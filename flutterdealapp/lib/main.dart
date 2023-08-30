@@ -26,9 +26,11 @@ class MyApp extends StatelessWidget {
       create: (context)=> AppBloc(),
       )
     ],
-    child: ScreenUtilInit(builder: (context, child)=>const MaterialApp(
+    child: ScreenUtilInit(builder: (context, child)=> MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Welcome(),
+      routes:{ 
+        "MyHomePage":(context)=>const MyHomePage(),}
     )
     
   
