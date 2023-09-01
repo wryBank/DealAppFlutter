@@ -106,7 +106,7 @@ class _WelcomeState extends State<Welcome> {
             else{
               //jump to new page
               // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>MyHomePage()));
-              Navigator.of(context).pushNamedAndRemoveUntil("MyHomePage", (route) => false);
+              Navigator.of(context).pushNamedAndRemoveUntil("signIn", (route) => false);
               print("object");
             }
           },
@@ -123,7 +123,8 @@ class _WelcomeState extends State<Welcome> {
                       spreadRadius: 1,
                       blurRadius: 10,
                       offset: Offset(0, 10))
-                ]),
+                ]
+                ),
             child: Center(
               child: Text(
                 "next",

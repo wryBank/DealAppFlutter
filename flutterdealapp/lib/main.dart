@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdealapp/pages/app/app_bloc.dart';
 import 'package:flutterdealapp/pages/app/app_event.dart';
 import 'package:flutterdealapp/pages/app/app_state.dart';
+import 'package:flutterdealapp/pages/signIn/sign_in.dart';
 import 'package:flutterdealapp/pages/welcome/bloc/welcome_blocs.dart';
 import 'package:flutterdealapp/pages/welcome/welcome.dart';
 
@@ -28,10 +29,15 @@ class MyApp extends StatelessWidget {
     ],
     child: ScreenUtilInit(builder: (context, child)=> MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(appBarTheme: const AppBarTheme(
+        elevation: 0,
+        backgroundColor: Colors.white
+      )),
       home: Welcome(),
       routes:{ 
-        "MyHomePage":(context)=>const MyHomePage(),}
-    )
+        "MyHomePage":(context)=>const MyHomePage(),
+        "signIn":(context) => const SignIn()
+    })
     
   
     ),
