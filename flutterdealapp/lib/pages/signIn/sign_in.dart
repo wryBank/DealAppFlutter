@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdealapp/pages/signIn/bloc/signin_blocs.dart';
 import 'package:flutterdealapp/pages/signIn/bloc/signin_events.dart';
 import 'package:flutterdealapp/pages/signIn/bloc/signin_state.dart';
+import 'package:flutterdealapp/pages/signIn/sign_in_controller.dart';
 import 'package:flutterdealapp/pages/signIn/widgets/sign_in_widget.dart';
 
 class SignIn extends StatefulWidget {
@@ -18,8 +19,7 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SignInBloc, SignInState>(
-      builder: (context, state) {
+    return BlocBuilder<SignInBloc, SignInState>(builder: (context, state) {
       return Container(
         color: Colors.white,
         child: SafeArea(
@@ -52,21 +52,24 @@ class _SignInState extends State<SignIn> {
                         ),
                         buildTextField(
                             "Enter email adress", "email", Icons.person,
-                            (value){
-                              context.read<SignInBloc>().add(EmailEvent(value));
-                            }),
+                            (value) {
+                          context.read<SignInBloc>().add(EmailEvent(value));
+                        }),
                         reusableText("password"),
                         SizedBox(
                           height: 5.h,
                         ),
                         buildTextField(
                             "Enter your password", "password", Icons.lock,
-                            (value){
-                              context.read<SignInBloc>().add(passwordEvent(value));
-                            }),
+                            (value) {
+                          context.read<SignInBloc>().add(passwordEvent(value));
+                        }),
                       ]),
                 ),
-                buildLoginAndRegisterButton("LOGIN"),
+                buildLoginButton("LOGIN", () {
+                  SignInController(context: context).handleSignIn("email");
+                  print("login button");
+                }),
                 SizedBox(
                   height: 20.h,
                 ),

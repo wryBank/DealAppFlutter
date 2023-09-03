@@ -1,4 +1,3 @@
-import 'dart:html';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +17,9 @@ class SignInController {
         String password = state.password;
         if(emailAddress.isEmpty){
           
+        }
+        else{
+          print("email is $emailAddress");
         }
         if(password.isEmpty){
 
@@ -44,7 +46,17 @@ class SignInController {
 
           }
 
-        }catch(e){
+        }on FirebaseAuthException catch(e){
+          if(e.code == 'user-not-found'){
+            print("no user found for that email.");
+          }
+          else if (e.code == 'wrong-password'){
+            print("Wrong password ");
+
+          }
+          else if(e.code=='invalid-email'){
+            print("Your email format is wrong");
+          }
 
         }
       }

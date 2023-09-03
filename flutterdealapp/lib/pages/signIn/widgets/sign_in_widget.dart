@@ -115,11 +115,9 @@ void Function(String value)?func
         ],
       ));
 }
-Widget buildLoginAndRegisterButton(String buttonName){
+Widget buildLoginButton(String buttonName, void Function()? func){
   return GestureDetector(
-    onTap: (){
-
-    },
+    onTap: func,
     child: Container(
       width: 180.w,
       height: 50.h,
