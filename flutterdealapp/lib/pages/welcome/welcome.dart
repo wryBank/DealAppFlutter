@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdealapp/main.dart';
 import 'package:flutterdealapp/pages/welcome/bloc/welcome_events.dart';
+import 'package:flutterdealapp/values/color.dart';
 
 import 'bloc/welcome_blocs.dart';
 import 'bloc/welcome_states.dart';
@@ -51,7 +52,7 @@ class _WelcomeState extends State<Welcome> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   decorator: DotsDecorator(
                     color: Colors.grey,
-                    activeColor: Colors.blue,
+                    activeColor: AppColors.primaryButton,
                     size: const Size.square(8.0),
                     activeSize: const Size(10.0, 8.0),
                     activeShape: RoundedRectangleBorder(

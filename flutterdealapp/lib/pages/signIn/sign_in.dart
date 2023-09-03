@@ -17,29 +17,56 @@ class _SignInState extends State<SignIn> {
     return Container(
       color: Colors.white,
       child: SafeArea(
-        child: Scaffold(
-          backgroundColor:Colors.white,
-          appBar: buildAppBar(),
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(top:66.h),
-                  padding: EdgeInsets.only(left: 25.w,right: 25.w ),
-                  child: Column(
+          child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: buildAppBar(),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: SizedBox(
+                  width: 250.w,
+                  height: 150.h,
+                  child: Image.asset(
+                    "assets/images/icon.png",
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 16.h),
+                padding: EdgeInsets.only(left: 25.w, right: 25.w),
+                child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       reusableText("email"),
-                      buildTextField("Email", "email")
-                  ]),
-                ),
-                buildThirdPartLogin(context),
-                Center(child: reusableText("Or use your email account to login")),
-              ],
-            ),
+                      SizedBox(
+                        height: 5.h,
+                      ),
+                      buildTextField(
+                          "Enter email adress", "email", Icons.person),
+                      reusableText("password"),
+                      SizedBox(
+                        height: 5.h,
+                      ),
+                      buildTextField(
+                          "Enter your password", "password", Icons.lock)
+                    ]),
+              ),
+              buildLoginAndRegisterButton("LOGIN"),
+              SizedBox(
+                height: 20.h,
+              ),
+              Center(child: reusableText("Or use your email account to login")),
+              buildThirdPartLogin(context),
+              Center(child: reusableText("Don't have an account ? "),),
+              Container(
+                padding: EdgeInsets.only(left: 125.w, right: 25.w),
+                child: SignUp())
+            ],
           ),
-      
+        ),
       )),
     );
   }

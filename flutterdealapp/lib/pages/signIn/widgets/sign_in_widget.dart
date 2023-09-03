@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdealapp/values/color.dart';
 
 AppBar buildAppBar() {
   return AppBar(
@@ -20,13 +21,8 @@ AppBar buildAppBar() {
 //need context for accessing bloc
 Widget buildThirdPartLogin(BuildContext context) {
   return Container(
-    margin: EdgeInsets.only(
-      top: 40.h,
-      bottom: 20.h
-    ),
-    child: Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
-    children: [
+    margin: EdgeInsets.only(top: 40.h, bottom: 20.h),
+    child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
       _reusableIcons("google"),
       _reusableIcons("facebook"),
     ]),
@@ -53,38 +49,119 @@ Widget _reusableIcons(String iconName) {
     ),
   );
 }
-Widget reusableText(String text){
+
+Widget reusableText(String text) {
   return Container(
     margin: EdgeInsets.only(bottom: 5.h),
     child: Text(
       text,
       style: TextStyle(
-        color: Colors.grey.withOpacity(0.9),
+          color: Colors.grey.withOpacity(0.9),
+          fontWeight: FontWeight.normal,
+          fontSize: 14.sp),
+    ),
+  );
+}
+
+Widget buildTextField(String hinttext, String textType, IconData iconName) {
+  return Container(
+      width: 325.w,
+      height: 50.h,
+      margin: EdgeInsets.only(bottom: 20.h),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(25.w)),
+          border: Border.all(color: Colors.grey)),
+      child: Row(
+        children: [
+          Container(
+            width: 16.w,
+            margin: EdgeInsets.only(left: 12.w),
+            height: 16.w,
+            child: Icon(iconName),
+          ),
+          Container(
+            width: 270.w,
+            height: 50.h,
+            child: TextField(
+              keyboardType: TextInputType.multiline,
+              decoration:  InputDecoration(
+                hintText: hinttext,
+                border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.transparent)),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.transparent)),
+                disabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.transparent)),
+                focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.transparent)),
+                    hintStyle: TextStyle(
+                      color: Colors.grey.withOpacity(0.5),
+                    )
+              ),
+            style: TextStyle(
+              color: Colors.black, 
+              // fontFamily: 
+              fontWeight: FontWeight.normal,
+              fontSize: 14.sp
+            ),
+            autocorrect: false,
+            obscureText: textType=="password"?true:false,
+            ),
+          )
+        ],
+      ));
+}
+Widget buildLoginAndRegisterButton(String buttonName){
+  return GestureDetector(
+    onTap: (){
+
+    },
+    child: Container(
+      width: 180.w,
+      height: 50.h,
+      margin: EdgeInsets.only(left: 150.w,right: 25.w,),
+      decoration: BoxDecoration(
+        color: AppColors.primaryButton,
+        borderRadius: BorderRadius.circular(30.w),
+        boxShadow: [
+          BoxShadow(
+            spreadRadius: 1,
+            blurRadius:3, 
+            offset: Offset(0,3),
+            color: Colors.grey.withOpacity(0.5)
+          )
+        ]
+      ),
+      child: Center(child: Text(buttonName,
+      style: TextStyle(
+        fontSize: 16.sp,
         fontWeight: FontWeight.normal,
-        fontSize: 14.sp
+        color: Colors.white
+      ),
+      
+      )),
+    ),
+  );
+}
+Widget SignUp(){
+  return Container(
+    margin: EdgeInsets.only(left: 25.w),
+    width: 260.w,
+    height: 44.h,
+    child: GestureDetector(
+      onTap: (){
+
+      },
+      child: Text("Sign up" ,
+      style: TextStyle(
+        color: AppColors.primaryButton,
+        fontSize: 12.sp
+      ),
+      
       ),
       
     ),
-
+    
   );
-}
-Widget buildTextField(String text, String textType){
-  return Container(
-    width: 325.w,
-    height: 50.h,
-    decoration: BoxDecoration(
-      color:Colors.red,
-      borderRadius: BorderRadius.all(Radius.circular(15.w)),
-      border: Border.all(color: Colors.black)
-    ),
-    child:Row(children: [
-      Container(
-        width: 16.w,
-        margin: EdgeInsets.only(left: 12.w),
-        height: 16.w,
-        child: Icon(Icons.person)
-      )
-    ],)
-  );
-  
 }
