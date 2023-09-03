@@ -116,7 +116,7 @@ class _WelcomeState extends State<Welcome> {
             width: 325.w,
             height: 50.h,
             decoration: BoxDecoration(
-                color: Colors.blue,
+                color:AppColors.primaryButton,
                 borderRadius: BorderRadius.all(Radius.circular(15.w)),
                 boxShadow: [
                   BoxShadow(

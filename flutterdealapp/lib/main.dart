@@ -4,11 +4,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdealapp/pages/app/app_bloc.dart';
 import 'package:flutterdealapp/pages/app/app_event.dart';
 import 'package:flutterdealapp/pages/app/app_state.dart';
+import 'package:flutterdealapp/pages/signIn/bloc/signin_blocs.dart';
 import 'package:flutterdealapp/pages/signIn/sign_in.dart';
 import 'package:flutterdealapp/pages/welcome/bloc/welcome_blocs.dart';
 import 'package:flutterdealapp/pages/welcome/welcome.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+Future<void> main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -25,7 +29,9 @@ class MyApp extends StatelessWidget {
       ),
       BlocProvider(
       create: (context)=> AppBloc(),
-      )
+      ),
+      BlocProvider(create: (context)=>SignInBloc())
+      
     ],
     child: ScreenUtilInit(builder: (context, child)=> MaterialApp(
       debugShowCheckedModeBanner: false,
