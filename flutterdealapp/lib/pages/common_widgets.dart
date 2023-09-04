@@ -1,9 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdealapp/values/color.dart';
 
-AppBar buildAppBar() {
+AppBar buildAppBar(String type) {
   return AppBar(
     bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1.0),
@@ -12,7 +11,7 @@ AppBar buildAppBar() {
           height: 1.0,
         )),
     title: Text(
-      "Logian",
+      type,
       style: TextStyle(
           color: Colors.black, fontSize: 16.sp, fontWeight: FontWeight.normal),
     ),

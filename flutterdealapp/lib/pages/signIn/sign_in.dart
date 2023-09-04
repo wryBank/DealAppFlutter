@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdealapp/pages/signIn/bloc/signin_blocs.dart';
 import 'package:flutterdealapp/pages/signIn/bloc/signin_events.dart';
 import 'package:flutterdealapp/pages/signIn/bloc/signin_state.dart';
 import 'package:flutterdealapp/pages/signIn/sign_in_controller.dart';
-import 'package:flutterdealapp/pages/signIn/widgets/sign_in_widget.dart';
+import '../common_widgets.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -25,7 +23,7 @@ class _SignInState extends State<SignIn> {
         child: SafeArea(
             child: Scaffold(
           backgroundColor: Colors.white,
-          appBar: buildAppBar(),
+          appBar: buildAppBar("LOGIN IN"),
           body: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,7 +79,11 @@ class _SignInState extends State<SignIn> {
                 ),
                 Container(
                     padding: EdgeInsets.only(left: 125.w, right: 25.w),
-                    child: SignUp())
+                    child: SignUp((){
+                      Navigator.of(context).pushNamed("register");
+                    }
+                    )
+                    )
               ],
             ),
           ),
