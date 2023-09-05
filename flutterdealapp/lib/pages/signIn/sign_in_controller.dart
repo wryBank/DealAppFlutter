@@ -34,7 +34,12 @@ class SignInController {
           var user = credential.user;
           if (user != null) {
             // user verified from firebaske
-            print("user login");
+            print("user not verified");
+            if(user.emailVerified){
+              print("user login");
+              Navigator.of(context).pushNamed("Application");
+
+            }
           } else {
             toastInfo(msg: "you not user of this app");
             // error getting user from firebase
