@@ -1,12 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterdealapp/model/usermodel.dart';
 import 'package:flutterdealapp/pages/signIn/bloc/signin_blocs.dart';
+import 'package:flutterdealapp/repo/user_repo.dart';
 import 'package:flutterdealapp/widgets/flutter_toast.dart';
 
 class SignInController {
   final BuildContext context;
-  const SignInController({required this.context});
+  UserRepository userRepository = UserRepository();
+  UserModel userModel = UserModel();
+  SignInController({required this.context});
 
   Future<void> handleSignIn(String type) async {
     try {
@@ -27,9 +31,11 @@ class SignInController {
           final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: emailAddress, password: password);
           if (credential.user == null) {
             toastInfo(msg: "you don't exist");
+            return;
           }
           if (!credential.user!.emailVerified) {
             toastInfo(msg: "You need to verify your email account");
+            return;
           }
           var user = credential.user;
           if (user != null) {
@@ -37,6 +43,7 @@ class SignInController {
             print("user not verified");
             if(user.emailVerified){
               print("user login");
+              userRepository.create(userModel);
               Navigator.of(context).pushNamed("Application");
 
             }

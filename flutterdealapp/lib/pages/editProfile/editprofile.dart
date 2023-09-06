@@ -3,96 +3,88 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_bloc.dart';
+import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_state.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_blocs.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_event.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_state.dart';
 import 'package:flutterdealapp/pages/register/register_controller.dart';
 
 import '../common_widgets.dart';
+import 'bloc/editprofile_event.dart';
 
-class Register extends StatefulWidget {
-  const Register({super.key});
+class EditProfile extends StatefulWidget {
+  const EditProfile({super.key});
 
   @override
-  State<Register> createState() => _RegisterState();
+  State<EditProfile> createState() => _EditProfileState();
 }
 
-class _RegisterState extends State<Register> {
+class _EditProfileState extends State<EditProfile> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-      return BlocBuilder<RegisterBloc,RegisterStates>( builder: (context,states) {
-          return Container(
-            color: Colors.white,
-            child: SafeArea(
-                child: Scaffold(
-              backgroundColor: Colors.white,
-              appBar: buildAppBar("Sign UP"),
-              body: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: SizedBox(
-                        width: 250.w,
-                        height: 150.h,
-                        child: Image.asset(
-                          "assets/images/icon.png",
-                          fit: BoxFit.cover,
-                        ),
+    return BlocBuilder<EditProfileBloc,EditProfileState >(
+      builder: (context, state) {
+        return Container(
+          color: Colors.white,
+          child: SafeArea(
+              child: Scaffold(
+            backgroundColor: Colors.white,
+            appBar: buildAppBar("More information"),
+            body: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: SizedBox(
+                      width: 250.w,
+                      height: 150.h,
+                      child: Image.asset(
+                        "assets/images/icon.png",
+                        fit: BoxFit.cover,
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(top: 16.h),
-                      padding: EdgeInsets.only(left: 25.w, right: 25.w),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            reusableText("username"),
-                            SizedBox(
-                              height: 5.h,
-                            ),
-                            buildTextField(
-                                "Enter your username", "username", Icons.lock,
-                                (value) {
-                              context.read<RegisterBloc>().add(UserNameEvent(value));
-                            }),
-                            reusableText("email"),
-                            buildTextField(
-                                "Enter email adress", "email", Icons.person,
-                                (value) {
-                              context.read<RegisterBloc>().add(EmailEvent(value));
-                            }),
-                            reusableText("password"),
-                            buildTextField(
-                                "Enter your password", "password", Icons.lock,
-                                (value) {
-                              context.read<RegisterBloc>().add(PasswordEvent(value));
-                            }),
-                            reusableText("Confirm Password"),
-                            buildTextField(
-                                "Enter your password", "password", Icons.lock,
-                                (value) {
-                              context.read<RegisterBloc>().add(RePasswordEvent(value));
-                            }),
-                          ]),
-                    ),
-                    buildLoginButton("Sign Up", () {
-                      // SignInController(context: context).handleSignIn("email");
-                      RegisterController(context:context).handleEmailRegister();
-                      print("login button");
-                    }),
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    Container(
-                        padding: EdgeInsets.only(left: 125.w, right: 25.w),
-                        )
-                  ],
-                ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 16.h),
+                    padding: EdgeInsets.only(left: 25.w, right: 25.w),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          reusableText("username"),
+                          SizedBox(
+                            height: 5.h,
+                          ),
+                          buildTextField2("Enter your username", "username",
+                              Icons.lock, _usernameController),
+                          reusableText("email"),
+                          buildTextField2("Enter email adress", "email",
+                              Icons.person, _phoneNumberController),
+                          reusableText("password"),
+                        ]),
+                  ),
+                  buildLoginButton("Sign Up", () {
+                    // SignInController(context: context).handleSignIn("email");
+                    // RegisterController(context:context).handleEmailRegister();
+                    // BlocProvider.of<EditProfileBloc>(context)
+                    //     .add(EditProfileEvent());
+                    print("login button");
+                  }),
+                  SizedBox(
+                    height: 20.h,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(left: 125.w, right: 25.w),
+                  )
+                ],
               ),
-            )),
-          );
-        }
-      );
+            ),
+          )),
+        );
+      },
+    );
   }
 }
