@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class UserModel {
   String? uid;
   String? username;
+  String? email;
   int? gender;
   String? phonenumber;
   String? urlprofileimage;
@@ -16,6 +17,7 @@ class UserModel {
   UserModel({
     this.uid,
     this.username,
+    this.email,
     this.gender,
     this.phonenumber,
     this.urlprofileimage,
@@ -24,10 +26,14 @@ class UserModel {
     this.dealsucceed,
     this.ondeal,
   });
+  
+
+
 
   UserModel copyWith({
     String? uid,
     String? username,
+    String? email,
     int? gender,
     String? phonenumber,
     String? urlprofileimage,
@@ -39,6 +45,7 @@ class UserModel {
     return UserModel(
       uid: uid ?? this.uid,
       username: username ?? this.username,
+      email: email ?? this.email,
       gender: gender ?? this.gender,
       phonenumber: phonenumber ?? this.phonenumber,
       urlprofileimage: urlprofileimage ?? this.urlprofileimage,
@@ -53,6 +60,7 @@ class UserModel {
     return <String, dynamic>{
       'uid': uid,
       'username': username,
+      'email': email,
       'gender': gender,
       'phonenumber': phonenumber,
       'urlprofileimage': urlprofileimage,
@@ -67,6 +75,7 @@ class UserModel {
     return UserModel(
       uid: map['uid'] != null ? map['uid'] as String : null,
       username: map['username'] != null ? map['username'] as String : null,
+      email: map['email'] != null ? map['email'] as String : null,
       gender: map['gender'] != null ? map['gender'] as int : null,
       phonenumber: map['phonenumber'] != null ? map['phonenumber'] as String : null,
       urlprofileimage: map['urlprofileimage'] != null ? map['urlprofileimage'] as String : null,
@@ -83,7 +92,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(uid: $uid, username: $username, gender: $gender, phonenumber: $phonenumber, urlprofileimage: $urlprofileimage, bio: $bio, dealcount: $dealcount, dealsucceed: $dealsucceed, ondeal: $ondeal)';
+    return 'UserModel(uid: $uid, username: $username, email: $email, gender: $gender, phonenumber: $phonenumber, urlprofileimage: $urlprofileimage, bio: $bio, dealcount: $dealcount, dealsucceed: $dealsucceed, ondeal: $ondeal)';
   }
 
   @override
@@ -93,6 +102,7 @@ class UserModel {
     return 
       other.uid == uid &&
       other.username == username &&
+      other.email == email &&
       other.gender == gender &&
       other.phonenumber == phonenumber &&
       other.urlprofileimage == urlprofileimage &&
@@ -106,6 +116,7 @@ class UserModel {
   int get hashCode {
     return uid.hashCode ^
       username.hashCode ^
+      email.hashCode ^
       gender.hashCode ^
       phonenumber.hashCode ^
       urlprofileimage.hashCode ^
@@ -114,17 +125,16 @@ class UserModel {
       dealsucceed.hashCode ^
       ondeal.hashCode;
   }
-  
   UserModel.fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc):
   uid = doc.data()!["uid"],
+  username = doc.data()!["username"],
   gender = doc.data()!["gender"],
+  email = doc.data()!["email"],
   phonenumber = doc.data()!["phonenumber"],
   urlprofileimage = doc.data()!["urlprofileimage"],
   bio = doc.data()!["bio"],
   dealcount = doc.data()!["dealcount"],
   dealsucceed = doc.data()!["dealsucceed"],
   ondeal = doc.data()!["ondeal"];
-  
-
 
 }

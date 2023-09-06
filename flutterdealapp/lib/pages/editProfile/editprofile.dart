@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdealapp/model/usermodel.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_bloc.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_state.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_blocs.dart';
@@ -21,8 +24,10 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
+  final uid = FirebaseAuth.instance.currentUser;
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
+  UserModel userModel = UserModel();
 
   @override
   Widget build(BuildContext context) {
@@ -67,11 +72,17 @@ class _EditProfileState extends State<EditProfile> {
                         ]),
                   ),
                   buildLoginButton("Sign Up", () {
+                    userModel.username = _usernameController.text;
+                    userModel.phonenumber = _phoneNumberController.text;
+                    userModel.uid = uid!.uid;
                     // SignInController(context: context).handleSignIn("email");
                     // RegisterController(context:context).handleEmailRegister();
                     // BlocProvider.of<EditProfileBloc>(context)
                     //     .add(EditProfileEvent());
+                    BlocProvider.of<EditProfileBloc>(context) .add(Create(userModel:userModel));
                     print("login button");
+                    print(userModel.uid.toString());
+                    print(userModel.username.toString());
                   }),
                   SizedBox(
                     height: 20.h,

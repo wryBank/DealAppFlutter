@@ -19,6 +19,9 @@ class SignInController {
         final state = context.read<SignInBloc>().state;
         String emailAddress = state.email;
         String password = state.password;
+
+        userModel.email = emailAddress;
+        userModel.uid = FirebaseAuth.instance.currentUser!.uid;
         if (emailAddress.isEmpty) {
           toastInfo(msg: "You need fill email address");
           return;
@@ -38,9 +41,8 @@ class SignInController {
             return;
           }
           var user = credential.user;
-          if (user != null) {
+          if (user != null && user.emailVerified) {
             // user verified from firebaske
-            print("user not verified");
             if(user.emailVerified){
               print("user login");
               userRepository.create(userModel);
