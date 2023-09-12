@@ -2,13 +2,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterdealapp/model/usermodel.dart';
+import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_repo.dart';
+import 'package:flutterdealapp/pages/editProfile/editprofile.dart';
 import 'package:flutterdealapp/pages/signIn/bloc/signin_blocs.dart';
 import 'package:flutterdealapp/repo/user_repo.dart';
 import 'package:flutterdealapp/widgets/flutter_toast.dart';
 
+import '../editProfile/bloc/editprofile_provider.dart';
+
 class SignInController {
   final BuildContext context;
   UserRepository userRepository = UserRepository();
+  editProfile_repo _ediitprofile_repo = editProfile_repo(provider: editProfile_provider());
   UserModel userModel = UserModel();
   SignInController({required this.context});
 
@@ -19,6 +24,9 @@ class SignInController {
         final state = context.read<SignInBloc>().state;
         String emailAddress = state.email;
         String password = state.password;
+
+        userModel.email = emailAddress;
+        userModel.uid = FirebaseAuth.instance.currentUser!.uid;
         if (emailAddress.isEmpty) {
           toastInfo(msg: "You need fill email address");
           return;
@@ -38,12 +46,12 @@ class SignInController {
             return;
           }
           var user = credential.user;
-          if (user != null) {
+          if (user != null && user.emailVerified) {
             // user verified from firebaske
-            print("user not verified");
             if(user.emailVerified){
               print("user login");
-              userRepository.create(userModel);
+              // userRepository.create(userModel);
+              _ediitprofile_repo.addData(userModel);
               Navigator.of(context).pushNamed("Application");
 
             }
