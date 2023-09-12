@@ -10,3 +10,7 @@ class passwordEvent extends SignInEvent{
   final String password;
   const passwordEvent(this.password);
 }
+class usernameEvent extends SignInEvent{
+  final String username;
+  const usernameEvent(this.username);
+}

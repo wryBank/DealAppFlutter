@@ -1,4 +1,7 @@
+import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
@@ -7,11 +10,14 @@ import '../../../model/usermodel.dart';
 class editProfile_provider{
   
   final _fireCloud = FirebaseFirestore.instance.collection("users");
-  final _uid = FirebaseAuth.instance.currentUser!.uid;
+  final _firestore = FirebaseFirestore.instance;
+  final _uid = FirebaseAuth.instance.currentUser?.uid;
+  PlatformFile? pickedFile;
+
   Future<void> editProfile(UserModel userModel) async{
     try{
       print("inprovicer");
-      print("uid = "+_uid);
+      print("uid = "+_uid!);
       await _fireCloud.doc(_uid).update(userModel.toMap());
     } on FirebaseException catch(e){
       if(kDebugMode){
@@ -59,5 +65,33 @@ class editProfile_provider{
     }
     return [];
   }
+  // get image firebase
+  Future<String> getImage(String id) async{
+    try{
+      DocumentSnapshot documentSnapshot = await _fireCloud.doc(id).get();
+      return documentSnapshot.get("urlprofileimage");
+    } on FirebaseException catch(e){
+      if(kDebugMode){
+        print("Failed with error '${e.code}': ${e.message}");
+      }
+    } catch (e){
+      throw Exception(e.toString());
+    }
+    return "";
+  }
+  Future<String?> uploadingImage(UserModel userModel) async{
+    try{
+      await _fireCloud.doc(_uid).update(userModel.toMap());
+      return userModel.urlprofileimage;
+    } on FirebaseException catch(e){
+      if(kDebugMode){
+        print("Failed with error '${e.code}': ${e.message}");
+      }
+    } catch (e){
+      throw Exception(e.toString());
+    }
+    return "";
+  }
+  
 
 }

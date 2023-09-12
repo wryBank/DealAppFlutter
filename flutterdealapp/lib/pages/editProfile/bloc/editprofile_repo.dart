@@ -13,11 +13,8 @@ class editProfile_repo{
     await provider.editProfile(userModel);
     
   }
-<<<<<<< HEAD
   Future<void> addData(UserModel userModel) async{
     await provider.addData(userModel);
   }
-=======
->>>>>>> d52c081fdceb3d0edf2dbc66e571d15c8ce2eef0
 
 }

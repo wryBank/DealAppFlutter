@@ -38,9 +38,9 @@ class _WelcomeState extends State<Welcome> {
                   print("index = ${index}");
                 },
                 children: [
-                  _page(1, context, "next", "First see Learning", "Forw",
+                  _page(1, context, "next", "This is Deal", "Forw",
                       "assets/images/icon.png"),
-                  _page(2, context, "next", "First see Learning2", "Forw",
+                  _page(2, context, "next", "This is Deal", "Forw",
                       "assets/images/icon.png"),
                 ],
               ),
@@ -78,7 +78,7 @@ class _WelcomeState extends State<Welcome> {
         ),
         Container(
           child: Text(
-            "First See Learning",
+            title,
             style: TextStyle(
                 color: Colors.black,
                 fontSize: 24.sp,
@@ -89,7 +89,7 @@ class _WelcomeState extends State<Welcome> {
           width: 375.w,
           padding: EdgeInsets.only(left: 30.w, right: 30.w),
           child: Text(
-            "title",
+            subTitle,
             style: TextStyle(
                 color: Colors.black.withOpacity(0.5),
                 fontSize: 14.sp,
@@ -141,3 +141,5 @@ class _WelcomeState extends State<Welcome> {
     );
   }
 }
+//q my curruent user id is null
+//a because you are not logged in

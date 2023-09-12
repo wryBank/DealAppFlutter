@@ -6,12 +6,10 @@ import 'package:flutterdealapp/model/usermodel.dart';
 
 @immutable
 abstract class EditProfileEvent  {
-  
 }
 class Create extends EditProfileEvent {
   // final String uid;
   // Create(this.uid);
-
   // final String uid;
   // final String username;
   // final int gender;
@@ -27,4 +25,8 @@ class Create extends EditProfileEvent {
   Create({
     required this.userModel,
   });
+}
+class uploadingImage extends EditProfileEvent{
+  String url;
+  uploadingImage({required this.url});
 }

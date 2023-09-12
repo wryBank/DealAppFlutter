@@ -17,9 +17,12 @@ class EditingError extends EditProfileState{
   final String message;
   EditingError(this.message); 
 }
+class uploadingImage extends EditProfileState{
+  final String url;
+  uploadingImage(this.url);
+}
 class EditingData extends EditProfileState {
   // final String uid;
-
   // EditingData(this.uid);
   // final String username;
   // final int gender;

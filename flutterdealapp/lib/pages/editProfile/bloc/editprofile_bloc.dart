@@ -17,11 +17,10 @@ class EditProfileBloc extends Bloc<EditProfileEvent,EditProfileState>{
       try {
         print("inbloc");
         print("eventusermodel = ${event.userModel}");
-        await repository.editProfile(event.userModel);
+        await  repository.editProfile(event.userModel);
         // emit(EditingData());
       } catch (e) {
         
       }
     }));
-  } 
-}
+}}

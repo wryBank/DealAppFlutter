@@ -38,11 +38,12 @@ class MyApp extends StatelessWidget {
                             color: AppColors.primaryText
                           ),
                           elevation: 0, backgroundColor: Colors.white)),
-                  home: EditProfile(),
+                  home: Welcome(),
                   routes: {
                     // "MyHomePage": (context) => const MyHomePage(),
                     "signIn": (context) => const SignIn(),
                     "register":(context) => const Register(),
+                    "editprofile":(context) => const EditProfile(),
                     "Application":(context) => const ApplicationPage()
                   })),
     );

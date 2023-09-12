@@ -24,9 +24,10 @@ class SignInController {
         final state = context.read<SignInBloc>().state;
         String emailAddress = state.email;
         String password = state.password;
-
+        
+        userModel.username = 
         userModel.email = emailAddress;
-        userModel.uid = FirebaseAuth.instance.currentUser!.uid;
+        userModel.uid = FirebaseAuth.instance.currentUser?.uid;
         if (emailAddress.isEmpty) {
           toastInfo(msg: "You need fill email address");
           return;
@@ -52,7 +53,8 @@ class SignInController {
               print("user login");
               // userRepository.create(userModel);
               _ediitprofile_repo.addData(userModel);
-              Navigator.of(context).pushNamed("Application");
+              // Navigator.of(context).pushNamed("Application");
+              Navigator.of(context).pushNamed("editprofile");
 
             }
           } else {

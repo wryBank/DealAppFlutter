@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutterdealapp/model/usermodel.dart';
 class UserRepository{
-  final _uid = FirebaseAuth.instance.currentUser!.uid;
+  final _uid = FirebaseAuth.instance.currentUser?.uid;
   
 
   Future<void> create(UserModel userModel) async{
