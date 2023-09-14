@@ -66,8 +66,7 @@ class _WelcomeState extends State<Welcome> {
       )),
     );
   }
-
-  Widget _page(int index, BuildContext context, String buttonName, String title,
+Widget _page(int index, BuildContext context, String buttonName, String title,
       String subTitle, String imagePath) {
     return Column(
       children: [
@@ -141,5 +140,3 @@ class _WelcomeState extends State<Welcome> {
     );
   }
 }
-//q my curruent user id is null
-//a because you are not logged in

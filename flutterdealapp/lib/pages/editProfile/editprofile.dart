@@ -28,7 +28,6 @@ class _EditProfileState extends State<EditProfile> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   UserModel userModel = UserModel();
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<EditProfileBloc,EditProfileState >(
@@ -70,7 +69,7 @@ class _EditProfileState extends State<EditProfile> {
                               Icons.person, _phoneNumberController),
                         ]),
                   ),
-                  buildLoginButton("Sign Up", () {
+                  buildLoginButton("Next", () {
                     userModel.username = _usernameController.text;
                     userModel.phonenumber = _phoneNumberController.text;
                     userModel.uid = uid!.uid;

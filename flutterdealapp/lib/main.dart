@@ -15,6 +15,8 @@ import 'package:flutterdealapp/pages/welcome/welcome.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutterdealapp/values/color.dart';
 
+import 'pages/editProfile/editprofile_image.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -38,13 +40,14 @@ class MyApp extends StatelessWidget {
                             color: AppColors.primaryText
                           ),
                           elevation: 0, backgroundColor: Colors.white)),
-                  home: Welcome(),
+                  home: EditProfileimage(),
                   routes: {
                     // "MyHomePage": (context) => const MyHomePage(),
                     "signIn": (context) => const SignIn(),
                     "register":(context) => const Register(),
                     "editprofile":(context) => const EditProfile(),
-                    "Application":(context) => const ApplicationPage()
+                    "Application":(context) => const ApplicationPage(),
+                    "editprofileImage":(context) => const EditProfileimage(),
                   })),
     );
   }

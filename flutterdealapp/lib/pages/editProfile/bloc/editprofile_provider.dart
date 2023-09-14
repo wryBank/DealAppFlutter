@@ -1,8 +1,10 @@
-import 'dart:html';
+
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../model/usermodel.dart';
@@ -10,7 +12,8 @@ import '../../../model/usermodel.dart';
 class editProfile_provider{
   
   final _fireCloud = FirebaseFirestore.instance.collection("users");
-  final _firestore = FirebaseFirestore.instance;
+  final _firefirestore = FirebaseFirestore.instance;
+  final _firestore = FirebaseStorage.instance;
   final _uid = FirebaseAuth.instance.currentUser?.uid;
   PlatformFile? pickedFile;
 
@@ -79,10 +82,16 @@ class editProfile_provider{
     }
     return "";
   }
-  Future<String?> uploadingImage(UserModel userModel) async{
+  // upload image firebase
+  Future<String?> uploadImage(PlatformFile? pickedFile) async{
     try{
-      await _fireCloud.doc(_uid).update(userModel.toMap());
-      return userModel.urlprofileimage;
+      pickedFile = (await FilePicker.platform.pickFiles(type: FileType.image)) as PlatformFile?;
+      if(pickedFile != null){
+        String fileName = pickedFile.name;
+        String filePath = pickedFile.path!;
+        String? result = await _firestore.ref().child("images/$fileName").putFile(Uri.parse(filePath) as File).then((value) => value.ref.getDownloadURL());
+        return result;
+      }
     } on FirebaseException catch(e){
       if(kDebugMode){
         print("Failed with error '${e.code}': ${e.message}");

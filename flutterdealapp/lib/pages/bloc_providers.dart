@@ -9,6 +9,8 @@ import 'app/app_bloc.dart';
 import 'editProfile/bloc/editprofile_provider.dart';
 class AppBlocProviders{
   static get allBlocProviders=>[
+    
+    
         BlocProvider( create: (context) => WelcomeBloc(),),
         // BlocProvider( create: (context) => AppBloc(),),
         BlocProvider(create: (context) => SignInBloc()),
