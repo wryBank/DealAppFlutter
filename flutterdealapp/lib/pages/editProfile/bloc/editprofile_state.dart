@@ -1,5 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +21,7 @@ class EditingError extends EditProfileState{
   EditingError(this.message); 
 }
 class EditImageState extends EditProfileState{
-  final String? imageFile;
+  final PlatformFile? imageFile;
   EditImageState(this.imageFile);
 }
 class uploadingImageState extends EditProfileState{

@@ -88,11 +88,11 @@ class editProfile_provider {
     return "";
   }
 
-  Future<PlatformFile?> EditImage(PlatformFile? pickedFile) async {
+  Future<String?> EditImage(PlatformFile? pickedFile) async {
     try {
       pickedFile = (await FilePicker.platform.pickFiles(type: FileType.image))
           as PlatformFile?;
-      return pickedFile;
+      return pickedFile?.path.toString();
     } catch (e) {
       throw Exception(e.toString());
     }

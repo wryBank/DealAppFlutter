@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +35,6 @@ class uploadingImageEvent extends EditProfileEvent{
   uploadingImageEvent({required this.imageFile});
 }
 class EditImageEvent extends EditProfileEvent{
-  String? imageFile;
+  PlatformFile? imageFile;
   EditImageEvent({required this.imageFile});
 }

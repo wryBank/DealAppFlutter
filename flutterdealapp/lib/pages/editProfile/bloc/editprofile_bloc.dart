@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/src/platform_file.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_event.dart';
@@ -38,9 +39,9 @@ class EditProfileBloc extends Bloc<EditProfileEvent,EditProfileState>{
     on<EditImageEvent>((event, emit)async {
       try {
         print("in bloc uploadimage");
-        print("wwwwaaaa${repository.EditImage(event.imageFile)}");
-        await repository.EditImage(event.imageFile);
-        print(" wwwwww ${event.imageFile!.path}");
+        print("wwwwaaaa${repository.EditImage(event.imageFile as PlatformFile?)}");
+        await repository.EditImage(event.imageFile as PlatformFile?);
+        print(" wwwwww ${event.imageFile!}");
         emit(EditImageState(event.imageFile!));
 
       } catch (e) {

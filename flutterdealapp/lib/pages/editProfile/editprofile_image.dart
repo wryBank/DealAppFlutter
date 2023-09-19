@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -44,8 +45,8 @@ class _EditProfileimageState extends State<EditProfileimage> {
         //     child: CircularProgressIndicator(),
         //   );
         // }
-        if (state is EditImageState) {
-          print("url state =  ${state.imageFile.path}");
+        if (state is uploadingImageState) {
+          // print("url state =  ${state.imageFile.toString()}");
           return Container(
             color: Colors.white,
             child: SafeArea(
@@ -56,7 +57,8 @@ class _EditProfileimageState extends State<EditProfileimage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _upLoadImage(context, "2", "title", "subtile", state.imageFile as String),
+                    _upLoadImage(context, "2", "title", "subtile",state.url.toString()),
+                        
                     // Center(
                     //   child: SizedBox(
                     //     width: 250.w,
@@ -141,7 +143,7 @@ Widget _upLoadImage(BuildContext context, String buttonName, String title,
     if (result == null) return;
     pickedFile = result.files.first;
     BlocProvider.of<EditProfileBloc>(context)
-        .add(EditImageEvent(imageFile: pickedFile?.path));
+        .add(uploadingImageEvent(imageFile: pickedFile));
   }
 
   return Column(
@@ -158,8 +160,11 @@ Widget _upLoadImage(BuildContext context, String buttonName, String title,
           CircleAvatar(
             radius: 90,
             backgroundImage: NetworkImage(imagePath),
+            // backgroundImage: 
+            // AssetImage('assets/images/defaultProfile.png'),
             backgroundColor: Colors.grey,
           ),
+          
         ]),
       ),
       // SizedBox(
