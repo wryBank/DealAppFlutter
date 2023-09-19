@@ -20,7 +20,12 @@ class EditingError extends EditProfileState{
 class uploadingImage extends EditProfileState{
   final String url;
   uploadingImage(this.url);
+  
+  uploadingImage copyWith(String? url){
+    return uploadingImage(url ?? this.url);
+  }
 }
+
 class EditingData extends EditProfileState {
   // final String uid;
   // EditingData(this.uid);
