@@ -21,11 +21,11 @@ class EditProfileBloc extends Bloc<EditProfileEvent,EditProfileState>{
         
       }
     }));
-    on<uploadingImage>((event, emit)async {
-      try {
-        await repository.uploadingImage(event.platformFile);
-      } catch (e) {
+    // on<uploadingImage>((event, emit)async {
+    //   try {
+    //     await repository.uploadingImage(event.platformFile);
+    //   } catch (e) {
         
-      }
-    });
+    //   }
+    // });
 }}

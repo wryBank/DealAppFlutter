@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
                             color: AppColors.primaryText
                           ),
                           elevation: 0, backgroundColor: Colors.white)),
-                  home: EditProfileimage(),
+                  home: Welcome(),
                   routes: {
                     // "MyHomePage": (context) => const MyHomePage(),
                     "signIn": (context) => const SignIn(),

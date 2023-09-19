@@ -27,7 +27,4 @@ class Create extends EditProfileEvent {
   });
 }
 class uploadingImage extends EditProfileEvent{
-  String url;
-
-  uploadingImage({required this.url});
 }
