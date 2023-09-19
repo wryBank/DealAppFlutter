@@ -17,6 +17,11 @@ class editProfile_repo{
     await provider.addData(userModel);
   }
   Future<void> uploadingImage(PlatformFile? imageFile) async{
+    print("inrepo uploadimage");
     await provider.uploadImage(imageFile);
+  }
+  Future<void> EditImage(PlatformFile? imageFile) async{
+    print("inrepo uploadEditimage");
+    await provider.EditImage(imageFile);
   }
 }

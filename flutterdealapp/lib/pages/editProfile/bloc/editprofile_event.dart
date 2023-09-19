@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -26,5 +27,12 @@ class Create extends EditProfileEvent {
     required this.userModel,
   });
 }
-class uploadingImage extends EditProfileEvent{
+// ignore: camel_case_types
+class uploadingImageEvent extends EditProfileEvent{
+  PlatformFile? imageFile;
+  uploadingImageEvent({required this.imageFile});
+}
+class EditImageEvent extends EditProfileEvent{
+  String? imageFile;
+  EditImageEvent({required this.imageFile});
 }

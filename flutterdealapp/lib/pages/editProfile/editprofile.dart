@@ -78,6 +78,8 @@ class _EditProfileState extends State<EditProfile> {
                     // BlocProvider.of<EditProfileBloc>(context)
                     //     .add(EditProfileEvent());
                     BlocProvider.of<EditProfileBloc>(context) .add(Create(userModel:userModel));
+                    
+              Navigator.of(context).pushNamedAndRemoveUntil("editprofileImage", (route) => false);
                     print("login button");
                     print(userModel.uid.toString());
                     print(userModel.username.toString());

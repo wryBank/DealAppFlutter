@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -7,6 +10,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdealapp/model/usermodel.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_bloc.dart';
+import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_provider.dart';
+import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_repo.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_state.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_blocs.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_event.dart';
@@ -29,73 +34,99 @@ class _EditProfileimageState extends State<EditProfileimage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   UserModel userModel = UserModel();
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<EditProfileBloc, EditProfileState>(
       builder: (context, state) {
-        return Container(
-          color: Colors.white,
-          child: SafeArea(
-              child: Scaffold(
-            backgroundColor: Colors.white,
-            appBar: buildAppBar("More information"),
-            body: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _upLoadImage(context, "2", "title", "subtile", "path")
-                  // Center(
-                  //   child: SizedBox(
-                  //     width: 250.w,
-                  //     height: 150.h,
-                  //     child: Image.asset(
-                  //       "assets/images/icon.png",
-                  //       fit: BoxFit.cover,
-                  //     ),
-                  //   ),
-                  // ),
-                  // Container(
-                  //   margin: EdgeInsets.only(top: 16.h),
-                  //   padding: EdgeInsets.only(left: 25.w, right: 25.w),
-                  //   child: Column(
-                  //       crossAxisAlignment: CrossAxisAlignment.start,
-                  //       // children: [
-                  //       //   reusableText("username"),
-                  //       //   SizedBox(
-                  //       //     height: 5.h,
-                  //       //   ),
-                  //       //   buildTextField2("Enter your username", "username",
-                  //       //       Icons.lock, _usernameController),
-                  //       //   reusableText("email"),
-                  //       //   buildTextField2("Enter email adress", "email",
-                  //       //       Icons.person, _phoneNumberController),
-                  //       // ]
-                  //       ),
-                  // ),
-                  // buildLoginButton("Next", () {
-                  //   userModel.username = _usernameController.text;
-                  //   userModel.phonenumber = _phoneNumberController.text;
-                  //   userModel.uid = uid!.uid;
-                  //   // SignInController(context: context).handleSignIn("email");
-                  //   // RegisterController(context:context).handleEmailRegister();
-                  //   // BlocProvider.of<EditProfileBloc>(context)
-                  //   //     .add(EditProfileEvent());
-                  //   BlocProvider.of<EditProfileBloc>(context) .add(Create(userModel:userModel));
-                  //   print("login button");
-                  //   print(userModel.uid.toString());
-                  //   print(userModel.username.toString());
-                  // }),
-                  // SizedBox(
-                  //   height: 20.h,
-                  // ),
-                  // Container(
-                  //   padding: EdgeInsets.only(left: 125.w, right: 25.w),
-                  // )
-                ],
+        // if(state is LoadingState || state is InitialState){
+        //   return const Center(
+        //     child: CircularProgressIndicator(),
+        //   );
+        // }
+        if (state is EditImageState) {
+          print("url state =  ${state.imageFile.path}");
+          return Container(
+            color: Colors.white,
+            child: SafeArea(
+                child: Scaffold(
+              backgroundColor: Colors.white,
+              appBar: buildAppBar("More information"),
+              body: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _upLoadImage(context, "2", "title", "subtile", state.imageFile as String),
+                    // Center(
+                    //   child: SizedBox(
+                    //     width: 250.w,
+                    //     height: 150.h,
+                    //     child: Image.asset(
+                    //       "assets/images/icon.png",
+                    //       fit: BoxFit.cover,
+                    //     ),
+                    //   ),
+                    // ),
+                    // Container(
+                    //   margin: EdgeInsets.only(top: 16.h),
+                    //   padding: EdgeInsets.only(left: 25.w, right: 25.w),
+                    //   child: Column(
+                    //       crossAxisAlignment: CrossAxisAlignment.start,
+                    //       // children: [
+                    //       //   reusableText("username"),
+                    //       //   SizedBox(
+                    //       //     height: 5.h,
+                    //       //   ),
+                    //       //   buildTextField2("Enter your username", "username",
+                    //       //       Icons.lock, _usernameController),
+                    //       //   reusableText("email"),
+                    //       //   buildTextField2("Enter email adress", "email",
+                    //       //       Icons.person, _phoneNumberController),
+                    //       // ]
+                    //       ),
+                    // ),
+                    // buildLoginButton("Next", () {
+                    //   userModel.username = _usernameController.text;
+                    //   userModel.phonenumber = _phoneNumberController.text;
+                    //   userModel.uid = uid!.uid;
+                    //   // SignInController(context: context).handleSignIn("email");
+                    //   // RegisterController(context:context).handleEmailRegister();
+                    //   // BlocProvider.of<EditProfileBloc>(context)
+                    //   //     .add(EditProfileEvent());
+                    //   BlocProvider.of<EditProfileBloc>(context) .add(Create(userModel:userModel));
+                    //   print("login button");
+                    //   print(userModel.uid.toString());
+                    //   print(userModel.username.toString());
+                    // }),
+                    // SizedBox(
+                    //   height: 20.h,
+                    // ),
+                    // Container(
+                    //   padding: EdgeInsets.only(left: 125.w, right: 25.w),
+                    // )
+                  ],
+                ),
               ),
-            ),
-          )),
-        );
+            )),
+          );
+        } else {
+          return Container(
+            color: Colors.white,
+            child: SafeArea(
+                child: Scaffold(
+              backgroundColor: Colors.white,
+              appBar: buildAppBar("More information"),
+              body: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _upLoadImage(context, "2", "title", "subtile", "path"),
+                  ],
+                ),
+              ),
+            )),
+          );
+        }
       },
     );
   }
@@ -103,6 +134,16 @@ class _EditProfileimageState extends State<EditProfileimage> {
 
 Widget _upLoadImage(BuildContext context, String buttonName, String title,
     String subTitle, String imagePath) {
+  PlatformFile? pickedFile;
+  Future selectFile() async {
+    // Uint8List img = await pickImage(ImageSource.gal)
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
+    pickedFile = result.files.first;
+    BlocProvider.of<EditProfileBloc>(context)
+        .add(EditImageEvent(imageFile: pickedFile?.path));
+  }
+
   return Column(
     children: [
       SizedBox(
@@ -111,12 +152,12 @@ Widget _upLoadImage(BuildContext context, String buttonName, String title,
       GestureDetector(
         onTap: () {
           print("click");
-          // selectFile();
+          selectFile();
         },
         child: Stack(children: [
           CircleAvatar(
             radius: 90,
-            // backgroundImage:
+            backgroundImage: NetworkImage(imagePath),
             backgroundColor: Colors.grey,
           ),
         ]),
@@ -150,6 +191,11 @@ Widget _upLoadImage(BuildContext context, String buttonName, String title,
         ),
       ),
       GestureDetector(
+        onTap: () {
+          selectFile();
+          BlocProvider.of<EditProfileBloc>(context)
+              .add(uploadingImageEvent(imageFile: pickedFile));
+        },
         child: Container(
           margin: EdgeInsets.only(top: 100.h, left: 25.w, right: 25.w),
           width: 325.w,

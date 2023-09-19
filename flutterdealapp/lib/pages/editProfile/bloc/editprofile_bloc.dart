@@ -23,7 +23,26 @@ class EditProfileBloc extends Bloc<EditProfileEvent,EditProfileState>{
     }));
     on<uploadingImageEvent>((event, emit)async {
       try {
+        print("in bloc uploadimage");
+        print("wwwwaaaa${repository.uploadingImage(event.imageFile)}");
         await repository.uploadingImage(event.imageFile);
+        print(" wwwwww ${event.imageFile!.path}");
+        String? url = await repository.provider.uploadImage(event.imageFile);
+        print("url = ${url}");
+        emit(uploadingImageState(url));
+
+      } catch (e) {
+        
+      }
+    });
+    on<EditImageEvent>((event, emit)async {
+      try {
+        print("in bloc uploadimage");
+        print("wwwwaaaa${repository.EditImage(event.imageFile)}");
+        await repository.EditImage(event.imageFile);
+        print(" wwwwww ${event.imageFile!.path}");
+        emit(EditImageState(event.imageFile!));
+
       } catch (e) {
         
       }

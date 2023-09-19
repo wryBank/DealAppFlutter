@@ -1,11 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 import 'package:equatable/equatable.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import '../../../model/usermodel.dart';
 
-@immutable
+
 abstract class EditProfileState {
 }
 class InitialState extends EditProfileState{
@@ -17,15 +18,14 @@ class EditingError extends EditProfileState{
   final String message;
   EditingError(this.message); 
 }
-class uploadingImage extends EditProfileState{
-  final String url;
-  uploadingImage(this.url);
-  
-  uploadingImage copyWith(String? url){
-    return uploadingImage(url ?? this.url);
-  }
+class EditImageState extends EditProfileState{
+  final String? imageFile;
+  EditImageState(this.imageFile);
 }
-
+class uploadingImageState extends EditProfileState{
+  final String? url;
+  uploadingImageState(this.url);
+}
 class EditingData extends EditProfileState {
   // final String uid;
   // EditingData(this.uid);
