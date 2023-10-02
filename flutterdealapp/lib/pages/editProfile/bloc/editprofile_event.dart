@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutterdealapp/model/usermodel.dart';
+import 'package:image_picker/image_picker.dart';
 
 @immutable
 abstract class EditProfileEvent  {
@@ -37,4 +38,8 @@ class uploadingImageEvent extends EditProfileEvent{
 class EditImageEvent extends EditProfileEvent{
   PlatformFile? imageFile;
   EditImageEvent({required this.imageFile});
+}
+class UploadUrlImageEvent extends EditProfileEvent{
+  String url;
+  UploadUrlImageEvent({required this.url});
 }

@@ -72,6 +72,20 @@ class editProfile_provider {
     }
     return [];
   }
+  // check user is exit or not
+  Future<bool> checkUser(String id) async {
+    try {
+      DocumentSnapshot documentSnapshot = await _fireCloud.doc(id).get();
+      return documentSnapshot.exists;
+    } on FirebaseException catch (e) {
+      if (kDebugMode) {
+        print("Failed with error '${e.code}': ${e.message}");
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return false;
+  }
 
   // get image firebase
   Future<String> getImage(String id) async {
@@ -128,4 +142,13 @@ class editProfile_provider {
     }
     return "";
   }
+// uploadUrl image to firebase doc
+  Future<void> uploadUrl(String url) async {
+    try {
+      await _fireCloud.doc(_uid).update({"urlprofileimage": url});
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
 }

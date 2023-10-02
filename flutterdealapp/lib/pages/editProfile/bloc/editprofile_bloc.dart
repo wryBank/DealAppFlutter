@@ -9,10 +9,9 @@ import 'package:flutterdealapp/repo/user_repo.dart';
 
 class EditProfileBloc extends Bloc<EditProfileEvent,EditProfileState>{
   final editProfile_repo repository;
-  EditProfileBloc(this.repository) : super(InitialState()){
+  EditProfileBloc(this.repository) : super(EditProfileState()){
     on<Create>(((event, emit)async {
         print("inbloc");
-        emit(LoadingState());
       try {
         print("inbloc");
         print("eventusermodel = ${event.userModel}");
@@ -36,16 +35,28 @@ class EditProfileBloc extends Bloc<EditProfileEvent,EditProfileState>{
         
       }
     });
-    on<EditImageEvent>((event, emit)async {
+    on<UploadUrlImageEvent>((event, emit)async {
       try {
         print("in bloc uploadimage");
-        print("wwwwaaaa${repository.EditImage(event.imageFile as PlatformFile?)}");
-        await repository.EditImage(event.imageFile as PlatformFile?);
-        print(" wwwwww ${event.imageFile!}");
-        emit(EditImageState(event.imageFile!));
+        print("wwwwaaaa${repository.upLoadUrlImage(event.url)}");
+        await repository.upLoadUrlImage(event.url);
+        print(" wwwwww ${event.url}");
 
       } catch (e) {
         
       }
     });
-}}
+    // on<EditImageEvent>((event, emit)async {
+    //   try {
+    //     print("in bloc uploadimage");
+    //     print("wwwwaaaa${repository.EditImage(event.imageFile as PlatformFile?)}");
+    //     await repository.EditImage(event.imageFile as PlatformFile?);
+    //     print(" wwwwww ${event.imageFile!}");
+    //     emit(EditImageState(event.imageFile!));
+
+    //   } catch (e) {
+        
+    //   }
+    // });
+}
+}

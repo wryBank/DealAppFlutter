@@ -5,12 +5,15 @@ import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../model/usermodel.dart';
 
 
-abstract class EditProfileState {
+@immutable
+class EditProfileState  {
 }
+
 class InitialState extends EditProfileState{
 
 }
@@ -21,27 +24,18 @@ class EditingError extends EditProfileState{
   EditingError(this.message); 
 }
 class EditImageState extends EditProfileState{
-  final PlatformFile? imageFile;
-  EditImageState(this.imageFile);
+  final PlatformFile? imageFile2;
+  EditImageState(this.imageFile2);
 }
 class uploadingImageState extends EditProfileState{
   final String? url;
   uploadingImageState(this.url);
 }
 class EditingData extends EditProfileState {
-  // final String uid;
-  // EditingData(this.uid);
-  // final String username;
-  // final int gender;
-  // final String phonenumber;
-  // final String urlprofileimage;
-  // final String bio;
-  // final int dealcount;
-  // final int dealsucceed;
-  // final int ondeal;
-  // EditingData(this.uid, this.username, this.gender, this.phonenumber, this.urlprofileimage, this.bio, this.dealcount, this.dealsucceed, this.ondeal);
   UserModel userModel;
   EditingData({
     required this.userModel,
   });
+
 }
+

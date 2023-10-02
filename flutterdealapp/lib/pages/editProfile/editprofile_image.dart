@@ -18,6 +18,7 @@ import 'package:flutterdealapp/pages/register/bloc/register_blocs.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_event.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_state.dart';
 import 'package:flutterdealapp/pages/register/register_controller.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../values/color.dart';
 import '../common_widgets.dart';
@@ -58,60 +59,13 @@ class _EditProfileimageState extends State<EditProfileimage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _upLoadImage(context, "2", "title", "subtile",state.url.toString()),
-                        
-                    // Center(
-                    //   child: SizedBox(
-                    //     width: 250.w,
-                    //     height: 150.h,
-                    //     child: Image.asset(
-                    //       "assets/images/icon.png",
-                    //       fit: BoxFit.cover,
-                    //     ),
-                    //   ),
-                    // ),
-                    // Container(
-                    //   margin: EdgeInsets.only(top: 16.h),
-                    //   padding: EdgeInsets.only(left: 25.w, right: 25.w),
-                    //   child: Column(
-                    //       crossAxisAlignment: CrossAxisAlignment.start,
-                    //       // children: [
-                    //       //   reusableText("username"),
-                    //       //   SizedBox(
-                    //       //     height: 5.h,
-                    //       //   ),
-                    //       //   buildTextField2("Enter your username", "username",
-                    //       //       Icons.lock, _usernameController),
-                    //       //   reusableText("email"),
-                    //       //   buildTextField2("Enter email adress", "email",
-                    //       //       Icons.person, _phoneNumberController),
-                    //       // ]
-                    //       ),
-                    // ),
-                    // buildLoginButton("Next", () {
-                    //   userModel.username = _usernameController.text;
-                    //   userModel.phonenumber = _phoneNumberController.text;
-                    //   userModel.uid = uid!.uid;
-                    //   // SignInController(context: context).handleSignIn("email");
-                    //   // RegisterController(context:context).handleEmailRegister();
-                    //   // BlocProvider.of<EditProfileBloc>(context)
-                    //   //     .add(EditProfileEvent());
-                    //   BlocProvider.of<EditProfileBloc>(context) .add(Create(userModel:userModel));
-                    //   print("login button");
-                    //   print(userModel.uid.toString());
-                    //   print(userModel.username.toString());
-                    // }),
-                    // SizedBox(
-                    //   height: 20.h,
-                    // ),
-                    // Container(
-                    //   padding: EdgeInsets.only(left: 125.w, right: 25.w),
-                    // )
                   ],
                 ),
               ),
             )),
           );
-        } else {
+        } 
+        else {
           return Container(
             color: Colors.white,
             child: SafeArea(
@@ -122,7 +76,7 @@ class _EditProfileimageState extends State<EditProfileimage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _upLoadImage(context, "2", "title", "subtile", "path"),
+                    _upLoadImage(context, "2", "title", "subtile" ,"w"),
                   ],
                 ),
               ),
@@ -152,9 +106,12 @@ Widget _upLoadImage(BuildContext context, String buttonName, String title,
         height: 34.h,
       ),
       GestureDetector(
-        onTap: () {
+        onTap: () async {
           print("click");
           selectFile();
+        final ImagePicker _picker = ImagePicker();
+        if(_picker != null){
+        }
         },
         child: Stack(children: [
           CircleAvatar(
@@ -197,9 +154,8 @@ Widget _upLoadImage(BuildContext context, String buttonName, String title,
       ),
       GestureDetector(
         onTap: () {
-          selectFile();
-          BlocProvider.of<EditProfileBloc>(context)
-              .add(uploadingImageEvent(imageFile: pickedFile));
+    BlocProvider.of<EditProfileBloc>(context)
+        .add(UploadUrlImageEvent(url: imagePath));
         },
         child: Container(
           margin: EdgeInsets.only(top: 100.h, left: 25.w, right: 25.w),
@@ -223,6 +179,7 @@ Widget _upLoadImage(BuildContext context, String buttonName, String title,
                   fontSize: 16.sp,
                   fontWeight: FontWeight.normal),
             ),
+            
           ),
         ),
       )

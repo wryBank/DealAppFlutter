@@ -25,7 +25,6 @@ class SignInController {
         String emailAddress = state.email;
         String password = state.password;
         
-        userModel.username = 
         userModel.email = emailAddress;
         userModel.uid = FirebaseAuth.instance.currentUser?.uid;
         if (emailAddress.isEmpty) {
@@ -49,14 +48,25 @@ class SignInController {
           var user = credential.user;
           if (user != null && user.emailVerified) {
             // user verified from firebaske
-            if(user.emailVerified){
+            
+            if(await _ediitprofile_repo.checkUser(user.uid)){
               print("user login");
-              // userRepository.create(userModel);
-              _ediitprofile_repo.addData(userModel);
-              // Navigator.of(context).pushNamed("Application");
-              Navigator.of(context).pushNamed("editprofile");
-
+              Navigator.of(context).pushNamed("Application");
             }
+            else{
+              _ediitprofile_repo.addData(userModel);
+              Navigator.of(context).pushNamed("editprofile");
+            }
+
+            // if(user.emailVerified){
+            //   print("user login");
+            //   Navigator.of(context).pushNamed("Application");
+
+            // }
+            // else{
+            //   _ediitprofile_repo.addData(userModel);
+            //   Navigator.of(context).pushNamed("editprofile");
+            // }
           } else {
             toastInfo(msg: "you not user of this app");
             // error getting user from firebase

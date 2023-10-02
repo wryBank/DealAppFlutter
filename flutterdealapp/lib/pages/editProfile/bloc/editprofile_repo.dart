@@ -24,4 +24,12 @@ class editProfile_repo{
     print("inrepo uploadEditimage");
     await provider.EditImage(imageFile);
   }
+  Future<bool> checkUser(String uid) async{
+    print("inrepo checkuser");
+    return await provider.checkUser(uid);
+  }
+  Future<void> upLoadUrlImage(String url) async{
+    print("inrepo uploadurlimage");
+    await provider.uploadUrl(url);
+  }
 }
