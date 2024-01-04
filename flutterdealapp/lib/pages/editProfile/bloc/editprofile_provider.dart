@@ -132,6 +132,7 @@ class editProfile_provider {
       uploadTask = ref.putFile(file);
       final snapshot = await uploadTask.whenComplete(() {});
       urlDownload = await snapshot.ref.getDownloadURL();
+      uploadUrl(urlDownload);
       return urlDownload;
     } on FirebaseException catch (e) {
       if (kDebugMode) {
