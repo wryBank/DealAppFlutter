@@ -10,6 +10,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdealapp/model/usermodel.dart';
+import 'package:flutterdealapp/pages/UserBloc/bloc/user_bloc.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_bloc.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_provider.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_repo.dart';
@@ -21,6 +22,7 @@ import 'package:flutterdealapp/pages/register/register_controller.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../values/color.dart';
+import '../UserBloc/bloc/user_state.dart';
 import '../common_widgets.dart';
 import 'bloc/editprofile_event.dart';
 
@@ -68,22 +70,43 @@ class _EditProfileimageState extends State<EditProfileimage> {
         } 
         else {
           print("inelse");
-          return Container(
-            color: Colors.white,
-            child: SafeArea(
-                child: Scaffold(
-              backgroundColor: Colors.white,
-              appBar: buildAppBar("More information"),
-              body: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _showImageSelect(context, "2", "title", "subtile" ,"https://cdn.discordapp.com/attachments/1012028615061422112/1226527028124319804/image.png?ex=6625174f&is=6612a24f&hm=a492ffb3714be70a5c70f28602bf401b96e074335ff963b8027e93d70105edb9&"),
-                    
-                  ],
-                ),
-              ),
-            )),
+          return BlocBuilder<UserBloc,UserState>(
+            builder: (context,state) {
+              if (state is getProfileImageState) {
+                return Container(
+                  color: Colors.white,
+                  child: SafeArea(
+                      child: Scaffold(
+                    backgroundColor: Colors.white,
+                    appBar: buildAppBar("More information"),
+                    body: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _showImageSelect(context, "2", "title", "subtile" ,state.url!),
+                        ],
+                      ),
+                    ),
+                  )),
+                );
+              }
+              return Container(
+                color: Colors.white,
+                child: SafeArea(
+                    child: Scaffold(
+                  backgroundColor: Colors.white,
+                  appBar: buildAppBar("More information"),
+                  body: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // _showImageSelect(context, "2", "title", "subtile" ,state.),
+                      ],
+                    ),
+                  ),
+                )),
+              );
+            }
           );
         }
       },

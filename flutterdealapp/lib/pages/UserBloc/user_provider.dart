@@ -72,6 +72,7 @@ class user_provider {
     }
     return [];
   }
+
   // check user is exit or not
   Future<bool> checkUser(String id) async {
     try {
@@ -111,6 +112,7 @@ class user_provider {
       throw Exception(e.toString());
     }
   }
+
   // upload image firebase
   Future<String?> uploadImage(PlatformFile? pickedFile) async {
     print("inprovider uploadimage");
@@ -143,6 +145,7 @@ class user_provider {
     }
     return "";
   }
+
 // uploadUrl image to firebase doc
   Future<void> uploadUrl(String url) async {
     try {
@@ -152,4 +155,16 @@ class user_provider {
     }
   }
 
+// get userdata by uid
+Future<UserModel> getUserData(String uid) async {
+  try {
+    DocumentSnapshot documentSnapshot = await _fireCloud.doc(uid).get();
+    return UserModel.fromMap(documentSnapshot.data() as Map<String, dynamic>);
+  } on FirebaseException catch (e) {
+    if (kDebugMode) {
+      print("Failed with error '${e.code}': ${e.message}");
+    } 
+  }
+  throw Exception("Failed to get user data."); // Added throw statement
+}
 }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutterdealapp/pages/UserBloc/bloc/user_bloc.dart';
 import 'package:flutterdealapp/pages/UserBloc/user_provider.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_provider.dart';
 
@@ -32,5 +33,9 @@ class user_repo{
   Future<void> upLoadUrlImage(String url) async{
     print("inrepo uploadurlimage");
     await provider.uploadUrl(url);
+  }
+  Future<void> getUserData(String uid) async{
+    print("inrepo getdata");
+    await provider.getUserData(uid);
   }
 }
