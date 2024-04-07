@@ -33,6 +33,7 @@ class Create extends EditProfileEvent {
 // ignore: camel_case_types
 class uploadingImageEvent extends EditProfileEvent{
   PlatformFile? imageFile;
+  // uploadingImageEvent({required this.imageFile, required PlatformFile url});
   uploadingImageEvent({required this.imageFile});
 }
 class EditImageEvent extends EditProfileEvent{
@@ -42,4 +43,8 @@ class EditImageEvent extends EditProfileEvent{
 class UploadUrlImageEvent extends EditProfileEvent{
   String url;
   UploadUrlImageEvent({required this.url});
+}
+class showImageSelect extends EditProfileEvent{
+  PlatformFile? imageFile;
+  showImageSelect({required this.imageFile});
 }

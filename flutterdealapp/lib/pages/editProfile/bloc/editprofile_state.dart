@@ -27,6 +27,10 @@ class EditImageState extends EditProfileState{
   final PlatformFile? imageFile2;
   EditImageState(this.imageFile2);
 }
+class showImageSelectState extends EditProfileState{
+  final PlatformFile? imageFile;
+  showImageSelectState(this.imageFile);
+}
 class uploadingImageState extends EditProfileState{
   final String? url;
   uploadingImageState(this.url);

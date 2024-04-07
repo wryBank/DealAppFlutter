@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/src/platform_file.dart';
 import 'package:flutter/foundation.dart';
@@ -24,11 +26,22 @@ class EditProfileBloc extends Bloc<EditProfileEvent,EditProfileState>{
       try {
         print("in bloc uploadimage");
         print("wwwwaaaa${repository.uploadingImage(event.imageFile)}");
-        await repository.uploadingImage(event.imageFile);
+        // await repository.uploadingImage(event.imageFile);
         print(" wwwwww ${event.imageFile!.path}");
         String? url = await repository.provider.uploadImage(event.imageFile);
         print("url = ${url}");
         emit(uploadingImageState(url));
+
+      } catch (e) {
+      }
+    });
+    on<showImageSelect>((event, emit)async {
+      try {
+        print("in bloc uploadimage");
+        // print("wwwwaaaa${repository.uploadingImage(event.imageFile)}");
+        // await repository.uploadingImage(event.imageFile);
+        // print(" wwwwww ${event.imageFile!.path}");
+        emit(showImageSelectState(event.imageFile));
 
       } catch (e) {
         

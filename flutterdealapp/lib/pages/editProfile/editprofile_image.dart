@@ -46,7 +46,8 @@ class _EditProfileimageState extends State<EditProfileimage> {
         //     child: CircularProgressIndicator(),
         //   );
         // }
-        if (state is uploadingImageState) {
+        // if (state is uploadingImageState) {
+        if (state is showImageSelectState) {
           // print("url state =  ${state.imageFile.toString()}");
           return Container(
             color: Colors.white,
@@ -58,7 +59,7 @@ class _EditProfileimageState extends State<EditProfileimage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _upLoadImage(context, "2", "title", "subtile",state.url.toString()),
+                    _upLoadImage(context, "2", "title", "subtile",state.imageFile),
                   ],
                 ),
               ),
@@ -66,6 +67,7 @@ class _EditProfileimageState extends State<EditProfileimage> {
           );
         } 
         else {
+          print("inelse");
           return Container(
             color: Colors.white,
             child: SafeArea(
@@ -76,7 +78,8 @@ class _EditProfileimageState extends State<EditProfileimage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _upLoadImage(context, "2", "title", "subtile" ,"w"),
+                    _showImageSelect(context, "2", "title", "subtile" ,"https://cdn.discordapp.com/attachments/1012028615061422112/1226527028124319804/image.png?ex=6625174f&is=6612a24f&hm=a492ffb3714be70a5c70f28602bf401b96e074335ff963b8027e93d70105edb9&"),
+                    
                   ],
                 ),
               ),
@@ -89,17 +92,116 @@ class _EditProfileimageState extends State<EditProfileimage> {
 }
 
 Widget _upLoadImage(BuildContext context, String buttonName, String title,
+    // String subTitle, String imagePath) {
+    String subTitle, PlatformFile? imagePath) {
+          print("in return");
+  PlatformFile? pickedFile;
+  // String? filePath = pickedFile?.path;
+
+  Future selectFile() async {
+    // Uint8List img = await pickImage(ImageSource.gal)
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
+    pickedFile = result.files.first;
+    // BlocProvider.of<EditProfileBloc>(context)
+    //     .add(uploadingImageEvent(imageFile: pickedFile));
+    BlocProvider.of<EditProfileBloc>(context)
+        .add(showImageSelect(imageFile: pickedFile));
+  }
+  return Column(
+    children: [
+      SizedBox(
+        height: 34.h,
+      ),
+      GestureDetector(
+        onTap: () async {
+          print("click");
+          selectFile();
+        final ImagePicker _picker = ImagePicker();
+        if(_picker != null){
+        }
+        },
+        child: Stack(children: [
+          CircleAvatar(
+            radius: 90,
+            // backgroundImage: NetworkImage(imagePath),
+            backgroundImage: FileImage(File(imagePath!.path!)),
+            // backgroundImage: 
+            // AssetImage('assets/images/defaultProfile.png'),
+            backgroundColor: Colors.grey,
+          ),
+          
+        ]),
+      ),
+      Container(
+        child: Text(
+          title,
+          style: TextStyle(
+              color: Colors.black,
+              fontSize: 24.sp,
+              fontWeight: FontWeight.normal),
+        ),
+      ),
+      Container(
+        width: 375.w,
+        padding: EdgeInsets.only(left: 30.w, right: 30.w),
+        child: Text(
+          subTitle,
+          style: TextStyle(
+              color: Colors.black.withOpacity(0.5),
+              fontSize: 14.sp,
+              fontWeight: FontWeight.normal),
+        ),
+      ),
+      GestureDetector(
+        onTap: () {
+    BlocProvider.of<EditProfileBloc>(context)
+        .add(uploadingImageEvent(imageFile: imagePath));
+        },
+        child: Container(
+          margin: EdgeInsets.only(top: 100.h, left: 25.w, right: 25.w),
+          width: 325.w,
+          height: 50.h,
+          decoration: BoxDecoration(
+              color: AppColors.primaryButton,
+              borderRadius: BorderRadius.all(Radius.circular(15.w)),
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 1,
+                    blurRadius: 10,
+                    offset: Offset(0, 10))
+              ]),
+          child: Center(
+            child: Text(
+              "next",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.normal),
+            ),
+            
+          ),
+        ),
+      )
+    ],
+  );
+}
+
+Widget _showImageSelect(BuildContext context, String buttonName, String title,
     String subTitle, String imagePath) {
+    // String subTitle, PlatformFile? imagePath) {
   PlatformFile? pickedFile;
   Future selectFile() async {
     // Uint8List img = await pickImage(ImageSource.gal)
     final result = await FilePicker.platform.pickFiles();
     if (result == null) return;
     pickedFile = result.files.first;
+    // BlocProvider.of<EditProfileBloc>(context)
+    //     .add(uploadingImageEvent(imageFile: pickedFile));
     BlocProvider.of<EditProfileBloc>(context)
-        .add(uploadingImageEvent(imageFile: pickedFile));
+        .add(showImageSelect(imageFile: pickedFile));
   }
-
   return Column(
     children: [
       SizedBox(
@@ -124,14 +226,6 @@ Widget _upLoadImage(BuildContext context, String buttonName, String title,
           
         ]),
       ),
-      // SizedBox(
-      //   width: 345.w,
-      //   height: 345.w,
-      //   child: Image.asset(
-      //     imagePath,
-      //     fit: BoxFit.cover,
-      //   ),
-      // ),
       Container(
         child: Text(
           title,
@@ -154,8 +248,8 @@ Widget _upLoadImage(BuildContext context, String buttonName, String title,
       ),
       GestureDetector(
         onTap: () {
-    BlocProvider.of<EditProfileBloc>(context)
-        .add(UploadUrlImageEvent(url: imagePath));
+    // BlocProvider.of<EditProfileBloc>(context)
+    //     .add(UploadUrlImageEvent(url: imagePath));
         },
         child: Container(
           margin: EdgeInsets.only(top: 100.h, left: 25.w, right: 25.w),
