@@ -38,6 +38,7 @@ class _EditProfileimageState extends State<EditProfileimage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   UserModel userModel = UserModel();
+  String url1 = "https://cdn.discordapp.com/attachments/1155873224643592222/1226776671286202390/image.png?ex=6625ffce&is=66138ace&hm=02e25580d2564450be11c72201ee130b18007a57ccdd6a04367ab6c143f8a8da&";
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +73,9 @@ class _EditProfileimageState extends State<EditProfileimage> {
           print("inelse");
           return BlocBuilder<UserBloc,UserState>(
             builder: (context,state) {
+              
               if (state is getProfileImageState) {
+                url1 = state.url!;
                 return Container(
                   color: Colors.white,
                   child: SafeArea(
@@ -100,7 +103,7 @@ class _EditProfileimageState extends State<EditProfileimage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // _showImageSelect(context, "2", "title", "subtile" ,state.),
+                        _showImageSelect(context, "2", "title", "subtile" ,url1),
                       ],
                     ),
                   ),
