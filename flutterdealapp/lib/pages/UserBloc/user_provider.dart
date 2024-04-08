@@ -167,4 +167,5 @@ Future<UserModel> getUserData(String uid) async {
   }
   throw Exception("Failed to get user data."); // Added throw statement
 }
+
 }

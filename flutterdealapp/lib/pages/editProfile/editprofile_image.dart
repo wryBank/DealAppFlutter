@@ -5,12 +5,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdealapp/model/usermodel.dart';
 import 'package:flutterdealapp/pages/UserBloc/bloc/user_bloc.dart';
+import 'package:flutterdealapp/pages/UserBloc/user_provider.dart';
+import 'package:flutterdealapp/pages/UserBloc/user_repo.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_bloc.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_provider.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_repo.dart';
@@ -38,7 +41,25 @@ class _EditProfileimageState extends State<EditProfileimage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   UserModel userModel = UserModel();
-  String url1 = "https://cdn.discordapp.com/attachments/1155873224643592222/1226776671286202390/image.png?ex=6625ffce&is=66138ace&hm=02e25580d2564450be11c72201ee130b18007a57ccdd6a04367ab6c143f8a8da&";
+
+  String url1 = "";
+  user_repo userRepo = user_repo(provider: user_provider());
+  Future<UserModel> getUserData() async {
+    return await userRepo.provider
+        .getUserData(FirebaseAuth.instance.currentUser!.uid);
+  }
+
+  void getData() async {
+    userModel = await getUserData();
+    print(userModel);
+    url1 = userModel.urlprofileimage!.toString();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,37 +83,18 @@ class _EditProfileimageState extends State<EditProfileimage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _upLoadImage(context, "2", "title", "subtile",state.imageFile),
+                    _upLoadImage(context, "2", "username", "subtile",
+                        state.imageFile),
                   ],
                 ),
               ),
             )),
           );
-        } 
-        else {
+        } else {
           print("inelse");
-          return BlocBuilder<UserBloc,UserState>(
-            builder: (context,state) {
-              
-              if (state is getProfileImageState) {
-                url1 = state.url!;
-                return Container(
-                  color: Colors.white,
-                  child: SafeArea(
-                      child: Scaffold(
-                    backgroundColor: Colors.white,
-                    appBar: buildAppBar("More information"),
-                    body: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _showImageSelect(context, "2", "title", "subtile" ,state.url!),
-                        ],
-                      ),
-                    ),
-                  )),
-                );
-              }
+          return BlocBuilder<UserBloc, UserState>(builder: (context, state) {
+            if (state is getProfileImageState) {
+              url1 = state.url!;
               return Container(
                 color: Colors.white,
                 child: SafeArea(
@@ -103,24 +105,51 @@ class _EditProfileimageState extends State<EditProfileimage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _showImageSelect(context, "2", "title", "subtile" ,url1),
+                        _showImageSelect(context, "2", "username",
+                            "subtile", state.url!),
                       ],
                     ),
                   ),
                 )),
               );
             }
-          );
+            return Container(
+              color: Colors.white,
+              child: SafeArea(
+                  child: Scaffold(
+                backgroundColor: Colors.white,
+                appBar: buildAppBar("More information"),
+                body: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _showImageSelect(
+                        context,
+                        "2",
+                        "username",
+                        "subtile",
+                        url1,
+                      ),
+                    ],
+                  ),
+                ),
+              )),
+            );
+          });
         }
       },
     );
   }
 }
 
-Widget _upLoadImage(BuildContext context, String buttonName, String title,
+Widget _upLoadImage(
+    BuildContext context,
+    String buttonName,
+    String title,
     // String subTitle, String imagePath) {
-    String subTitle, PlatformFile? imagePath) {
-          print("in return");
+    String subTitle,
+    PlatformFile? imagePath) {
+  print("in return");
   PlatformFile? pickedFile;
   // String? filePath = pickedFile?.path;
 
@@ -134,6 +163,7 @@ Widget _upLoadImage(BuildContext context, String buttonName, String title,
     BlocProvider.of<EditProfileBloc>(context)
         .add(showImageSelect(imageFile: pickedFile));
   }
+
   return Column(
     children: [
       SizedBox(
@@ -143,20 +173,18 @@ Widget _upLoadImage(BuildContext context, String buttonName, String title,
         onTap: () async {
           print("click");
           selectFile();
-        final ImagePicker _picker = ImagePicker();
-        if(_picker != null){
-        }
+          final ImagePicker _picker = ImagePicker();
+          if (_picker != null) {}
         },
         child: Stack(children: [
           CircleAvatar(
             radius: 90,
             // backgroundImage: NetworkImage(imagePath),
             backgroundImage: FileImage(File(imagePath!.path!)),
-            // backgroundImage: 
+            // backgroundImage:
             // AssetImage('assets/images/defaultProfile.png'),
             backgroundColor: Colors.grey,
           ),
-          
         ]),
       ),
       Container(
@@ -181,8 +209,8 @@ Widget _upLoadImage(BuildContext context, String buttonName, String title,
       ),
       GestureDetector(
         onTap: () {
-    BlocProvider.of<EditProfileBloc>(context)
-        .add(uploadingImageEvent(imageFile: imagePath));
+          BlocProvider.of<EditProfileBloc>(context)
+              .add(uploadingImageEvent(imageFile: imagePath));
         },
         child: Container(
           margin: EdgeInsets.only(top: 100.h, left: 25.w, right: 25.w),
@@ -206,7 +234,6 @@ Widget _upLoadImage(BuildContext context, String buttonName, String title,
                   fontSize: 16.sp,
                   fontWeight: FontWeight.normal),
             ),
-            
           ),
         ),
       )
@@ -216,7 +243,7 @@ Widget _upLoadImage(BuildContext context, String buttonName, String title,
 
 Widget _showImageSelect(BuildContext context, String buttonName, String title,
     String subTitle, String imagePath) {
-    // String subTitle, PlatformFile? imagePath) {
+  // String subTitle, PlatformFile? imagePath) {
   PlatformFile? pickedFile;
   Future selectFile() async {
     // Uint8List img = await pickImage(ImageSource.gal)
@@ -228,6 +255,7 @@ Widget _showImageSelect(BuildContext context, String buttonName, String title,
     BlocProvider.of<EditProfileBloc>(context)
         .add(showImageSelect(imageFile: pickedFile));
   }
+
   return Column(
     children: [
       SizedBox(
@@ -237,19 +265,17 @@ Widget _showImageSelect(BuildContext context, String buttonName, String title,
         onTap: () async {
           print("click");
           selectFile();
-        final ImagePicker _picker = ImagePicker();
-        if(_picker != null){
-        }
+          final ImagePicker _picker = ImagePicker();
+          if (_picker != null) {}
         },
         child: Stack(children: [
           CircleAvatar(
             radius: 90,
             backgroundImage: NetworkImage(imagePath),
-            // backgroundImage: 
+            // backgroundImage:
             // AssetImage('assets/images/defaultProfile.png'),
             backgroundColor: Colors.grey,
           ),
-          
         ]),
       ),
       Container(
@@ -274,8 +300,8 @@ Widget _showImageSelect(BuildContext context, String buttonName, String title,
       ),
       GestureDetector(
         onTap: () {
-    // BlocProvider.of<EditProfileBloc>(context)
-    //     .add(UploadUrlImageEvent(url: imagePath));
+          // BlocProvider.of<EditProfileBloc>(context)
+          //     .add(UploadUrlImageEvent(url: imagePath));
         },
         child: Container(
           margin: EdgeInsets.only(top: 100.h, left: 25.w, right: 25.w),
@@ -299,7 +325,6 @@ Widget _showImageSelect(BuildContext context, String buttonName, String title,
                   fontSize: 16.sp,
                   fontWeight: FontWeight.normal),
             ),
-            
           ),
         ),
       )
