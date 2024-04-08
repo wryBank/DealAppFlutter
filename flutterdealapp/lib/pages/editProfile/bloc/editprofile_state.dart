@@ -24,8 +24,8 @@ class EditingError extends EditProfileState{
   EditingError(this.message); 
 }
 class EditImageState extends EditProfileState{
-  final PlatformFile? imageFile2;
-  EditImageState(this.imageFile2);
+  UserModel? userModel;
+  EditImageState(this.userModel);
 }
 class showImageSelectState extends EditProfileState{
   final PlatformFile? imageFile;

@@ -32,4 +32,8 @@ class editProfile_repo{
     print("inrepo uploadurlimage");
     await provider.uploadUrl(url);
   }
+  Future<void> getUserData(String uid) async{
+    print("inrepo getdata");
+    await provider.getUserData(uid);
+  }
 }

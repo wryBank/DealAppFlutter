@@ -11,6 +11,8 @@ import 'package:image_picker/image_picker.dart';
 @immutable
 abstract class EditProfileEvent  {
 }
+class InitialEvent extends EditProfileEvent{
+}
 class Create extends EditProfileEvent {
   // final String uid;
   // Create(this.uid);
@@ -37,8 +39,8 @@ class uploadingImageEvent extends EditProfileEvent{
   uploadingImageEvent({required this.imageFile});
 }
 class EditImageEvent extends EditProfileEvent{
-  PlatformFile? imageFile;
-  EditImageEvent({required this.imageFile});
+  String? uid ;
+  EditImageEvent({required this.uid});
 }
 class UploadUrlImageEvent extends EditProfileEvent{
   String url;

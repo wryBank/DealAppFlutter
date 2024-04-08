@@ -143,5 +143,17 @@ class editProfile_provider {
       throw Exception(e.toString());
     }
   }
+// get userdata by uid
+Future<UserModel> getUserData(String uid) async {
+  try {
+    DocumentSnapshot documentSnapshot = await _fireCloud.doc(uid).get();
+    return UserModel.fromMap(documentSnapshot.data() as Map<String, dynamic>);
+  } on FirebaseException catch (e) {
+    if (kDebugMode) {
+      print("Failed with error '${e.code}': ${e.message}");
+    } 
+  }
+  throw Exception("Failed to get user data."); // Added throw statement
+}
 
 }

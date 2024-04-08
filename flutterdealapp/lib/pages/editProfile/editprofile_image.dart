@@ -25,7 +25,6 @@ import 'package:flutterdealapp/pages/register/register_controller.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../values/color.dart';
-import '../UserBloc/bloc/user_state.dart';
 import '../common_widgets.dart';
 import 'bloc/editprofile_event.dart';
 
@@ -42,7 +41,8 @@ class _EditProfileimageState extends State<EditProfileimage> {
   final TextEditingController _phoneNumberController = TextEditingController();
   UserModel userModel = UserModel();
 
-  String url1 = "";
+  String url1 =
+      "https://cdn.discordapp.com/attachments/1155873224643592222/1226776671286202390/image.png?ex=6625ffce&is=66138ace&hm=02e25580d2564450be11c72201ee130b18007a57ccdd6a04367ab6c143f8a8da&";
   user_repo userRepo = user_repo(provider: user_provider());
   Future<UserModel> getUserData() async {
     return await userRepo.provider
@@ -57,7 +57,8 @@ class _EditProfileimageState extends State<EditProfileimage> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    // TODO: implement initStateeB
+    context.read<EditProfileBloc>().add(EditImageEvent(uid: FirebaseAuth.instance.currentUser!.uid));
     getData();
   }
 
@@ -65,13 +66,19 @@ class _EditProfileimageState extends State<EditProfileimage> {
   Widget build(BuildContext context) {
     return BlocBuilder<EditProfileBloc, EditProfileState>(
       builder: (context, state) {
-        // if(state is LoadingState || state is InitialState){
-        //   return const Center(
-        //     child: CircularProgressIndicator(),
-        //   );
-        // }
+        print("state1 = ${state.toString()}");
+        // context.read<EditProfileBloc>().add(EditImageEvent(userModel: userModel));
         // if (state is uploadingImageState) {
-        if (state is showImageSelectState) {
+        if(state is InitialState || state is LoadingState){
+          return Container(
+            child: Center(
+              child: CircularProgressIndicator(),
+            )
+            
+          );
+        }
+        if (state is EditImageState) {
+          // else {
           // print("url state =  ${state.imageFile.toString()}");
           return Container(
             color: Colors.white,
@@ -83,59 +90,61 @@ class _EditProfileimageState extends State<EditProfileimage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _upLoadImage(context, "2", "username", "subtile",
-                        state.imageFile),
+                    // _upLoadImage(context, "2", "a", "subtile",state.imageFile!),
+                    _showImageSelect(context, "2", state.userModel!.username!, state.userModel!.username!, state.userModel!.urlprofileimage!)
                   ],
                 ),
               ),
             )),
           );
-        } else {
+        }  
+        if(state is showImageSelectState)
+        {
           print("inelse");
-          return BlocBuilder<UserBloc, UserState>(builder: (context, state) {
-            if (state is getProfileImageState) {
-              url1 = state.url!;
-              return Container(
-                color: Colors.white,
-                child: SafeArea(
-                    child: Scaffold(
-                  backgroundColor: Colors.white,
-                  appBar: buildAppBar("More information"),
-                  body: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _showImageSelect(context, "2", "username",
-                            "subtile", state.url!),
-                      ],
-                    ),
-                  ),
-                )),
-              );
-            }
-            return Container(
-              color: Colors.white,
-              child: SafeArea(
-                  child: Scaffold(
-                backgroundColor: Colors.white,
-                appBar: buildAppBar("More information"),
-                body: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _showImageSelect(
-                        context,
-                        "2",
-                        "username",
-                        "subtile",
-                        url1,
-                      ),
-                    ],
-                  ),
+          return Container(
+            color: Colors.white,
+            child: SafeArea(
+                child: Scaffold(
+              backgroundColor: Colors.white,
+              appBar: buildAppBar("More information"),
+              body: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _upLoadImage(context, "2", userModel.username!, userModel.username!,state.imageFile!),
+                    // _showImageSelect(context, "2", "username", "subtile", ""),
+                  ],
                 ),
-              )),
-            );
-          });
+              ),
+            )),
+          );
+        }
+        // if(state is uploadingImageState){
+        //   return Container(
+        //     color: Colors.white,
+        //     child: SafeArea(
+        //         child: Scaffold(
+        //       backgroundColor: Colors.white,
+        //       appBar: buildAppBar("More information"),
+        //       body: SingleChildScrollView(
+        //         child: Column(
+        //           crossAxisAlignment: CrossAxisAlignment.start,
+        //           children: [
+        //             // _showImageSelect(context, "2", userModel.username!, userModel.username!,userModel.urlprofileimage!),
+        //             // _showImageSelect(context, "2", "username", "subtile", ""),
+        //           ],
+        //         ),
+        //       ),
+        //     )),
+        //   );
+
+        // }
+        else{
+          return Container(
+            child: Center(
+              child: CircularProgressIndicator(),
+            )
+          );
         }
       },
     );

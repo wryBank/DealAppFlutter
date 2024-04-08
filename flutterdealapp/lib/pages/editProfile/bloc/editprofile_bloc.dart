@@ -2,73 +2,56 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/src/platform_file.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_event.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_repo.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_state.dart';
 
-class EditProfileBloc extends Bloc<EditProfileEvent,EditProfileState>{
+import '../../../model/usermodel.dart';
+
+class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
   final editProfile_repo repository;
-  EditProfileBloc(this.repository) : super(EditProfileState()){
-    on<Create>(((event, emit)async {
-        print("inbloc");
+  EditProfileBloc(this.repository) : super(InitialState()) {
+    on<InitialEvent>((event, emit) {
+      // Potentially perform initial logic here (empty for now)
+    }); // Add this handler
+    on<EditImageEvent>((event, emit) async {
+      emit(LoadingState());
+      await Future.delayed(const Duration(seconds: 1));
       try {
-        print("inbloc");
-        print("eventusermodel = ${event.userModel}");
-        await  repository.editProfile(event.userModel);
-        // emit(EditingData());
-      } catch (e) {
-        
-      }
-    }));
-    on<uploadingImageEvent>((event, emit)async {
+        print("in editimageevent");
+        print("uiddddd = ${event.uid}");
+        repository.getUserData(event.uid!);
+        UserModel userModel = await repository.provider.getUserData(event.uid!);
+        print("usermodel naja $userModel");
+        emit(EditImageState(userModel));
+        // return;
+      } catch (e) {}
+    });
+
+    on<uploadingImageEvent>((event, emit) async {
+      emit(LoadingState());
       try {
         print("in bloc uploadimage");
         print("wwwwaaaa${repository.uploadingImage(event.imageFile)}");
-        // await repository.uploadingImage(event.imageFile);
         print(" wwwwww ${event.imageFile!.path}");
         String? url = await repository.provider.uploadImage(event.imageFile);
         print("url = ${url}");
-        emit(uploadingImageState(url));
-
-      } catch (e) {
-      }
+        // emit(EditProfileState());
+        // emit(uploadingImageState(url));
+      } catch (e) {}
     });
-    on<showImageSelect>((event, emit)async {
+    on<showImageSelect>((event, emit) async {
+      emit(LoadingState());
       try {
         print("in bloc uploadimage");
         // print("wwwwaaaa${repository.uploadingImage(event.imageFile)}");
         // await repository.uploadingImage(event.imageFile);
         // print(" wwwwww ${event.imageFile!.path}");
         emit(showImageSelectState(event.imageFile));
-
-      } catch (e) {
-        
-      }
+      } catch (e) {}
     });
-    on<UploadUrlImageEvent>((event, emit)async {
-      try {
-        print("in bloc uploadimage");
-        print("wwwwaaaa${repository.upLoadUrlImage(event.url)}");
-        await repository.upLoadUrlImage(event.url);
-        print(" wwwwww ${event.url}");
-
-      } catch (e) {
-        
-      }
-    });
-    // on<EditImageEvent>((event, emit)async {
-    //   try {
-    //     print("in bloc uploadimage");
-    //     print("wwwwaaaa${repository.EditImage(event.imageFile as PlatformFile?)}");
-    //     await repository.EditImage(event.imageFile as PlatformFile?);
-    //     print(" wwwwww ${event.imageFile!}");
-    //     emit(EditImageState(event.imageFile!));
-
-    //   } catch (e) {
-        
-    //   }
-    // });
-}
+  }
 }
