@@ -1,9 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutterdealapp/model/usermodel.dart';
+import 'package:image_picker/image_picker.dart';
 
 @immutable
 abstract class EditProfileEvent  {
@@ -30,9 +33,18 @@ class Create extends EditProfileEvent {
 // ignore: camel_case_types
 class uploadingImageEvent extends EditProfileEvent{
   PlatformFile? imageFile;
+  // uploadingImageEvent({required this.imageFile, required PlatformFile url});
   uploadingImageEvent({required this.imageFile});
 }
 class EditImageEvent extends EditProfileEvent{
-  String? imageFile;
+  PlatformFile? imageFile;
   EditImageEvent({required this.imageFile});
+}
+class UploadUrlImageEvent extends EditProfileEvent{
+  String url;
+  UploadUrlImageEvent({required this.url});
+}
+class showImageSelect extends EditProfileEvent{
+  PlatformFile? imageFile;
+  showImageSelect({required this.imageFile});
 }

@@ -1,13 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutterdealapp/pages/UserBloc/bloc/user_bloc.dart';
+import 'package:flutterdealapp/pages/UserBloc/user_provider.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_provider.dart';
 
 import '../../../model/usermodel.dart';
 
-class editProfile_repo{
-  final editProfile_provider provider;
-  editProfile_repo({required this.provider});
+class user_repo{
+  final user_provider provider;
+  user_repo({required this.provider});
 
   Future<void> editProfile(UserModel userModel) async{
       print("inrepo");
@@ -31,5 +33,9 @@ class editProfile_repo{
   Future<void> upLoadUrlImage(String url) async{
     print("inrepo uploadurlimage");
     await provider.uploadUrl(url);
+  }
+  Future<void> getUserData(String uid) async{
+    print("inrepo getdata");
+    await provider.getUserData(uid);
   }
 }

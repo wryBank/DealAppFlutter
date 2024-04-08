@@ -72,12 +72,9 @@ class _EditProfileState extends State<EditProfile> {
                   buildLoginButton("Next", () {
                     userModel.username = _usernameController.text;
                     userModel.phonenumber = _phoneNumberController.text;
+                    userModel.email = uid!.email;
                     userModel.uid = uid!.uid;
-                    // SignInController(context: context).handleSignIn("email");
-                    // RegisterController(context:context).handleEmailRegister();
-                    // BlocProvider.of<EditProfileBloc>(context)
-                    //     .add(EditProfileEvent());
-                    BlocProvider.of<EditProfileBloc>(context) .add(Create(userModel:userModel));
+                    BlocProvider.of<EditProfileBloc>(context).add(Create(userModel: userModel));
                     
               Navigator.of(context).pushNamedAndRemoveUntil("editprofileImage", (route) => false);
                     print("login button");

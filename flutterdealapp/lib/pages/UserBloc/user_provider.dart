@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 
 import '../../../model/usermodel.dart';
 
-class editProfile_provider {
+class user_provider {
   final _fireCloud = FirebaseFirestore.instance.collection("users");
   final _firefirestore = FirebaseFirestore.instance;
   final _firestore = FirebaseStorage.instance;
@@ -72,6 +72,7 @@ class editProfile_provider {
     }
     return [];
   }
+
   // check user is exit or not
   Future<bool> checkUser(String id) async {
     try {
@@ -111,6 +112,7 @@ class editProfile_provider {
       throw Exception(e.toString());
     }
   }
+
   // upload image firebase
   Future<String?> uploadImage(PlatformFile? pickedFile) async {
     print("inprovider uploadimage");
@@ -118,6 +120,14 @@ class editProfile_provider {
     String urlDownload = '';
     try {
       print("intry");
+      // pickedFile = (await FilePicker.platform.pickFiles(type: FileType.image)) as PlatformFile?;
+      // // if(pickedFile != null){
+      //   String? fileName = pickedFile?.name;
+      //   String? filePath = pickedFile?.path;
+      //   String? result = await _firestore.ref().child("images/$fileName").putFile(Uri.parse(filePath!) as File).then((value) => value.ref.getDownloadURL());
+      //   print("${result} result");
+      //   return result;
+      // // }
       final path = 'files/${pickedFile?.name}';
       final file = File(pickedFile!.path!);
       final ref = FirebaseStorage.instance.ref().child(path);
@@ -135,6 +145,7 @@ class editProfile_provider {
     }
     return "";
   }
+
 // uploadUrl image to firebase doc
   Future<void> uploadUrl(String url) async {
     try {
@@ -144,4 +155,16 @@ class editProfile_provider {
     }
   }
 
+// get userdata by uid
+Future<UserModel> getUserData(String uid) async {
+  try {
+    DocumentSnapshot documentSnapshot = await _fireCloud.doc(uid).get();
+    return UserModel.fromMap(documentSnapshot.data() as Map<String, dynamic>);
+  } on FirebaseException catch (e) {
+    if (kDebugMode) {
+      print("Failed with error '${e.code}': ${e.message}");
+    } 
+  }
+  throw Exception("Failed to get user data."); // Added throw statement
+}
 }
