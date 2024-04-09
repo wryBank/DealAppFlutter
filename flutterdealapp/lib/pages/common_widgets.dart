@@ -2,6 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdealapp/values/color.dart';
 
+
+AppBar buildAppBarEditProfile(String type){
+  return AppBar(
+    automaticallyImplyLeading: false,
+    
+    leading: IconButton(
+      icon: Icon(Icons.cancel_sharp),
+      onPressed: (){},
+    ),
+    actions: [
+      IconButton(
+        icon: Icon(Icons.check),
+        onPressed: (){},
+      )
+    ],
+    bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(1.0),
+        child: Container(
+          color: Colors.grey.withOpacity(0.5),
+          height: 1.0,
+        )),
+    title: Text(
+      type,
+      style: TextStyle(
+          color: Colors.black, fontSize: 16.sp, fontWeight: FontWeight.normal),
+    ),
+  );
+
+}
+
 AppBar buildAppBar(String type) {
   return AppBar(
     bottom: PreferredSize(

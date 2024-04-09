@@ -40,27 +40,13 @@ class _EditProfileimageState extends State<EditProfileimage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   UserModel userModel = UserModel();
-
-  String url1 =
-      "https://cdn.discordapp.com/attachments/1155873224643592222/1226776671286202390/image.png?ex=6625ffce&is=66138ace&hm=02e25580d2564450be11c72201ee130b18007a57ccdd6a04367ab6c143f8a8da&";
-  user_repo userRepo = user_repo(provider: user_provider());
-  Future<UserModel> getUserData() async {
-    return await userRepo.provider
-        .getUserData(FirebaseAuth.instance.currentUser!.uid);
-  }
-
-  void getData() async {
-    userModel = await getUserData();
-    print(userModel);
-    url1 = userModel.urlprofileimage!.toString();
-  }
-
+  
   @override
   void initState() {
     // TODO: implement initStateeB
     context.read<EditProfileBloc>().add(EditImageEvent(uid: FirebaseAuth.instance.currentUser!.uid));
-    getData();
   }
+  late PlatformFile dumpFile;
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +71,7 @@ class _EditProfileimageState extends State<EditProfileimage> {
             child: SafeArea(
                 child: Scaffold(
               backgroundColor: Colors.white,
-              appBar: buildAppBar("More information"),
+              appBar: buildAppBarEditProfile("EditProfile"),
               body: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,9 +127,21 @@ class _EditProfileimageState extends State<EditProfileimage> {
         // }
         else{
           return Container(
-            child: Center(
-              child: CircularProgressIndicator(),
-            )
+            color: Colors.white,
+            child: SafeArea(
+                child: Scaffold(
+              backgroundColor: Colors.white,
+              appBar: buildAppBar("More information"),
+              body: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // _upLoadImage(context, "2", userModel.username!, userModel.username!,state.imageFile!),
+                    _showImageSelect(context, "2", "username", "subtile", ""),
+                  ],
+                ),
+              ),
+            )),
           );
         }
       },
@@ -163,6 +161,8 @@ Widget _upLoadImage(
   // String? filePath = pickedFile?.path;
 
   Future selectFile() async {
+    
+    
     // Uint8List img = await pickImage(ImageSource.gal)
     final result = await FilePicker.platform.pickFiles();
     if (result == null) return;
