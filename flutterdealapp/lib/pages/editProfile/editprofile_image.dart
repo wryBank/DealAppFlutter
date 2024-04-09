@@ -40,12 +40,28 @@ class _EditProfileimageState extends State<EditProfileimage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   UserModel userModel = UserModel();
-  
+  String url1 = "";
+  // user_repo userRepo = user_repo(provider: user_provider());
+  // Future<UserModel> getUserData() async {
+  //   return await userRepo.provider
+  //       .getUserData(FirebaseAuth.instance.currentUser!.uid);
+  // }
+
+  // void getData() async {
+  //   userModel = await getUserData();
+  //   print(userModel);
+  //   url1 = userModel.urlprofileimage!.toString();
+  // }
+
   @override
   void initState() {
     // TODO: implement initStateeB
-    context.read<EditProfileBloc>().add(EditImageEvent(uid: FirebaseAuth.instance.currentUser!.uid));
+    context
+        .read<EditProfileBloc>()
+        .add(EditImageEvent(uid: FirebaseAuth.instance.currentUser!.uid));
+    // getData();
   }
+
   late PlatformFile dumpFile;
 
   @override
@@ -55,13 +71,11 @@ class _EditProfileimageState extends State<EditProfileimage> {
         print("state1 = ${state.toString()}");
         // context.read<EditProfileBloc>().add(EditImageEvent(userModel: userModel));
         // if (state is uploadingImageState) {
-        if(state is InitialState || state is LoadingState){
+        if (state is InitialState || state is LoadingState) {
           return Container(
-            child: Center(
-              child: CircularProgressIndicator(),
-            )
-            
-          );
+              child: Center(
+            child: CircularProgressIndicator(),
+          ));
         }
         if (state is EditImageState) {
           // else {
@@ -71,61 +85,44 @@ class _EditProfileimageState extends State<EditProfileimage> {
             child: SafeArea(
                 child: Scaffold(
               backgroundColor: Colors.white,
-              appBar: buildAppBarEditProfile("EditProfile"),
+              appBar: buildAppBar("EditProfile"),
               body: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // _upLoadImage(context, "2", "a", "subtile",state.imageFile!),
-                    _showImageSelect(context, "2", state.userModel!.username!, state.userModel!.username!, state.userModel!.urlprofileimage!)
-                  ],
-                ),
-              ),
-            )),
-          );
-        }  
-        if(state is showImageSelectState)
-        {
-          print("inelse");
-          return Container(
-            color: Colors.white,
-            child: SafeArea(
-                child: Scaffold(
-              backgroundColor: Colors.white,
-              appBar: buildAppBar("More information"),
-              body: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _upLoadImage(context, "2", userModel.username!, userModel.username!,state.imageFile!),
-                    // _showImageSelect(context, "2", "username", "subtile", ""),
+                    _showImageSelect(
+                        context,
+                        "2",
+                        state.userModel!.username!,
+                        state.userModel!.username!,
+                        state.userModel!.urlprofileimage!)
                   ],
                 ),
               ),
             )),
           );
         }
-        // if(state is uploadingImageState){
-        //   return Container(
-        //     color: Colors.white,
-        //     child: SafeArea(
-        //         child: Scaffold(
-        //       backgroundColor: Colors.white,
-        //       appBar: buildAppBar("More information"),
-        //       body: SingleChildScrollView(
-        //         child: Column(
-        //           crossAxisAlignment: CrossAxisAlignment.start,
-        //           children: [
-        //             // _showImageSelect(context, "2", userModel.username!, userModel.username!,userModel.urlprofileimage!),
-        //             // _showImageSelect(context, "2", "username", "subtile", ""),
-        //           ],
-        //         ),
-        //       ),
-        //     )),
-        //   );
-
-        // }
-        else{
+        if (state is showImageSelectState) {
+          print("inelse");
+          return Container(
+            color: Colors.white,
+            child: SafeArea(
+                child: Scaffold(
+              backgroundColor: Colors.white,
+              appBar: buildAppBarEditProfile(context,"More information",state.imageFile!),
+              body: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _upLoadImage(context, "2", "", "", state.imageFile!),
+                    // _showImageSelect(context, "2", "username", "subtile", ""),
+                  ],
+                ),
+              ),
+            )),
+          );
+        } else {
           return Container(
             color: Colors.white,
             child: SafeArea(
@@ -161,8 +158,6 @@ Widget _upLoadImage(
   // String? filePath = pickedFile?.path;
 
   Future selectFile() async {
-    
-    
     // Uint8List img = await pickImage(ImageSource.gal)
     final result = await FilePicker.platform.pickFiles();
     if (result == null) return;
@@ -186,66 +181,65 @@ Widget _upLoadImage(
           if (_picker != null) {}
         },
         child: Stack(children: [
-          CircleAvatar(
-            radius: 90,
-            // backgroundImage: NetworkImage(imagePath),
-            backgroundImage: FileImage(File(imagePath!.path!)),
-            // backgroundImage:
-            // AssetImage('assets/images/defaultProfile.png'),
-            backgroundColor: Colors.grey,
+          Center(
+            child: CircleAvatar(
+              radius: 90,
+              backgroundImage: FileImage(File(imagePath!.path!)),
+              backgroundColor: Colors.grey,
+            ),
           ),
         ]),
       ),
-      Container(
-        child: Text(
-          title,
-          style: TextStyle(
-              color: Colors.black,
-              fontSize: 24.sp,
-              fontWeight: FontWeight.normal),
-        ),
-      ),
-      Container(
-        width: 375.w,
-        padding: EdgeInsets.only(left: 30.w, right: 30.w),
-        child: Text(
-          subTitle,
-          style: TextStyle(
-              color: Colors.black.withOpacity(0.5),
-              fontSize: 14.sp,
-              fontWeight: FontWeight.normal),
-        ),
-      ),
-      GestureDetector(
-        onTap: () {
-          BlocProvider.of<EditProfileBloc>(context)
-              .add(uploadingImageEvent(imageFile: imagePath));
-        },
-        child: Container(
-          margin: EdgeInsets.only(top: 100.h, left: 25.w, right: 25.w),
-          width: 325.w,
-          height: 50.h,
-          decoration: BoxDecoration(
-              color: AppColors.primaryButton,
-              borderRadius: BorderRadius.all(Radius.circular(15.w)),
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 1,
-                    blurRadius: 10,
-                    offset: Offset(0, 10))
-              ]),
-          child: Center(
-            child: Text(
-              "next",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.normal),
-            ),
-          ),
-        ),
-      )
+      // Container(
+      //   child: Text(
+      //     title,
+      //     style: TextStyle(
+      //         color: Colors.black,
+      //         fontSize: 24.sp,
+      //         fontWeight: FontWeight.normal),
+      //   ),
+      // ),
+      // Container(
+      //   width: 375.w,
+      //   padding: EdgeInsets.only(left: 30.w, right: 30.w),
+      //   child: Text(
+      //     subTitle,
+      //     style: TextStyle(
+      //         color: Colors.black.withOpacity(0.5),
+      //         fontSize: 14.sp,
+      //         fontWeight: FontWeight.normal),
+      //   ),
+      // ),
+      // GestureDetector(
+      //   onTap: () {
+      //     BlocProvider.of<EditProfileBloc>(context)
+      //         .add(uploadingImageEvent(imageFile: imagePath));
+      //   },
+      //   child: Container(
+      //     margin: EdgeInsets.only(top: 100.h, left: 25.w, right: 25.w),
+      //     width: 325.w,
+      //     height: 50.h,
+      //     decoration: BoxDecoration(
+      //         color: AppColors.primaryButton,
+      //         borderRadius: BorderRadius.all(Radius.circular(15.w)),
+      //         boxShadow: [
+      //           BoxShadow(
+      //               color: Colors.grey.withOpacity(0.5),
+      //               spreadRadius: 1,
+      //               blurRadius: 10,
+      //               offset: Offset(0, 10))
+      //         ]),
+      //     child: Center(
+      //       child: Text(
+      //         "next",
+      //         style: TextStyle(
+      //             color: Colors.white,
+      //             fontSize: 16.sp,
+      //             fontWeight: FontWeight.normal),
+      //       ),
+      //     ),
+      //   ),
+      // )
     ],
   );
 }
@@ -278,65 +272,99 @@ Widget _showImageSelect(BuildContext context, String buttonName, String title,
           if (_picker != null) {}
         },
         child: Stack(children: [
-          CircleAvatar(
-            radius: 90,
-            backgroundImage: NetworkImage(imagePath),
-            // backgroundImage:
-            // AssetImage('assets/images/defaultProfile.png'),
-            backgroundColor: Colors.grey,
+          Center(
+            child: CircleAvatar(
+              radius: 90,
+              backgroundImage: NetworkImage(imagePath),
+              // backgroundImage:
+              // AssetImage('assets/images/defaultProfile.png'),
+              backgroundColor: Colors.grey,
+            ),
           ),
         ]),
       ),
-      Container(
-        child: Text(
-          title,
-          style: TextStyle(
-              color: Colors.black,
-              fontSize: 24.sp,
-              fontWeight: FontWeight.normal),
-        ),
-      ),
-      Container(
-        width: 375.w,
-        padding: EdgeInsets.only(left: 30.w, right: 30.w),
-        child: Text(
-          subTitle,
-          style: TextStyle(
-              color: Colors.black.withOpacity(0.5),
-              fontSize: 14.sp,
-              fontWeight: FontWeight.normal),
-        ),
-      ),
-      GestureDetector(
-        onTap: () {
-          // BlocProvider.of<EditProfileBloc>(context)
-          //     .add(UploadUrlImageEvent(url: imagePath));
+      // Container(
+      //   child: Text(
+      //     title,
+      //     style: TextStyle(
+      //         color: Colors.black,
+      //         fontSize: 24.sp,
+      //         fontWeight: FontWeight.normal),
+      //   ),
+      // ),
+      // Container(
+      //   width: 375.w,
+      //   padding: EdgeInsets.only(left: 30.w, right: 30.w),
+      //   child: Text(
+      //     subTitle,
+      //     style: TextStyle(
+      //         color: Colors.black.withOpacity(0.5),
+      //         fontSize: 14.sp,
+      //         fontWeight: FontWeight.normal),
+      //   ),
+      // ),
+      // GestureDetector(
+      //   onTap: () {
+      //     // BlocProvider.of<EditProfileBloc>(context)
+      //     //     .add(UploadUrlImageEvent(url: imagePath));
+      //   },
+      //   child: Container(
+      //     margin: EdgeInsets.only(top: 100.h, left: 25.w, right: 25.w),
+      //     width: 325.w,
+      //     height: 50.h,
+      //     decoration: BoxDecoration(
+      //         color: AppColors.primaryButton,
+      //         borderRadius: BorderRadius.all(Radius.circular(15.w)),
+      //         boxShadow: [
+      //           BoxShadow(
+      //               color: Colors.grey.withOpacity(0.5),
+      //               spreadRadius: 1,
+      //               blurRadius: 10,
+      //               offset: Offset(0, 10))
+      //         ]),
+      //     child: Center(
+      //       child: Text(
+      //         "next",
+      //         style: TextStyle(
+      //             color: Colors.white,
+      //             fontSize: 16.sp,
+      //             fontWeight: FontWeight.normal),
+      //       ),
+      //     ),
+      //   ),
+      // )
+    ],
+  );
+}
+
+AppBar buildAppBarEditProfile(context,
+  String type,PlatformFile imagePath
+) {
+  return AppBar(
+    automaticallyImplyLeading: false,
+    leading: IconButton(
+      icon: Icon(Icons.cancel_sharp),
+      onPressed: () {},
+    ),
+    actions: [
+      IconButton(
+        icon: Icon(Icons.check),
+        onPressed: () {
+          BlocProvider.of<EditProfileBloc>(context)
+              .add(uploadingImageEvent(imageFile: imagePath));
         },
-        child: Container(
-          margin: EdgeInsets.only(top: 100.h, left: 25.w, right: 25.w),
-          width: 325.w,
-          height: 50.h,
-          decoration: BoxDecoration(
-              color: AppColors.primaryButton,
-              borderRadius: BorderRadius.all(Radius.circular(15.w)),
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 1,
-                    blurRadius: 10,
-                    offset: Offset(0, 10))
-              ]),
-          child: Center(
-            child: Text(
-              "next",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.normal),
-            ),
-          ),
-        ),
       )
     ],
+    bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(1.0),
+        child: Container(
+          color: Colors.grey.withOpacity(0.5),
+          height: 1.0,
+        )),
+    title: Text(
+      type,
+      style: TextStyle(
+          color: Colors.black, fontSize: 16.sp, fontWeight: FontWeight.normal),
+    ),
   );
 }
