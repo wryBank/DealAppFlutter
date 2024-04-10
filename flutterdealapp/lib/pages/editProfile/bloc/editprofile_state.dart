@@ -42,4 +42,5 @@ class EditingData extends EditProfileState {
   });
 
 }
-
+class doneUploadState extends EditProfileState {
+}

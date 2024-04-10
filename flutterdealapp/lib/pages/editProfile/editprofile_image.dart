@@ -14,6 +14,7 @@ import 'package:flutterdealapp/model/usermodel.dart';
 import 'package:flutterdealapp/pages/UserBloc/bloc/user_bloc.dart';
 import 'package:flutterdealapp/pages/UserBloc/user_provider.dart';
 import 'package:flutterdealapp/pages/UserBloc/user_repo.dart';
+import 'package:flutterdealapp/pages/application/application_page.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_bloc.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_provider.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_repo.dart';
@@ -56,10 +57,11 @@ class _EditProfileimageState extends State<EditProfileimage> {
   @override
   void initState() {
     // TODO: implement initStateeB
-    context.read<EditProfileBloc>() .add(EditImageEvent(uid: FirebaseAuth.instance.currentUser!.uid));
+    context
+        .read<EditProfileBloc>()
+        .add(EditImageEvent(uid: FirebaseAuth.instance.currentUser!.uid));
     // getData();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -120,25 +122,39 @@ class _EditProfileimageState extends State<EditProfileimage> {
               ),
             )),
           );
-        } else {
-          return Container(
-            color: Colors.white,
-            child: SafeArea(
-                child: Scaffold(
-              backgroundColor: Colors.white,
-              appBar: buildAppBar("More information"),
-              body: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // _upLoadImage(context, "2", userModel.username!, userModel.username!,state.imageFile!),
-                    _showImageSelect(context, "2", "username", "subtile", ""),
-                  ],
-                ),
-              ),
-            )),
-          );
         }
+        if (state is doneUploadState) {
+          print("done");
+          // Navigator.of(context).pushNamed("profile");
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.of(context).pushNamedAndRemoveUntil("Application", (route) => false);
+          });
+          // Navigator.push(context, MaterialPageRoute(builder: (context) => ApplicationPage()));
+        }
+        return Container(
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+        //   else {
+        //     return Container(
+        //       color: Colors.white,
+        //       child: SafeArea(
+        //           child: Scaffold(
+        //         backgroundColor: Colors.white,
+        //         appBar: buildAppBar("More information"),
+        //         body: SingleChildScrollView(
+        //           child: Column(
+        //             crossAxisAlignment: CrossAxisAlignment.start,
+        //             children: [
+        //               // _upLoadImage(context, "2", userModel.username!, userModel.username!,state.imageFile!),
+        //               _showImageSelect(context, "2", "username", "subtile", ""),
+        //             ],
+        //           ),
+        //         ),
+        //       )),
+        //     );
+        //   }
       },
     );
   }
@@ -207,6 +223,7 @@ Widget _upLoadImage(
           )),
         ),
       )
+
       // Container(
       //   child: Text(
       //     title,

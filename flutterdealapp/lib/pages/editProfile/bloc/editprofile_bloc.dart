@@ -39,6 +39,7 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
         print(" wwwwww ${event.imageFile!.path}");
         String? url = await repository.provider.uploadImage(event.imageFile);
         print("url = ${url}");
+        emit(doneUploadState());
         // emit(EditProfileState());
         // emit(uploadingImageState(url));
       } catch (e) {}

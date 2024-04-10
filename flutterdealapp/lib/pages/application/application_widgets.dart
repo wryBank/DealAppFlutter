@@ -5,8 +5,8 @@ import 'package:flutterdealapp/pages/Profile/profile.dart';
 Widget buildPage(int index){
   List<Widget> _widgets = [
     Center(child: Text("home"),),
-    ProfilePage(),
     EditProfileimage(),
+    ProfilePage(),
     Center(child: Text("home"),),
     Center(child: Text("home"),),
     

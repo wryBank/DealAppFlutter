@@ -227,11 +227,13 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       child: Builder(
                         builder: (context) {
-                          return ListTile(
-                            title: Text("test"),
-                            subtitle: Text("test"),
-                            leading: Icon(Icons.person),
-                            trailing: Icon(Icons.edit),
+                          return Material(
+                            child: ListTile(
+                              title: Text("test"),
+                              subtitle: Text("test"),
+                              leading: Icon(Icons.person),
+                              trailing: Icon(Icons.edit),
+                            ),
                           );
                         }
                       ),
