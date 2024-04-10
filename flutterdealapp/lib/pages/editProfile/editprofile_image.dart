@@ -190,6 +190,22 @@ Widget _upLoadImage(
           ),
         ]),
       ),
+          GestureDetector(
+            onTap: () async {
+          print("click");
+          selectFile();
+          final ImagePicker _picker = ImagePicker();
+          if (_picker != null) {}
+              print("tap tap");
+            },
+            child: Container(
+              child: Center(
+                child: 
+                Text("แก้ไขรูปภาพ",style: TextStyle(color: Color.fromARGB(255, 0, 128, 255),fontSize: 24.sp,fontWeight: FontWeight.normal),
+                )
+              ),
+            ),
+          )
       // Container(
       //   child: Text(
       //     title,
@@ -283,6 +299,22 @@ Widget _showImageSelect(BuildContext context, String buttonName, String title,
           ),
         ]),
       ),
+          GestureDetector(
+            onTap: () async {
+          print("click");
+          selectFile();
+          final ImagePicker _picker = ImagePicker();
+          if (_picker != null) {}
+              print("tap tap");
+            },
+            child: Container(
+              child: Center(
+                child: 
+                Text("แก้ไขรูปภาพ",style: TextStyle(color: Color.fromARGB(255, 0, 128, 255),fontSize: 24.sp,fontWeight: FontWeight.normal),
+                )
+              ),
+            ),
+          )
       // Container(
       //   child: Text(
       //     title,

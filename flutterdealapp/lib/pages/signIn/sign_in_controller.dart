@@ -5,7 +5,6 @@ import 'package:flutterdealapp/model/usermodel.dart';
 import 'package:flutterdealapp/pages/UserBloc/user_provider.dart';
 import 'package:flutterdealapp/pages/UserBloc/user_repo.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_repo.dart';
-import 'package:flutterdealapp/pages/editProfile/editprofile.dart';
 import 'package:flutterdealapp/pages/signIn/bloc/signin_blocs.dart';
 import 'package:flutterdealapp/widgets/flutter_toast.dart';
 
