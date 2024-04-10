@@ -56,13 +56,10 @@ class _EditProfileimageState extends State<EditProfileimage> {
   @override
   void initState() {
     // TODO: implement initStateeB
-    context
-        .read<EditProfileBloc>()
-        .add(EditImageEvent(uid: FirebaseAuth.instance.currentUser!.uid));
+    context.read<EditProfileBloc>() .add(EditImageEvent(uid: FirebaseAuth.instance.currentUser!.uid));
     // getData();
   }
 
-  late PlatformFile dumpFile;
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +107,8 @@ class _EditProfileimageState extends State<EditProfileimage> {
             child: SafeArea(
                 child: Scaffold(
               backgroundColor: Colors.white,
-              appBar: buildAppBarEditProfile(context,"More information",state.imageFile!),
+              appBar: buildAppBarEditProfile(
+                  context, "More information", state.imageFile!),
               body: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -190,22 +188,25 @@ Widget _upLoadImage(
           ),
         ]),
       ),
-          GestureDetector(
-            onTap: () async {
+      GestureDetector(
+        onTap: () async {
           print("click");
           selectFile();
           final ImagePicker _picker = ImagePicker();
           if (_picker != null) {}
-              print("tap tap");
-            },
-            child: Container(
-              child: Center(
-                child: 
-                Text("แก้ไขรูปภาพ",style: TextStyle(color: Color.fromARGB(255, 0, 128, 255),fontSize: 24.sp,fontWeight: FontWeight.normal),
-                )
-              ),
-            ),
-          )
+          print("tap tap");
+        },
+        child: Container(
+          child: Center(
+              child: Text(
+            "แก้ไขรูปภาพ",
+            style: TextStyle(
+                color: Color.fromARGB(255, 0, 128, 255),
+                fontSize: 24.sp,
+                fontWeight: FontWeight.normal),
+          )),
+        ),
+      )
       // Container(
       //   child: Text(
       //     title,
@@ -299,22 +300,25 @@ Widget _showImageSelect(BuildContext context, String buttonName, String title,
           ),
         ]),
       ),
-          GestureDetector(
-            onTap: () async {
+      GestureDetector(
+        onTap: () async {
           print("click");
           selectFile();
           final ImagePicker _picker = ImagePicker();
           if (_picker != null) {}
-              print("tap tap");
-            },
-            child: Container(
-              child: Center(
-                child: 
-                Text("แก้ไขรูปภาพ",style: TextStyle(color: Color.fromARGB(255, 0, 128, 255),fontSize: 24.sp,fontWeight: FontWeight.normal),
-                )
-              ),
-            ),
-          )
+          print("tap tap");
+        },
+        child: Container(
+          child: Center(
+              child: Text(
+            "แก้ไขรูปภาพ",
+            style: TextStyle(
+                color: Color.fromARGB(255, 0, 128, 255),
+                fontSize: 24.sp,
+                fontWeight: FontWeight.normal),
+          )),
+        ),
+      )
       // Container(
       //   child: Text(
       //     title,
@@ -369,9 +373,7 @@ Widget _showImageSelect(BuildContext context, String buttonName, String title,
   );
 }
 
-AppBar buildAppBarEditProfile(context,
-  String type,PlatformFile imagePath
-) {
+AppBar buildAppBarEditProfile(context, String type, PlatformFile imagePath) {
   return AppBar(
     automaticallyImplyLeading: false,
     leading: IconButton(

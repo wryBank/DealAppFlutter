@@ -6,7 +6,7 @@ import 'package:flutterdealapp/pages/app/app_event.dart';
 import 'package:flutterdealapp/pages/app/app_state.dart';
 import 'package:flutterdealapp/pages/application/application_page.dart';
 import 'package:flutterdealapp/pages/bloc_providers.dart';
-import 'package:flutterdealapp/pages/editProfile/profile.dart';
+import 'package:flutterdealapp/pages/Profile/profile.dart';
 import 'package:flutterdealapp/pages/register/register.dart';
 import 'package:flutterdealapp/pages/signIn/bloc/signin_blocs.dart';
 import 'package:flutterdealapp/pages/signIn/sign_in.dart';

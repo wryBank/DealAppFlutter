@@ -6,8 +6,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdealapp/model/usermodel.dart';
-import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_bloc.dart';
-import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_state.dart';
+import 'package:flutterdealapp/pages/Profile/bloc/profile_bloc.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_blocs.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_event.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_state.dart';
@@ -23,7 +22,14 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
+
+
 class _ProfilePageState extends State<ProfilePage> {
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<ProfileBloc>(context).add(getUserData(uid: FirebaseAuth.instance.currentUser!.uid));
+  }
   final uid = FirebaseAuth.instance.currentUser;
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
@@ -31,151 +37,213 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Column(
-      children: <Widget>[
-        Container(
-          height: size.height * 0.4,
-          child: Stack(
-            children: <Widget>[
-              Container(
-                  height: size.height * 0.4 -47,
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 88, 172, 255),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(26),
-                      bottomRight: Radius.circular(26),
+    return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
+      if (state is LoadingState) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      }
+
+      if (state is getDataState) {
+        return Column(
+          children: <Widget>[
+            Container(
+              height: size.height * 0.4,
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                    height: size.height * 0.4 - 47,
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 88, 172, 255),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(26),
+                        bottomRight: Radius.circular(26),
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: Transform.scale(
+                            scale: 1.2,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.white, width: 2),
+                              ),
+                              child: CircleAvatar(
+                                radius: 50,
+                                backgroundImage: NetworkImage(
+                                    state.userModel!.urlprofileimage!),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 15.h,
+                        ),
+                        Text("${state.userModel!.username}",
+                            style: TextStyle(
+                                fontSize: 20.sp,
+                                color: Colors.white,
+                                fontWeight: FontWeight.normal)),
+                        Text("${state.userModel!.bio}",
+                            style: TextStyle(
+                                fontSize: 15.sp,
+                                color: Colors.white,
+                                fontWeight: FontWeight.normal)),
+                      ],
                     ),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Center(
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundImage: AssetImage("assets/images/icon.png"),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Container(
+                              margin: EdgeInsets.symmetric(
+                                vertical: 1,
+                              ),
+                              height: 70.h,
+                              width: 100.w,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 1,
+                                  blurRadius: 7,
+                                  offset: Offset(0, 3), // changes position of shadow
+                                )]
+                              ),
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: <Widget>[
+                                  Column(
+                                    children: [
+                                      Text(
+                                        "0",
+                                        style: TextStyle(
+                                            fontSize: 20.sp,
+                                            color: Colors.blue),
+                                      ),
+                                      Expanded(
+                                          child: Image.asset(
+                                        "assets/images/icon.png",
+                                        fit: BoxFit.cover,
+                                      ))
+                                    ],
+                                  ),
+                                ],
+                              )),
+                          Container(
+                              margin: EdgeInsets.symmetric(
+                                vertical: 1,
+                              ),
+                              height: 70.h,
+                              width: 100.w,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 1,
+                                  blurRadius: 7,
+                                  offset: Offset(0, 3), // changes position of shadow
+                                )]
+                              ),
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: <Widget>[
+                                  Column(
+                                    children: [
+                                      Text(
+                                        "0",
+                                        style: TextStyle(
+                                            fontSize: 20.sp,
+                                            color: Colors.blue),
+                                      ),
+                                      Expanded(
+                                          child: Image.asset(
+                                        "assets/images/icon.png",
+                                        fit: BoxFit.cover,
+                                      ))
+                                    ],
+                                  ),
+                                ],
+                              )),
+                          Container(
+                              margin: EdgeInsets.symmetric(
+                                vertical: 1,
+                              ),
+                              height: 70.h,
+                              width: 100.w,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 1,
+                                  blurRadius: 7,
+                                  offset: Offset(0, 3), // changes position of shadow
+                                )]
+                              ),
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: <Widget>[
+                                  Column(
+                                    children: [
+                                      Text(
+                                        "0",
+                                        style: TextStyle(
+                                            fontSize: 20.sp,
+                                            color: Colors.blue),
+                                      ),
+                                      Expanded(
+                                          child: Image.asset(
+                                        "assets/images/icon.png",
+                                        fit: BoxFit.cover,
+                                      ))
+                                    ],
+                                  ),
+                                ],
+                              )),
+                        ]),
+                  )
+                ],
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                  itemCount: 10,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(color: Colors.grey.shade300),
                         ),
                       ),
-                      Text("test"),
-                      Text("test")
-                    ],
-                  ),
-                  ),
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Container(
-                          margin: EdgeInsets.symmetric(
-                            vertical:1,
-                          ),
-                          height: 70.h,
-                          width: 100.w,
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: <Widget>[
-                              Column(
-                                children: [
-                                  Text(
-                                    "0",
-                                    style: TextStyle(
-                                        fontSize: 20.sp, color: Colors.white),
-                                  ),
-                                  Expanded(
-                                      child: Image.asset(
-                                    "assets/images/icon.png",
-                                    fit: BoxFit.cover,
-                                  ))
-                                ],
-                              ),
-                            ],
-                          )),
-                      Container(
-                          margin: EdgeInsets.symmetric(
-                            vertical: 2,
-                          ),
-                          height: 70.h,
-                          width: 100.w,
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: <Widget>[
-                              Column(
-                                children: [
-                                  Text(
-                                    "0",
-                                    style: TextStyle(
-                                        fontSize: 20.sp, color: Colors.white),
-                                  ),
-                                  Expanded(
-                                      child: Image.asset(
-                                    "assets/images/icon.png",
-                                    fit: BoxFit.cover,
-                                  ))
-                                ],
-                              ),
-                            ],
-                          )),
-                      Container(
-                          margin: EdgeInsets.symmetric(
-                            vertical: 5,
-                          ),
-                          height: 70.h,
-                          width: 100.w,
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: <Widget>[
-                              Column(
-                                children: [
-                                  Text(
-                                    "0",
-                                    style: TextStyle(
-                                        fontSize: 20.sp, color: Colors.white),
-                                  ),
-                                  Expanded(
-                                      child: Image.asset(
-                                    "assets/images/icon.png",
-                                    fit: BoxFit.cover,
-                                  ))
-                                ],
-                              ),
-                            ],
-                          )),
-                    ]),
-              )
-            ],
-          ),
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: 10,
-            itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                title: Text("test"),
-                subtitle: Text("test"),
-                leading: Icon(Icons.person),
-                trailing: Icon(Icons.edit),
-              );
-            }
-          ),
-        ),
-        
-      ],
-    );
-    // add gridview here
+                      child: Builder(
+                        builder: (context) {
+                          return ListTile(
+                            title: Text("test"),
+                            subtitle: Text("test"),
+                            leading: Icon(Icons.person),
+                            trailing: Icon(Icons.edit),
+                          );
+                        }
+                      ),
+                    );
+                  }),
+            ),
+          ],
+        );
+      }
+      return Container();
+    });
 
+    // add gridview here
   }
 }
