@@ -43,4 +43,6 @@ class EditingData extends EditProfileState {
 
 }
 class doneUploadState extends EditProfileState {
+  final String? url;
+  doneUploadState(this.url);
 }

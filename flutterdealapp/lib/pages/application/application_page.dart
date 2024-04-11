@@ -12,7 +12,8 @@ import '../editProfile/bloc/editprofile_event.dart';
 import 'application_widgets.dart';
 
 class ApplicationPage extends StatefulWidget {
-  const ApplicationPage({super.key});
+  final int initialIndex;
+  const ApplicationPage({this.initialIndex = 0});
 
   @override
   State<ApplicationPage> createState() => _ApplicationPageState();
@@ -23,6 +24,11 @@ class _ApplicationPageState extends State<ApplicationPage> {
 
   String? uid = FirebaseAuth.instance.currentUser!.uid;
   int _index = 0;
+  @override
+  void initState() {
+    super.initState();
+    _index = widget.initialIndex;
+  }
   @override
   Widget build(BuildContext context) {
     return Container(

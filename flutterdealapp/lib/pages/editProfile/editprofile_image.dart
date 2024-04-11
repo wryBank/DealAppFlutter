@@ -68,354 +68,188 @@ class _EditProfileimageState extends State<EditProfileimage> {
     return BlocBuilder<EditProfileBloc, EditProfileState>(
       builder: (context, state) {
         print("state1 = ${state.toString()}");
-        // context.read<EditProfileBloc>().add(EditImageEvent(userModel: userModel));
-        // if (state is uploadingImageState) {
         if (state is InitialState || state is LoadingState) {
           return Container(
               child: Center(
             child: CircularProgressIndicator(),
           ));
         }
-        if (state is EditImageState) {
-          // else {
-          // print("url state =  ${state.imageFile.toString()}");
-          return Container(
-            color: Colors.white,
-            child: SafeArea(
-                child: Scaffold(
-              backgroundColor: Colors.white,
-              appBar: buildAppBar("EditProfile"),
-              body: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // _upLoadImage(context, "2", "a", "subtile",state.imageFile!),
-                    _showImageSelect(
-                        context,
-                        "2",
-                        state.userModel!.username!,
-                        state.userModel!.username!,
-                        state.userModel!.urlprofileimage!)
-                  ],
-                ),
+        // else {
+        // print("url state =  ${state.imageFile.toString()}");
+        return Container(
+          color: Colors.white,
+          child: SafeArea(
+              child: Scaffold(
+            backgroundColor: Colors.white,
+            appBar: state is showImageSelectState
+                ? buildAppBarEditProfile(
+                    context, "test", state.imageFile!)
+                : buildAppBarEditProfile(
+                    context,
+                    "showprofile",
+                  ),
+            body: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _showImageSelect(
+                    context,
+                  )
+                ],
               ),
-            )),
-          );
-        }
-        if (state is showImageSelectState) {
-          print("inelse");
-          return Container(
-            color: Colors.white,
-            child: SafeArea(
-                child: Scaffold(
-              backgroundColor: Colors.white,
-              appBar: buildAppBarEditProfile(
-                  context, "More information", state.imageFile!),
-              body: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _upLoadImage(context, "2", "", "", state.imageFile!),
-                    // _showImageSelect(context, "2", "username", "subtile", ""),
-                  ],
-                ),
-              ),
-            )),
-          );
-        }
-        if (state is doneUploadState) {
-          print("done");
-          // Navigator.of(context).pushNamed("profile");
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.of(context).pushNamedAndRemoveUntil("Application", (route) => false);
-          });
-          // Navigator.push(context, MaterialPageRoute(builder: (context) => ApplicationPage()));
-        }
+            ),
+          )),
+        );
         return Container(
           child: Center(
             child: CircularProgressIndicator(),
           ),
         );
         //   else {
-        //     return Container(
-        //       color: Colors.white,
-        //       child: SafeArea(
-        //           child: Scaffold(
-        //         backgroundColor: Colors.white,
-        //         appBar: buildAppBar("More information"),
-        //         body: SingleChildScrollView(
-        //           child: Column(
-        //             crossAxisAlignment: CrossAxisAlignment.start,
-        //             children: [
-        //               // _upLoadImage(context, "2", userModel.username!, userModel.username!,state.imageFile!),
-        //               _showImageSelect(context, "2", "username", "subtile", ""),
-        //             ],
-        //           ),
-        //         ),
-        //       )),
-        //     );
-        //   }
       },
     );
   }
 }
 
-Widget _upLoadImage(
-    BuildContext context,
-    String buttonName,
-    String title,
-    // String subTitle, String imagePath) {
-    String subTitle,
-    PlatformFile? imagePath) {
-  print("in return");
-  PlatformFile? pickedFile;
-  // String? filePath = pickedFile?.path;
 
+Widget _showImageSelect(
+  BuildContext context,
+) {
+  PlatformFile? pickedFile;
+  UserModel userModel1 = UserModel();
   Future selectFile() async {
-    // Uint8List img = await pickImage(ImageSource.gal)
     final result = await FilePicker.platform.pickFiles();
     if (result == null) return;
     pickedFile = result.files.first;
-    // BlocProvider.of<EditProfileBloc>(context)
-    //     .add(uploadingImageEvent(imageFile: pickedFile));
     BlocProvider.of<EditProfileBloc>(context)
         .add(showImageSelect(imageFile: pickedFile));
   }
 
-  return Column(
-    children: [
-      SizedBox(
-        height: 34.h,
-      ),
-      GestureDetector(
-        onTap: () async {
-          print("click");
-          selectFile();
-          final ImagePicker _picker = ImagePicker();
-          if (_picker != null) {}
-        },
-        child: Stack(children: [
-          Center(
-            child: CircleAvatar(
-              radius: 90,
-              backgroundImage: FileImage(File(imagePath!.path!)),
-              backgroundColor: Colors.grey,
-            ),
-          ),
-        ]),
-      ),
-      GestureDetector(
-        onTap: () async {
-          print("click");
-          selectFile();
-          final ImagePicker _picker = ImagePicker();
-          if (_picker != null) {}
-          print("tap tap");
-        },
-        child: Container(
-          child: Center(
-              child: Text(
-            "แก้ไขรูปภาพ",
-            style: TextStyle(
-                color: Color.fromARGB(255, 0, 128, 255),
-                fontSize: 24.sp,
-                fontWeight: FontWeight.normal),
-          )),
+  return BlocBuilder<EditProfileBloc, EditProfileState>(
+      builder: (context, state) {
+    return Column(
+      children: [
+        SizedBox(
+          height: 34.h,
         ),
-      )
-
-      // Container(
-      //   child: Text(
-      //     title,
-      //     style: TextStyle(
-      //         color: Colors.black,
-      //         fontSize: 24.sp,
-      //         fontWeight: FontWeight.normal),
-      //   ),
-      // ),
-      // Container(
-      //   width: 375.w,
-      //   padding: EdgeInsets.only(left: 30.w, right: 30.w),
-      //   child: Text(
-      //     subTitle,
-      //     style: TextStyle(
-      //         color: Colors.black.withOpacity(0.5),
-      //         fontSize: 14.sp,
-      //         fontWeight: FontWeight.normal),
-      //   ),
-      // ),
-      // GestureDetector(
-      //   onTap: () {
-      //     BlocProvider.of<EditProfileBloc>(context)
-      //         .add(uploadingImageEvent(imageFile: imagePath));
-      //   },
-      //   child: Container(
-      //     margin: EdgeInsets.only(top: 100.h, left: 25.w, right: 25.w),
-      //     width: 325.w,
-      //     height: 50.h,
-      //     decoration: BoxDecoration(
-      //         color: AppColors.primaryButton,
-      //         borderRadius: BorderRadius.all(Radius.circular(15.w)),
-      //         boxShadow: [
-      //           BoxShadow(
-      //               color: Colors.grey.withOpacity(0.5),
-      //               spreadRadius: 1,
-      //               blurRadius: 10,
-      //               offset: Offset(0, 10))
-      //         ]),
-      //     child: Center(
-      //       child: Text(
-      //         "next",
-      //         style: TextStyle(
-      //             color: Colors.white,
-      //             fontSize: 16.sp,
-      //             fontWeight: FontWeight.normal),
-      //       ),
-      //     ),
-      //   ),
-      // )
-    ],
-  );
+        GestureDetector(
+          onTap: () async {
+            print("click");
+            selectFile();
+            final ImagePicker _picker = ImagePicker();
+            if (_picker != null) {}
+          },
+          child: Stack(children: [
+            Center(
+              child: BlocBuilder<EditProfileBloc, EditProfileState>(
+                  builder: (context, state) {
+                if (state is EditImageState) {
+                  return CircleAvatar(
+                    radius: 90,
+                    backgroundImage:
+                        NetworkImage(state.userModel!.urlprofileimage!),
+                    backgroundColor: Colors.grey,
+                  );
+                }  if (state is showImageSelectState) {
+                  return CircleAvatar(
+                    radius: 90,
+                    backgroundImage: FileImage(File(state.imageFile!.path!)),
+                    backgroundColor: Colors.grey,
+                  );
+                } if(state is doneUploadState) {
+                  return CircleAvatar(
+                    radius: 90,
+                    backgroundImage:
+                        NetworkImage(state.url!),
+                    backgroundColor: Colors.grey,
+                  );
+                }
+                else{
+                  return CircleAvatar(
+                    radius: 90,
+                    child: CircularProgressIndicator(),
+                    backgroundColor: Colors.grey,
+                  );
+                }
+              }),
+            ),
+          ]),
+        ),
+        GestureDetector(
+          onTap: () async {
+            print("click");
+            selectFile();
+            final ImagePicker _picker = ImagePicker();
+            if (_picker != null) {}
+            print("tap tap");
+          },
+          child: Container(
+            child: Center(
+                child: Text(
+              "แก้ไขรูปภาพ",
+              style: TextStyle(
+                  color: Color.fromARGB(255, 0, 128, 255),
+                  fontSize: 24.sp,
+                  fontWeight: FontWeight.normal),
+            )),
+          ),
+        )
+      ],
+    );
+  });
 }
 
-Widget _showImageSelect(BuildContext context, String buttonName, String title,
-    String subTitle, String imagePath) {
-  // String subTitle, PlatformFile? imagePath) {
-  PlatformFile? pickedFile;
-  Future selectFile() async {
-    // Uint8List img = await pickImage(ImageSource.gal)
-    final result = await FilePicker.platform.pickFiles();
-    if (result == null) return;
-    pickedFile = result.files.first;
-    // BlocProvider.of<EditProfileBloc>(context)
-    //     .add(uploadingImageEvent(imageFile: pickedFile));
-    BlocProvider.of<EditProfileBloc>(context)
-        .add(showImageSelect(imageFile: pickedFile));
+AppBar buildAppBarEditProfile(context, String type, [PlatformFile? imagePath]) {
+  if (type == "test") {
+    return AppBar(
+      automaticallyImplyLeading: false,
+      leading: IconButton(
+        icon: Icon(Icons.cancel_sharp),
+        onPressed: () {},
+      ),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.check),
+          onPressed: () {
+            BlocProvider.of<EditProfileBloc>(context)
+                .add(uploadingImageEvent(imageFile: imagePath));
+          },
+        )
+      ],
+      bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1.0),
+          child: Container(
+            color: Colors.grey.withOpacity(0.5),
+            height: 1.0,
+          )),
+      title: Text(
+        type,
+        style: TextStyle(
+            color: Colors.black,
+            fontSize: 16.sp,
+            fontWeight: FontWeight.normal),
+      ),
+    );
+  } else {
+    return AppBar(
+      automaticallyImplyLeading: false,
+      leading: IconButton(
+        icon: Icon(Icons.cancel_sharp),
+        onPressed: () {},
+      ),
+      bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1.0),
+          child: Container(
+            color: Colors.grey.withOpacity(0.5),
+            height: 1.0,
+          )),
+      title: Text(
+        type,
+        style: TextStyle(
+            color: Colors.black,
+            fontSize: 16.sp,
+            fontWeight: FontWeight.normal),
+      ),
+    );
   }
-
-  return Column(
-    children: [
-      SizedBox(
-        height: 34.h,
-      ),
-      GestureDetector(
-        onTap: () async {
-          print("click");
-          selectFile();
-          final ImagePicker _picker = ImagePicker();
-          if (_picker != null) {}
-        },
-        child: Stack(children: [
-          Center(
-            child: CircleAvatar(
-              radius: 90,
-              backgroundImage: NetworkImage(imagePath),
-              // backgroundImage:
-              // AssetImage('assets/images/defaultProfile.png'),
-              backgroundColor: Colors.grey,
-            ),
-          ),
-        ]),
-      ),
-      GestureDetector(
-        onTap: () async {
-          print("click");
-          selectFile();
-          final ImagePicker _picker = ImagePicker();
-          if (_picker != null) {}
-          print("tap tap");
-        },
-        child: Container(
-          child: Center(
-              child: Text(
-            "แก้ไขรูปภาพ",
-            style: TextStyle(
-                color: Color.fromARGB(255, 0, 128, 255),
-                fontSize: 24.sp,
-                fontWeight: FontWeight.normal),
-          )),
-        ),
-      )
-      // Container(
-      //   child: Text(
-      //     title,
-      //     style: TextStyle(
-      //         color: Colors.black,
-      //         fontSize: 24.sp,
-      //         fontWeight: FontWeight.normal),
-      //   ),
-      // ),
-      // Container(
-      //   width: 375.w,
-      //   padding: EdgeInsets.only(left: 30.w, right: 30.w),
-      //   child: Text(
-      //     subTitle,
-      //     style: TextStyle(
-      //         color: Colors.black.withOpacity(0.5),
-      //         fontSize: 14.sp,
-      //         fontWeight: FontWeight.normal),
-      //   ),
-      // ),
-      // GestureDetector(
-      //   onTap: () {
-      //     // BlocProvider.of<EditProfileBloc>(context)
-      //     //     .add(UploadUrlImageEvent(url: imagePath));
-      //   },
-      //   child: Container(
-      //     margin: EdgeInsets.only(top: 100.h, left: 25.w, right: 25.w),
-      //     width: 325.w,
-      //     height: 50.h,
-      //     decoration: BoxDecoration(
-      //         color: AppColors.primaryButton,
-      //         borderRadius: BorderRadius.all(Radius.circular(15.w)),
-      //         boxShadow: [
-      //           BoxShadow(
-      //               color: Colors.grey.withOpacity(0.5),
-      //               spreadRadius: 1,
-      //               blurRadius: 10,
-      //               offset: Offset(0, 10))
-      //         ]),
-      //     child: Center(
-      //       child: Text(
-      //         "next",
-      //         style: TextStyle(
-      //             color: Colors.white,
-      //             fontSize: 16.sp,
-      //             fontWeight: FontWeight.normal),
-      //       ),
-      //     ),
-      //   ),
-      // )
-    ],
-  );
-}
-
-AppBar buildAppBarEditProfile(context, String type, PlatformFile imagePath) {
-  return AppBar(
-    automaticallyImplyLeading: false,
-    leading: IconButton(
-      icon: Icon(Icons.cancel_sharp),
-      onPressed: () {},
-    ),
-    actions: [
-      IconButton(
-        icon: Icon(Icons.check),
-        onPressed: () {
-          BlocProvider.of<EditProfileBloc>(context)
-              .add(uploadingImageEvent(imageFile: imagePath));
-        },
-      )
-    ],
-    bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(1.0),
-        child: Container(
-          color: Colors.grey.withOpacity(0.5),
-          height: 1.0,
-        )),
-    title: Text(
-      type,
-      style: TextStyle(
-          color: Colors.black, fontSize: 16.sp, fontWeight: FontWeight.normal),
-    ),
-  );
 }
