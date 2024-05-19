@@ -14,7 +14,7 @@ class SignInController {
   final BuildContext context;
   // UserRepository userRepository = UserRepository();
   user_repo userRepository = user_repo(provider: user_provider());
-  // editProfile_repo _ediitprofile_repo = editProfile_repo(provider: editProfile_provider());
+  editProfile_repo _ediitprofile_repo = editProfile_repo(provider: editProfile_provider());
   UserModel userModel = UserModel();
   SignInController({required this.context});
 
@@ -54,10 +54,13 @@ class SignInController {
             if(await userRepository.checkUser(user.uid)){
               print("user login");
               Navigator.of(context).pushNamed("Application");
+              // Navigator.of(context).pushNamed("editprofileImage");
             }
             else{
+              print("adddata");
               userRepository.addData(userModel);
-              Navigator.of(context).pushNamed("editprofile");
+              // Navigator.of(context).pushNamed("editprofile");
+              Navigator.of(context).pushNamed("editprofileImage");
             }
 
             // if(user.emailVerified){

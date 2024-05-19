@@ -74,6 +74,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               child: CircleAvatar(
                                 radius: 50,
                                 backgroundImage: NetworkImage(
+                                    // state.userModel!.urlprofileimage!),
                                     state.userModel!.urlprofileimage!),
                               ),
                             ),

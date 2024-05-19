@@ -22,6 +22,8 @@ class RegisterController {
     String rePassword = state.rePassword;
     userModel.email = email;
     userModel.username = userName;
+    userModel.urlprofileimage = "https://firebasestorage.googleapis.com/v0/b/dealapp-363e7.appspot.com/o/files%2FdefaultProfile.png?alt=media&token=a025938a-fe31-4100-8601-c41169db88eb";
+    
 
     if (userName.isEmpty) {
       toastInfo(msg: "User name can not be emty");
