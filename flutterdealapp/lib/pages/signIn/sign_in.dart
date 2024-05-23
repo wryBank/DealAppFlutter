@@ -71,8 +71,9 @@ class _SignInState extends State<SignIn> {
                 SizedBox(
                   height: 20.h,
                 ),
-                Center(
-                    child: reusableText("Or use your email account to login")),
+                // Center(
+                //     child: reusableText("Or use your email account to login")
+                //     ),
                 buildThirdPartLogin(context),
                 Center(
                   child: reusableText("Don't have an account ? "),

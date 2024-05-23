@@ -51,17 +51,18 @@ class SignInController {
           if (user != null && user.emailVerified) {
             // user verified from firebaske
             
+            
             if(await userRepository.checkUser(user.uid)){
               print("user login");
               Navigator.of(context).pushNamed("Application");
               // Navigator.of(context).pushNamed("editprofileImage");
             }
-            else{
-              print("adddata");
-              userRepository.addData(userModel);
-              // Navigator.of(context).pushNamed("editprofile");
-              Navigator.of(context).pushNamed("editprofileImage");
-            }
+            // else{
+            //   print("adddata");
+            //   userRepository.addData(userModel);
+            //   // Navigator.of(context).pushNamed("editprofile");
+            //   Navigator.of(context).pushNamed("editprofileImage");
+            // }
 
             // if(user.emailVerified){
             //   print("user login");
