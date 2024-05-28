@@ -54,5 +54,15 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
         emit(showImageSelectState(event.imageFile));
       } catch (e) {}
     });
+    on<showData>((event, emit) async {
+      emit(LoadingState());
+      try {
+        print("in editprofileevent");
+        print("uiddddd = ${event.userModel.uid}");
+        repository.editProfile(event.userModel);
+        UserModel userModel = await repository.provider.getUserData(event.userModel.uid!);
+        emit(EditProfileState(userModelProfile: userModel));
+      } catch (e) {}
+    });
   }
 }

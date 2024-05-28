@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdealapp/pages/editProfile/editprofile_image.dart';
 import 'package:flutterdealapp/values/color.dart';
 
 // AppBar buildAppBarEditProfile(String type,) {
@@ -56,7 +59,10 @@ AppBar buildAppBar(String type) {
         IconButton(
           icon: Icon(Icons.edit),
           color: Colors.white,
-          onPressed: () {},
+          onPressed: () {
+            print("click edit");
+            
+          },
         )
       ],
     );
@@ -193,6 +199,7 @@ Widget buildTextField(String hinttext, String textType, IconData iconName,
             child: TextField(
               onChanged: (value) => func!(value),
               keyboardType: TextInputType.multiline,
+              // textAlignVertical: TextAlignVertical.top,
               decoration: InputDecoration(
                   hintText: hinttext,
                   border: OutlineInputBorder(

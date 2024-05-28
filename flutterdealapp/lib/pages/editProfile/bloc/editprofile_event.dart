@@ -50,3 +50,9 @@ class showImageSelect extends EditProfileEvent{
   PlatformFile? imageFile;
   showImageSelect({required this.imageFile});
 }
+class showData extends EditProfileEvent{
+  UserModel userModel;
+  showData({
+    required this.userModel,
+  });
+}

@@ -12,6 +12,9 @@ import '../../../model/usermodel.dart';
 
 @immutable
 class EditProfileState  {
+  UserModel? userModelProfile;
+  EditProfileState({this.userModelProfile});
+
 }
 
 class InitialState extends EditProfileState{

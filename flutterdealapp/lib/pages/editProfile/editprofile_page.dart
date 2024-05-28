@@ -11,15 +11,12 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdealapp/model/usermodel.dart';
+import 'package:flutterdealapp/pages/Profile/bloc/profile_bloc.dart';
 import 'package:flutterdealapp/pages/UserBloc/bloc/user_bloc.dart';
 import 'package:flutterdealapp/pages/UserBloc/user_provider.dart';
 import 'package:flutterdealapp/pages/UserBloc/user_repo.dart';
 import 'package:flutterdealapp/pages/application/application_page.dart';
 import 'package:flutterdealapp/pages/common_widgets.dart';
-import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_bloc.dart';
-import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_provider.dart';
-import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_repo.dart';
-import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_state.dart';
 import 'package:flutterdealapp/pages/editProfile/edtibio_page.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_blocs.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_event.dart';
@@ -31,14 +28,14 @@ import '../../values/color.dart';
 import 'Widgets/editprofile_widget.dart';
 import 'bloc/editprofile_event.dart';
 
-class EditProfileimage extends StatefulWidget {
-  const EditProfileimage({super.key});
+class EditProfilePage extends StatefulWidget {
+  const EditProfilePage({super.key});
 
   @override
-  State<EditProfileimage> createState() => _EditProfileimageState();
+  State<EditProfilePage> createState() => _EditProfilePageState();
 }
 
-class _EditProfileimageState extends State<EditProfileimage> {
+class _EditProfilePageState extends State<EditProfilePage> {
   final uid = FirebaseAuth.instance.currentUser;
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
@@ -67,10 +64,10 @@ class _EditProfileimageState extends State<EditProfileimage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<EditProfileBloc, EditProfileState>(
+    return BlocBuilder<ProfileBloc, ProfileState>(
       builder: (context, state) {
         print("state1 = ${state.toString()}");
-        if (state is InitialState || state is LoadingState) {
+        if (state is LoadingState) {
           return Container(
               child: Center(
             child: CircularProgressIndicator(),

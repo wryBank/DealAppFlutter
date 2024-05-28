@@ -12,8 +12,10 @@ import 'package:flutterdealapp/pages/register/bloc/register_event.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_state.dart';
 import 'package:flutterdealapp/pages/register/register_controller.dart';
 
+import '../../values/color.dart';
 import '../common_widgets.dart';
 import '../editProfile/bloc/editprofile_event.dart';
+import '../editProfile/editprofile_image.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -48,7 +50,38 @@ class _ProfilePageState extends State<ProfilePage> {
 
       if (state is getDataState) {
         return Scaffold(
-          appBar: buildAppBar("Profile"),
+          appBar: 
+    AppBar(
+      // backgroundColor: Colors.blue,
+      automaticallyImplyLeading: false,
+      backgroundColor: AppColors.primaryAppbar,
+      bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1.0),
+          child: Container(
+            // color: Colors.grey.withOpacity(0.5),
+            // color: const Color.fromARGB(255, 0, 128, 255),
+            height: 0.5,
+          )),
+      // title: Text(
+      //   type,
+      //   style: TextStyle(
+      //       color: Colors.black,
+      //       fontSize: 16.sp,
+      //       fontWeight: FontWeight.normal),
+      // ),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.edit),
+          color: Colors.white,
+          onPressed: () {
+            print("click edit");
+            Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfileimage()));
+            // Navigator.popAndPushNamed(context, "editprofileimage");
+            // MaterialPageRoute(builder: (context) => EditProfileimage());
+          },
+        )
+      ],
+    ),
           body: Column(
             children: <Widget>[
               Container(
