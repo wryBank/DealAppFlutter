@@ -155,5 +155,12 @@ Future<UserModel> getUserData(String uid) async {
   }
   throw Exception("Failed to get user data."); // Added throw statement
 }
+Future<void> editBio(String bio) async {
+  try {
+    await _fireCloud.doc(_uid).update({"bio": bio});
+  } catch (e) {
+    throw Exception(e.toString());
+  }
+}
 
 }

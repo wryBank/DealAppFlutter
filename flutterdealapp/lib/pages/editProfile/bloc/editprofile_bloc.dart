@@ -64,5 +64,22 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
         emit(EditProfileState(userModelProfile: userModel));
       } catch (e) {}
     });
+  on<updateProfileBioEvent>((event, emit) async {
+      emit(LoadingState());
+      try {
+        print("in editprofileevent");
+        print("bio = ${event.bio}");
+        repository.editBio(event.bio);
+        UserModel userModel = await repository.provider.getUserData(FirebaseAuth.instance.currentUser!.uid);
+        emit(updateProfileBioState(userModel.bio!));
+        print("emit bio = ${userModel.bio}");
+      } catch (e) {}
+    });
+    on<EditingBioEvent>((event, emit)  {
+        print("in editprofileevent");
+        print("bio = ${event.bio}");
+        // emit(state.bio);
+    });
   }
-}
+  }
+  

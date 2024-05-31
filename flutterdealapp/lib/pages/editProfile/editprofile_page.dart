@@ -17,6 +17,7 @@ import 'package:flutterdealapp/pages/UserBloc/user_provider.dart';
 import 'package:flutterdealapp/pages/UserBloc/user_repo.dart';
 import 'package:flutterdealapp/pages/application/application_page.dart';
 import 'package:flutterdealapp/pages/common_widgets.dart';
+import 'package:flutterdealapp/pages/editProfile/editprofile_image.dart';
 import 'package:flutterdealapp/pages/editProfile/edtibio_page.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_blocs.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_event.dart';
@@ -36,31 +37,17 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
+  @override
+  void initState() {
+    // TODO: implement initStateeB
+    BlocProvider.of<ProfileBloc>(context)
+        .add(getUserData(uid: FirebaseAuth.instance.currentUser!.uid));
+  }
+
   final uid = FirebaseAuth.instance.currentUser;
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   UserModel userModel = UserModel();
-  String url1 = "";
-  // user_repo userRepo = user_repo(provider: user_provider());
-  // Future<UserModel> getUserData() async {
-  //   return await userRepo.provider
-  //       .getUserData(FirebaseAuth.instance.currentUser!.uid);
-  // }
-
-  // void getData() async {
-  //   userModel = await getUserData();
-  //   print(userModel);
-  //   url1 = userModel.urlprofileimage!.toString();
-  // }
-
-  @override
-  void initState() {
-    // TODO: implement initStateeB
-    context
-        .read<EditProfileBloc>()
-        .add(EditImageEvent(uid: FirebaseAuth.instance.currentUser!.uid));
-    // getData();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +60,26 @@ class _EditProfilePageState extends State<EditProfilePage> {
             child: CircularProgressIndicator(),
           ));
         }
+        print("in getdatastate");
+        return Container(
+          color: Colors.white,
+          child: SafeArea(
+              child: Scaffold(
+            backgroundColor: Colors.white,
+            // appBar: buildAppBarEditProfile(
+            //     context, "test", state.userModel!.urlprofileimage!),
+            body: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _showImageSelect(
+                    context,
+                  )
+                ],
+              ),
+            ),
+          )),
+        );
         // else {
         // print("url state =  ${state.imageFile.toString()}");
         return Container(
@@ -80,12 +87,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
           child: SafeArea(
               child: Scaffold(
             backgroundColor: Colors.white,
-            appBar: state is showImageSelectState
-                ? buildAppBarEditProfile(context, "test", state.imageFile!)
-                : buildAppBarEditProfile(
-                    context,
-                    "showprofile",
-                  ),
+            // appBar: state is getDataState
+            //     ? buildAppBarEditProfile(context, "test", state.imageFile!)
+            //     : buildAppBarEditProfile(
+            //         context,
+            //         "showprofile",
+            //       ),
             body: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,104 +121,78 @@ Widget _showImageSelect(
 ) {
   PlatformFile? pickedFile;
   UserModel userModel1 = UserModel();
-  Future selectFile() async {
-    final result = await FilePicker.platform.pickFiles();
-    if (result == null) return;
-    pickedFile = result.files.first;
-    BlocProvider.of<EditProfileBloc>(context)
-        .add(showImageSelect(imageFile: pickedFile));
-  }
 
-  return BlocBuilder<EditProfileBloc, EditProfileState>(
-      builder: (context, state) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 34.h,
-        ),
-        GestureDetector(
-          onTap: () async {
-            print("click");
-            selectFile();
-            final ImagePicker _picker = ImagePicker();
-            if (_picker != null) {}
-          },
-          child: Stack(children: [
-            Center(
-              child: BlocBuilder<EditProfileBloc, EditProfileState>(
-                  builder: (context, state) {
-                if (state is EditImageState) {
-                  return CircleAvatar(
-                    radius: 90,
-                    backgroundImage:
-                        NetworkImage(state.userModel!.urlprofileimage!),
-                    backgroundColor: Colors.grey,
-                  );
-                }
-                if (state is showImageSelectState) {
-                  return CircleAvatar(
-                    radius: 90,
-                    backgroundImage: FileImage(File(state.imageFile!.path!)),
-                    backgroundColor: Colors.grey,
-                  );
-                }
-                if (state is doneUploadState) {
-                  return CircleAvatar(
-                    radius: 90,
-                    backgroundImage: NetworkImage(state.url!),
-                    backgroundColor: Colors.grey,
-                  );
-                } else {
-                  return CircleAvatar(
-                    radius: 90,
-                    child: CircularProgressIndicator(),
-                    backgroundColor: Colors.grey,
-                  );
-                }
-              }),
-            ),
-          ]),
-        ),
-        GestureDetector(
-          onTap: () async {
-            print("click");
-            selectFile();
-            final ImagePicker _picker = ImagePicker();
-            if (_picker != null) {}
-            print("tap tap");
-          },
-          child: Container(
-            child: Center(
-                child: Text(
-              "แก้ไขรูปภาพ",
-              style: TextStyle(
-                  color: Color.fromARGB(255, 0, 128, 255),
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.normal),
-            )),
+  return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
+    if (state is getDataState) {
+      print("state is getdatastate");
+                print("bio = ${state.userModel!.bio}");
+
+      return Column(
+        children: [
+          SizedBox(
+            height: 34.h,
           ),
+          GestureDetector(
+            onTap: () async {
+              print("click");
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => EditProfileimage()));
+            },
+            child: Stack(children: [
+              CircleAvatar(
+                radius: 60.r,
+                backgroundImage:
+                    NetworkImage(state.userModel!.urlprofileimage!),
+              )
+            ]),
+          ),
+          GestureDetector(
+            onTap: () async {
+              print("click");
+              // selectFile();
+              final ImagePicker _picker = ImagePicker();
+              if (_picker != null) {}
+              print("tap tap");
+            },
+            child: Container(
+              child: Center(
+                  child: Text(
+                "แก้ไขรูปภาพ",
+                style: TextStyle(
+                    color: Color.fromARGB(255, 0, 128, 255),
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.normal),
+              )),
+            ),
+          ),
+            GestureDetector(
+              onTap: () {
+                print("tap textfield editbio");
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => editbioPage()));
+              },
+              child: Container(
+                child: TextField(
+                  enabled: false,
+                  decoration: InputDecoration(
+                    hintText: state.userModel!.bio,
+                    hintStyle: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.normal),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      );
+    } else {
+      return Container(
+        child: Center(
+          child: CircularProgressIndicator(),
         ),
-        // GestureDetector(
-        //   onTap: () {
-        //     print("tap textfield editbio");
-        //     Navigator.push(context,
-        //         MaterialPageRoute(builder: (context) => editbioPage()));
-        //   },
-        //   child: Container(
-        //     child: TextField(
-        //       enabled: false,
-        //       decoration: InputDecoration(
-        //         hintText: state.userModel!.username,
-        //         hintStyle: TextStyle(
-        //             color: Colors.black.withOpacity(0.5),
-        //             fontSize: 14.sp,
-        //             fontWeight: FontWeight.normal),
-        //       ),
-        //     ),
-        //     )
-        //   )
-      ],
-    );
+      );
+    }
   });
 }
 
@@ -227,8 +208,8 @@ AppBar buildAppBarEditProfile(context, String type, [PlatformFile? imagePath]) {
         IconButton(
           icon: Icon(Icons.check),
           onPressed: () {
-            BlocProvider.of<EditProfileBloc>(context)
-                .add(uploadingImageEvent(imageFile: imagePath));
+            // BlocProvider.of<ProfileBloc>(context)
+            //     .add(uploadingImageEvent(imageFile: imagePath));
           },
         )
       ],

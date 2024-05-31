@@ -36,4 +36,8 @@ class editProfile_repo{
     print("inrepo getdata");
     await provider.getUserData(uid);
   }
+  Future<void> editBio(String bio) async{
+    print("inrepo editbio");
+    await provider.editBio(bio);
+  }
 }

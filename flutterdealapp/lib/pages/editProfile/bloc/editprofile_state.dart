@@ -14,6 +14,7 @@ import '../../../model/usermodel.dart';
 class EditProfileState  {
   UserModel? userModelProfile;
   EditProfileState({this.userModelProfile});
+ 
 
 }
 
@@ -48,4 +49,16 @@ class EditingData extends EditProfileState {
 class doneUploadState extends EditProfileState {
   final String? url;
   doneUploadState(this.url);
+}
+class updateProfileBioState extends EditProfileState{
+  final String? bio;
+  updateProfileBioState(this.bio);
+}
+class showDataState extends EditProfileState{
+  String? uid;
+  showDataState(this.uid);
+}
+class EditingBio extends EditProfileState{
+  final String bio;
+  EditingBio(this.bio);
 }

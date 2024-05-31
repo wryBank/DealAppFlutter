@@ -116,7 +116,7 @@ Widget _showImageSelect(
   BuildContext context,
 ) {
   PlatformFile? pickedFile;
-  UserModel userModel1 = UserModel();
+  // UserModel userModel1 = UserModel();
   Future selectFile() async {
     final result = await FilePicker.platform.pickFiles();
     if (result == null) return;

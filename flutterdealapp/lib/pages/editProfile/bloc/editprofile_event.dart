@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 
 @immutable
 abstract class EditProfileEvent  {
+  const EditProfileEvent();
 }
 class InitialEvent extends EditProfileEvent{
 }
@@ -55,4 +56,12 @@ class showData extends EditProfileEvent{
   showData({
     required this.userModel,
   });
+}
+class updateProfileBioEvent extends EditProfileEvent{
+  String bio;
+  updateProfileBioEvent(this.bio);
+}
+class EditingBioEvent extends EditProfileEvent{
+  String bio;
+  EditingBioEvent(this.bio);
 }

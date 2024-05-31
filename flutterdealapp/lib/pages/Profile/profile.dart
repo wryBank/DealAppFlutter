@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdealapp/model/usermodel.dart';
 import 'package:flutterdealapp/pages/Profile/bloc/profile_bloc.dart';
+import 'package:flutterdealapp/pages/editProfile/editprofile_page.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_blocs.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_event.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_state.dart';
@@ -24,24 +25,22 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-
-
 class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ProfileBloc>(context).add(getUserData(uid: FirebaseAuth.instance.currentUser!.uid));
+    BlocProvider.of<ProfileBloc>(context)
+        .add(getUserData(uid: FirebaseAuth.instance.currentUser!.uid));
   }
+
   final uid = FirebaseAuth.instance.currentUser;
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   UserModel userModel = UserModel();
   @override
   Widget build(BuildContext context) {
-    
     Size size = MediaQuery.of(context).size;
     return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
-    
       if (state is LoadingState) {
         return Center(
           child: CircularProgressIndicator(),
@@ -50,38 +49,40 @@ class _ProfilePageState extends State<ProfilePage> {
 
       if (state is getDataState) {
         return Scaffold(
-          appBar: 
-    AppBar(
-      // backgroundColor: Colors.blue,
-      automaticallyImplyLeading: false,
-      backgroundColor: AppColors.primaryAppbar,
-      bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1.0),
-          child: Container(
-            // color: Colors.grey.withOpacity(0.5),
-            // color: const Color.fromARGB(255, 0, 128, 255),
-            height: 0.5,
-          )),
-      // title: Text(
-      //   type,
-      //   style: TextStyle(
-      //       color: Colors.black,
-      //       fontSize: 16.sp,
-      //       fontWeight: FontWeight.normal),
-      // ),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.edit),
-          color: Colors.white,
-          onPressed: () {
-            print("click edit");
-            Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfileimage()));
-            // Navigator.popAndPushNamed(context, "editprofileimage");
-            // MaterialPageRoute(builder: (context) => EditProfileimage());
-          },
-        )
-      ],
-    ),
+          appBar: AppBar(
+            // backgroundColor: Colors.blue,
+            automaticallyImplyLeading: false,
+            backgroundColor: AppColors.primaryAppbar,
+            bottom: PreferredSize(
+                preferredSize: const Size.fromHeight(1.0),
+                child: Container(
+                  // color: Colors.grey.withOpacity(0.5),
+                  // color: const Color.fromARGB(255, 0, 128, 255),
+                  height: 0.5,
+                )),
+            // title: Text(
+            //   type,
+            //   style: TextStyle(
+            //       color: Colors.black,
+            //       fontSize: 16.sp,
+            //       fontWeight: FontWeight.normal),
+            // ),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.edit),
+                color: Colors.white,
+                onPressed: () {
+                  print("click edit");
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EditProfilePage()));
+                  // Navigator.popAndPushNamed(context, "editprofileimage");
+                  // MaterialPageRoute(builder: (context) => EditProfileimage());
+                },
+              )
+            ],
+          ),
           body: Column(
             children: <Widget>[
               Container(
@@ -106,7 +107,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               child: Container(
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  border: Border.all(color: Colors.white, width: 2),
+                                  border:
+                                      Border.all(color: Colors.white, width: 2),
                                 ),
                                 child: CircleAvatar(
                                   radius: 50,
@@ -147,15 +149,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                 height: 70.h,
                                 width: 100.w,
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 1,
-                                    blurRadius: 7,
-                                    offset: Offset(0, 3), // changes position of shadow
-                                  )]
-                                ),
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 1,
+                                        blurRadius: 7,
+                                        offset: Offset(
+                                            0, 3), // changes position of shadow
+                                      )
+                                    ]),
                                 child: Stack(
                                   alignment: Alignment.center,
                                   children: <Widget>[
@@ -183,15 +187,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                 height: 70.h,
                                 width: 100.w,
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 1,
-                                    blurRadius: 7,
-                                    offset: Offset(0, 3), // changes position of shadow
-                                  )]
-                                ),
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 1,
+                                        blurRadius: 7,
+                                        offset: Offset(
+                                            0, 3), // changes position of shadow
+                                      )
+                                    ]),
                                 child: Stack(
                                   alignment: Alignment.center,
                                   children: <Widget>[
@@ -219,15 +225,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                 height: 70.h,
                                 width: 100.w,
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 1,
-                                    blurRadius: 7,
-                                    offset: Offset(0, 3), // changes position of shadow
-                                  )]
-                                ),
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 1,
+                                        blurRadius: 7,
+                                        offset: Offset(
+                                            0, 3), // changes position of shadow
+                                      )
+                                    ]),
                                 child: Stack(
                                   alignment: Alignment.center,
                                   children: <Widget>[
@@ -263,18 +271,16 @@ class _ProfilePageState extends State<ProfilePage> {
                             bottom: BorderSide(color: Colors.grey.shade300),
                           ),
                         ),
-                        child: Builder(
-                          builder: (context) {
-                            return Material(
-                              child: ListTile(
-                                title: Text("test"),
-                                subtitle: Text("test"),
-                                leading: Icon(Icons.person),
-                                trailing: Icon(Icons.edit),
-                              ),
-                            );
-                          }
-                        ),
+                        child: Builder(builder: (context) {
+                          return Material(
+                            child: ListTile(
+                              title: Text("test"),
+                              subtitle: Text("test"),
+                              leading: Icon(Icons.person),
+                              trailing: Icon(Icons.edit),
+                            ),
+                          );
+                        }),
                       );
                     }),
               ),

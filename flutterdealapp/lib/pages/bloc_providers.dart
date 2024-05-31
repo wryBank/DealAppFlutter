@@ -4,6 +4,7 @@ import 'package:flutterdealapp/pages/Profile/bloc/profile_bloc.dart';
 import 'package:flutterdealapp/pages/UserBloc/bloc/user_bloc.dart';
 import 'package:flutterdealapp/pages/UserBloc/user_provider.dart';
 import 'package:flutterdealapp/pages/UserBloc/user_repo.dart';
+import 'package:flutterdealapp/pages/editProfile/bloc/editprofileBio_bloc.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_bloc.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_repo.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_blocs.dart';
@@ -22,6 +23,7 @@ class AppBlocProviders{
         BlocProvider(create: (context) => EditProfileBloc(editProfile_repo(provider: editProfile_provider()))),
         BlocProvider(create: (context) => UserBloc(user_repo(provider: user_provider()))),
         BlocProvider(create: (context) => ProfileBloc(user_repo(provider: user_provider()))),
+        BlocProvider(create: (context) => EditProfileBioBloc()),
 
   ];
   
