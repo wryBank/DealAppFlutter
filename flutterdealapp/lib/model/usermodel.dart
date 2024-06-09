@@ -7,7 +7,7 @@ class UserModel {
   String? uid;
   String? username;
   String? email;
-  int? gender;
+  String? gender;
   String? phonenumber;
   String? urlprofileimage;
   String? bio;
@@ -34,7 +34,7 @@ class UserModel {
     String? uid,
     String? username,
     String? email,
-    int? gender,
+    String? gender,
     String? phonenumber,
     String? urlprofileimage,
     String? bio,
@@ -76,7 +76,7 @@ class UserModel {
       uid: map['uid'] != null ? map['uid'] as String : null,
       username: map['username'] != null ? map['username'] as String : null,
       email: map['email'] != null ? map['email'] as String : null,
-      gender: map['gender'] != null ? map['gender'] as int : null,
+      gender: map['gender'] != null ? map['gender'] as String : null,
       phonenumber: map['phonenumber'] != null ? map['phonenumber'] as String : null,
       urlprofileimage: map['urlprofileimage'] != null ? map['urlprofileimage'] as String : null,
       bio: map['bio'] != null ? map['bio'] as String : null,

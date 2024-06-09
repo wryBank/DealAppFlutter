@@ -54,6 +54,10 @@ class updateProfileBioState extends EditProfileState{
   final String? bio;
   updateProfileBioState(this.bio);
 }
+class updateProfileGenderState extends EditProfileState{
+  final String? Gender;
+  updateProfileGenderState(this.Gender);
+}
 class showDataState extends EditProfileState{
   String? uid;
   showDataState(this.uid);

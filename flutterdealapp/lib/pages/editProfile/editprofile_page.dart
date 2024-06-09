@@ -19,10 +19,12 @@ import 'package:flutterdealapp/pages/application/application_page.dart';
 import 'package:flutterdealapp/pages/common_widgets.dart';
 import 'package:flutterdealapp/pages/editProfile/editprofile_image.dart';
 import 'package:flutterdealapp/pages/editProfile/edtibio_page.dart';
+import 'package:flutterdealapp/pages/editProfile/edtigender_page.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_blocs.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_event.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_state.dart';
 import 'package:flutterdealapp/pages/register/register_controller.dart';
+import 'package:flutterdealapp/widgets/flutter_toast.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../values/color.dart';
@@ -61,24 +63,27 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ));
         }
         print("in getdatastate");
-        return Container(
-          color: Colors.white,
-          child: SafeArea(
-              child: Scaffold(
-            backgroundColor: Colors.white,
-            // appBar: buildAppBarEditProfile(
-            //     context, "test", state.userModel!.urlprofileimage!),
-            body: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _showImageSelect(
-                    context,
-                  )
-                ],
+        return Scaffold(
+          appBar: buildAppBarEditProfile(context, "showprofile"),
+          body: Container(
+            color: Colors.white,
+            child: SafeArea(
+                child: Scaffold(
+              backgroundColor: Colors.white,
+              // appBar: buildAppBarEditProfile(
+              //     context, "test", state.userModel!.urlprofileimage!),
+              body: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _showImageSelect(
+                      context,
+                    )
+                  ],
+                ),
               ),
-            ),
-          )),
+            )),
+          ),
         );
         // else {
         // print("url state =  ${state.imageFile.toString()}");
@@ -125,7 +130,7 @@ Widget _showImageSelect(
   return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
     if (state is getDataState) {
       print("state is getdatastate");
-                print("bio = ${state.userModel!.bio}");
+      print("bio = ${state.userModel!.bio}");
 
       return Column(
         children: [
@@ -165,25 +170,92 @@ Widget _showImageSelect(
               )),
             ),
           ),
-            GestureDetector(
-              onTap: () {
-                print("tap textfield editbio");
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => editbioPage()));
-              },
-              child: Container(
-                child: TextField(
-                  enabled: false,
-                  decoration: InputDecoration(
-                    hintText: state.userModel!.bio,
-                    hintStyle: TextStyle(
-                        color: Colors.black,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.normal),
+          Container(
+            margin: EdgeInsets.only(top: 10.h),
+            padding: EdgeInsets.only(left: 25.w, right: 25.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                reusableText("Username"),
+                GestureDetector(
+                  onTap: () {
+                    print("tap username ");
+                    // Navigator.push(context,
+                    //     MaterialPageRoute(builder: (context) => editbioPage()));
+                  },
+                  child: Container(
+                    child: buildTextFieldToShowInEditProfilePage(
+                        state.userModel!.username),
                   ),
                 ),
-              ),
+                SizedBox(height: 10.h),
+                reusableText("bio"),
+                GestureDetector(
+                  onTap: () {
+                    print("tap textfield editbio");
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => editbioPage()));
+                  },
+                  child: Container(
+                    child: buildTextFieldToShowInEditProfilePage(
+                        state.userModel!.bio),
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                reusableText("email"),
+                GestureDetector(
+                  onTap: () {
+                    print("tap textfield editbio");
+                    // Navigator.push(context,
+                    //     MaterialPageRoute(builder: (context) => editbioPage()));
+                    toastInfo(msg: "Can't edit email");
+                  },
+                  child: Container(
+                    child: buildTextFieldToShowInEditProfilePage(
+                        state.userModel!.email),
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                reusableText("Gender"),
+                GestureDetector(
+                  onTap: () {
+                    print("tap textfield Gender");
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => editgenderPage()));
+                    // toastInfo(msg: "Can't edit email");
+                  },
+                  child: Container(
+                    child: buildTextFieldToShowInEditProfilePage(
+                        state.userModel!.gender),
+                  ),
+                )
+              ],
             ),
+          )
+          // Container(
+
+          //   child: GestureDetector(
+          //     onTap: () {
+          //       print("tap textfield editbio");
+          //       Navigator.push(context,
+          //           MaterialPageRoute(builder: (context) => editbioPage()));
+          //     },
+          //     child: Container(
+          //       child: TextField(
+          //         enabled: false,
+          //         decoration: InputDecoration(
+          //           hintText: state.userModel!.bio,
+          //           hintStyle: TextStyle(
+          //               color: Colors.black,
+          //               fontSize: 14.sp,
+          //               fontWeight: FontWeight.normal),
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       );
     } else {
@@ -197,12 +269,16 @@ Widget _showImageSelect(
 }
 
 AppBar buildAppBarEditProfile(context, String type, [PlatformFile? imagePath]) {
-  if (type == "test") {
+  if (type == "showprofile2") {
     return AppBar(
-      automaticallyImplyLeading: false,
+      // automaticallyImplyLeading: true,
       leading: IconButton(
-        icon: Icon(Icons.cancel_sharp),
-        onPressed: () {},
+        icon: Icon(Icons.arrow_back),
+        onPressed: () {
+          // Navigator.of(context).pushAndRemoveUntil("Application",(route)=>false);
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil("Application", (route) => false);
+        },
       ),
       actions: [
         IconButton(
@@ -229,11 +305,14 @@ AppBar buildAppBarEditProfile(context, String type, [PlatformFile? imagePath]) {
     );
   } else {
     return AppBar(
-      // automaticallyImplyLeading: false,
-      // leading: IconButton(
-      //   icon: Icon(Icons.cancel_sharp),
-      //   onPressed: () {},
-      // ),
+      automaticallyImplyLeading: false,
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil("Application", (route) => false);
+        },
+      ),
       bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
           child: Container(

@@ -256,6 +256,36 @@ Widget buildLoginButton(String buttonName, void Function()? func) {
     ),
   );
 }
+Widget buildCommonButton(String buttonName, void Function()? func) {
+  return GestureDetector(
+    onTap: func,
+    child: Center(
+      child: Container(
+        width: 180.w,
+        height: 50.h,
+        // margin: EdgeInsets.only(left: 150.w,right: 25.w,),
+        decoration: BoxDecoration(
+            color: AppColors.primaryButton,
+            borderRadius: BorderRadius.circular(30.w),
+            boxShadow: [
+              BoxShadow(
+                  spreadRadius: 1,
+                  blurRadius: 3,
+                  offset: Offset(0, 3),
+                  color: Colors.grey.withOpacity(0.5))
+            ]),
+        child: Center(
+            child: Text(
+          buttonName,
+          style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.normal,
+              color: Colors.white),
+        )),
+      ),
+    ),
+  );
+}
 
 Widget SignUp(void Function()? func) {
   return Container(

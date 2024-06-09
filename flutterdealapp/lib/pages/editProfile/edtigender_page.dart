@@ -11,6 +11,9 @@ import 'package:flutterdealapp/pages/editProfile/Widgets/editprofile_widget.dart
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofileBio_bloc.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofileBio_event.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofileBio_state.dart';
+import 'package:flutterdealapp/pages/editProfile/bloc/editprofileGender_bloc.dart';
+import 'package:flutterdealapp/pages/editProfile/bloc/editprofileGender_event.dart';
+import 'package:flutterdealapp/pages/editProfile/bloc/editprofileGender_state.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_bloc.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_event.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_state.dart';
@@ -20,14 +23,14 @@ import 'package:flutterdealapp/pages/editProfile/editprofile_page.dart';
 import '../../model/usermodel.dart';
 import '../Profile/bloc/profile_bloc.dart';
 
-class editbioPage extends StatefulWidget {
-  const editbioPage({super.key});
+class editgenderPage extends StatefulWidget {
+  const editgenderPage({super.key});
 
   @override
-  State<editbioPage> createState() => _editbioPageState();
+  State<editgenderPage> createState() => _editgenderPageState();
 }
 
-class _editbioPageState extends State<editbioPage> {
+class _editgenderPageState extends State<editgenderPage> {
   final uid = FirebaseAuth.instance.currentUser;
   @override
   void initState() {
@@ -104,6 +107,8 @@ class _editbioPageState extends State<editbioPage> {
 Widget _showBio(BuildContext context, UserModel? userModel) {
   print(userModel);
   final TextEditingController _bioController = TextEditingController();
+  final TextEditingController _GenderController = TextEditingController();
+  String? dropdownValue = 'None';
   // return BlocBuilder<EditProfileBloc, EditProfileState>(
   //     builder: (context, state) {
   // _bioController.text = state.userModelProfile?.bio ?? '';
@@ -114,31 +119,71 @@ Widget _showBio(BuildContext context, UserModel? userModel) {
     padding: EdgeInsets.only(left: 25.w, right: 25.w),
     child: Column(
       children: [
-        GestureDetector(
-          onTap: () {
-            // FocusScope.of(context).unfocus();
-          },
-          child: TextField(
-            controller: _bioController,
-            // onChanged: (value) {
-            //   print(_bioController.text);
-            //   state.userModel!.bio = _bioController.text;
-            // },
-            onChanged: (value) => context
-                .read<EditProfileBioBloc>()
-                .add((BioEvent(_bioController.text))),
+        // GestureDetector(
+        //   onTap: () {
+        //     // FocusScope.of(context).unfocus();
+        //   },
+        //   child: TextField(
+        //     controller: _bioController,
+        //     // onChanged: (value) {
+        //     //   print(_bioController.text);
+        //     //   state.userModel!.bio = _bioController.text;
+        //     // },
+        //     onChanged: (value) => context
+        //         .read<EditProfileBioBloc>()
+        //         .add((BioEvent(_bioController.text))),
 
-            enabled: true,
-            decoration: InputDecoration(
-              // hintText: state.userModel!.bio,
-              hintStyle: TextStyle(
-                  color: Colors.black,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.normal),
-            ),
-          ),
-        ),
-        
+        //     enabled: true,
+        //     decoration: InputDecoration(
+        //       // hintText: state.userModel!.bio,
+        //       hintStyle: TextStyle(
+        //           color: Colors.black,
+        //           fontSize: 14.sp,
+        //           fontWeight: FontWeight.normal),
+        //     ),
+        //   ),
+        // ),
+        // DropdownMenu(
+        //   // enabled: tr,
+        //   dropdownMenuEntries: [
+        //     DropdownMenuEntry(value: "Male", label: "Male"),
+        //     DropdownMenuEntry(value: "Female", label: "Female"),
+        //   ],
+        //   controller: _GenderController,
+        //   onSelected: (value) {
+        //     print(value);
+        //     _GenderController.text = value.toString();
+        //   },
+        // ),
+
+        BlocBuilder<EditProfileGenderBloc, GenderState>(
+            builder: (context, state) {
+          // dropdownValue = state.Gender;
+          // state.userModelProfile = userModel;
+          return DropdownButton<String>(
+              value: dropdownValue,
+              items: <String>['None', 'Male', 'Female']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              onChanged: (value) {
+                dropdownValue = value;
+                context
+                    .read<EditProfileGenderBloc>()
+                    .add((GenderEvent(value.toString())));
+                // state.userModelProfile?.gender ;
+                // state.userModelProfile?.gender = value.toString();
+                print(value);
+                // print(state.userModelProfile?.gender);
+                // print(state.userModelProfile);
+                print(state);
+                print("${userModel}");
+                print(dropdownValue);
+              });
+        }),
         // GestureDetector(
         //   onTap: () async {
         //     BlocProvider.of<EditProfileBloc>(context)
@@ -150,23 +195,22 @@ Widget _showBio(BuildContext context, UserModel? userModel) {
         SizedBox(
           height: 35.h,
         ),
-          buildCommonButton("SaveData", ()async {
-            BlocProvider.of<EditProfileBloc>(context)
-                .add(updateProfileBioEvent(_bioController.text));
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => EditProfilePage()));
-
-           }),
-          // child: Container(
-          //   child: Center(
-          //       child: Text(
-          //     userModel?.bio ?? 'bio',
-          //     style: TextStyle(
-          //         color: Color.fromARGB(255, 0, 128, 255),
-          //         fontSize: 24.sp,
-          //         fontWeight: FontWeight.normal),
-          //   )),
-          // ),
+        buildCommonButton("SaveData", () async {
+          BlocProvider.of<EditProfileBloc>(context)
+              .add(updateProfileGenderEvent(dropdownValue!));
+          await Navigator.push(context,
+              MaterialPageRoute(builder: (context) => EditProfilePage()));
+        }),
+        // child: Container(
+        //   child: Center(
+        //       child: Text(
+        //     userModel?.bio ?? 'bio',
+        //     style: TextStyle(
+        //         color: Color.fromARGB(255, 0, 128, 255),
+        //         fontSize: 24.sp,
+        //         fontWeight: FontWeight.normal),
+        //   )),
+        // ),
         // ),
       ],
     ),

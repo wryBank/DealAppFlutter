@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdealapp/pages/Feed/Feed_page.dart';
 import 'package:flutterdealapp/pages/app/app_bloc.dart';
 import 'package:flutterdealapp/pages/app/app_event.dart';
 import 'package:flutterdealapp/pages/app/app_state.dart';
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
                     "profile":(context) => const ProfilePage(),
                     "Application":(context) => const ApplicationPage(),
                     "editprofileImage":(context) => const EditProfileimage(),
+                    "Feed":(context) => const FeedPage(),
                   })),
     );
   }

@@ -11,6 +11,7 @@ import 'package:flutterdealapp/pages/register/bloc/register_blocs.dart';
 import 'package:flutterdealapp/pages/signIn/bloc/signin_blocs.dart';
 import 'package:flutterdealapp/pages/welcome/bloc/welcome_blocs.dart';
 import 'app/app_bloc.dart';
+import 'editProfile/bloc/editprofileGender_bloc.dart';
 import 'editProfile/bloc/editprofile_provider.dart';
 class AppBlocProviders{
   static get allBlocProviders=>[
@@ -24,6 +25,7 @@ class AppBlocProviders{
         BlocProvider(create: (context) => UserBloc(user_repo(provider: user_provider()))),
         BlocProvider(create: (context) => ProfileBloc(user_repo(provider: user_provider()))),
         BlocProvider(create: (context) => EditProfileBioBloc()),
+        BlocProvider(create: (context) => EditProfileGenderBloc()),
 
   ];
   

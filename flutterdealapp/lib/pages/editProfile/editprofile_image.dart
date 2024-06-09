@@ -20,6 +20,7 @@ import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_bloc.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_provider.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_repo.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_state.dart';
+import 'package:flutterdealapp/pages/editProfile/editprofile_page.dart';
 import 'package:flutterdealapp/pages/editProfile/edtibio_page.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_blocs.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_event.dart';
@@ -72,9 +73,10 @@ class _EditProfileimageState extends State<EditProfileimage> {
         print("state1 = ${state.toString()}");
         if (state is InitialState || state is LoadingState) {
           return Container(
+              color: Colors.white,
               child: Center(
-            child: CircularProgressIndicator(),
-          ));
+                child: CircularProgressIndicator(),
+              ));
         }
         // else {
         // print("url state =  ${state.imageFile.toString()}");
@@ -102,6 +104,7 @@ class _EditProfileimageState extends State<EditProfileimage> {
           )),
         );
         return Container(
+          color: Colors.white,
           child: Center(
             child: CircularProgressIndicator(),
           ),
@@ -167,8 +170,10 @@ Widget _showImageSelect(
                 } else {
                   return CircleAvatar(
                     radius: 90,
-                    child: CircularProgressIndicator(),
-                    backgroundColor: Colors.grey,
+                    child: Container(
+                      color: Colors.white,
+                      child: CircularProgressIndicator(),
+                    ),
                   );
                 }
               }),
@@ -254,7 +259,9 @@ AppBar buildAppBarEditProfile(context, String type, [PlatformFile? imagePath]) {
       // automaticallyImplyLeading: false,
       // leading: IconButton(
       //   icon: Icon(Icons.cancel_sharp),
-      //   onPressed: () {},
+      //   onPressed: () {
+      //     MaterialPageRoute(builder: (context) => EditProfilePage());
+      //   },
       // ),
       bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),

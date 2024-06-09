@@ -40,4 +40,8 @@ class editProfile_repo{
     print("inrepo editbio");
     await provider.editBio(bio);
   }
+  Future<void> editGender(String gender) async{
+    print("inrepo editbio");
+    await provider.editGender(gender);
+  }
 }

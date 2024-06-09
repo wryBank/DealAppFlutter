@@ -1,11 +1,9 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Widget buildTextField(String hinttext, String textType, IconData iconName,
-void Function(String value)?func
-) {
+    void Function(String value)? func) {
   return Container(
       width: 325.w,
       height: 50.h,
@@ -26,39 +24,37 @@ void Function(String value)?func
             width: 270.w,
             height: 50.h,
             child: TextField(
-              onChanged: (value)=>func!(value),
+              onChanged: (value) => func!(value),
               keyboardType: TextInputType.multiline,
-              decoration:  InputDecoration(
+              decoration: InputDecoration(
                 hintText: hinttext,
-              //   border: OutlineInputBorder(
-              //       borderSide: BorderSide(color: Colors.transparent)),
-              //   enabledBorder: OutlineInputBorder(
-              //       borderSide: BorderSide(color: Colors.transparent)),
-              //   disabledBorder: OutlineInputBorder(
-              //       borderSide: BorderSide(color: Colors.transparent)),
-              //   focusedBorder: OutlineInputBorder(
-              //       borderSide: BorderSide(color: Colors.transparent)),
-              //       hintStyle: TextStyle(
-              //         color: Colors.grey.withOpacity(0.5),
-              //       )
+                //   border: OutlineInputBorder(
+                //       borderSide: BorderSide(color: Colors.transparent)),
+                //   enabledBorder: OutlineInputBorder(
+                //       borderSide: BorderSide(color: Colors.transparent)),
+                //   disabledBorder: OutlineInputBorder(
+                //       borderSide: BorderSide(color: Colors.transparent)),
+                //   focusedBorder: OutlineInputBorder(
+                //       borderSide: BorderSide(color: Colors.transparent)),
+                //       hintStyle: TextStyle(
+                //         color: Colors.grey.withOpacity(0.5),
+                //       )
               ),
-            style: TextStyle(
-              color: Colors.black, 
-              // fontFamily: 
-              fontWeight: FontWeight.normal,
-              fontSize: 14.sp
-            ),
-            autocorrect: false,
-            obscureText: textType=="password"?true:false,
+              style: TextStyle(
+                  color: Colors.black,
+                  // fontFamily:
+                  fontWeight: FontWeight.normal,
+                  fontSize: 14.sp),
+              autocorrect: false,
+              obscureText: textType == "password" ? true : false,
             ),
           )
         ],
       ));
 }
 
-Widget buildTextField_EditImage(String hinttext, String textType, IconData iconName,
-void Function(String value)?func
-) {
+Widget buildTextField_EditImage(String hinttext, String textType,
+    IconData iconName, void Function(String value)? func) {
   return Column(
     children: [
       Container(
@@ -81,34 +77,46 @@ void Function(String value)?func
                 width: 270.w,
                 height: 50.h,
                 child: TextField(
-                  onChanged: (value)=>func!(value),
+                  onChanged: (value) => func!(value),
                   keyboardType: TextInputType.multiline,
-                  decoration:  InputDecoration(
+                  decoration: InputDecoration(
                     hintText: hinttext,
-                  //   border: OutlineInputBorder(
-                  //       borderSide: BorderSide(color: Colors.transparent)),
-                  //   enabledBorder: OutlineInputBorder(
-                  //       borderSide: BorderSide(color: Colors.transparent)),
-                  //   disabledBorder: OutlineInputBorder(
-                  //       borderSide: BorderSide(color: Colors.transparent)),
-                  //   focusedBorder: OutlineInputBorder(
-                  //       borderSide: BorderSide(color: Colors.transparent)),
-                  //       hintStyle: TextStyle(
-                  //         color: Colors.grey.withOpacity(0.5),
-                  //       )
+                    //   border: OutlineInputBorder(
+                    //       borderSide: BorderSide(color: Colors.transparent)),
+                    //   enabledBorder: OutlineInputBorder(
+                    //       borderSide: BorderSide(color: Colors.transparent)),
+                    //   disabledBorder: OutlineInputBorder(
+                    //       borderSide: BorderSide(color: Colors.transparent)),
+                    //   focusedBorder: OutlineInputBorder(
+                    //       borderSide: BorderSide(color: Colors.transparent)),
+                    //       hintStyle: TextStyle(
+                    //         color: Colors.grey.withOpacity(0.5),
+                    //       )
                   ),
-                style: TextStyle(
-                  color: Colors.black, 
-                  // fontFamily: 
-                  fontWeight: FontWeight.normal,
-                  fontSize: 14.sp
-                ),
-                autocorrect: false,
-                obscureText: textType=="password"?true:false,
+                  style: TextStyle(
+                      color: Colors.black,
+                      // fontFamily:
+                      fontWeight: FontWeight.normal,
+                      fontSize: 14.sp),
+                  autocorrect: false,
+                  obscureText: textType == "password" ? true : false,
                 ),
               )
             ],
           )),
     ],
+  );
+}
+
+Widget buildTextFieldToShowInEditProfilePage(
+  String? text,
+) {
+  return TextField(
+    enabled: false,
+    decoration: InputDecoration(
+      hintText: text,
+      hintStyle: TextStyle(
+          color: Colors.black, fontSize: 14.sp, fontWeight: FontWeight.normal),
+    ),
   );
 }

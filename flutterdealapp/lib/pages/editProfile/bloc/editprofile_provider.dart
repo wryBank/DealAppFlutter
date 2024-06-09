@@ -162,5 +162,12 @@ Future<void> editBio(String bio) async {
     throw Exception(e.toString());
   }
 }
+Future<void> editGender(String gender) async {
+  try {
+    await _fireCloud.doc(_uid).update({"gender": gender});
+  } catch (e) {
+    throw Exception(e.toString());
+  }
+}
 
 }

@@ -61,6 +61,10 @@ class updateProfileBioEvent extends EditProfileEvent{
   String bio;
   updateProfileBioEvent(this.bio);
 }
+class updateProfileGenderEvent extends EditProfileEvent{
+  String Gender;
+  updateProfileGenderEvent(this.Gender);
+}
 class EditingBioEvent extends EditProfileEvent{
   String bio;
   EditingBioEvent(this.bio);
