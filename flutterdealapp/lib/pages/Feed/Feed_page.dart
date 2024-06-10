@@ -29,10 +29,10 @@ class _FeedPageState extends State<FeedPage> {
         ),
         body: Column(children: <Widget>[
           Container(
-              height: size.height * 0.2,
+              // height: size.height * 0.2,
               child: Stack(children: <Widget>[
                 Container(
-                    height: size.height * 0.4 - 47,
+                    height: size.height * 0.2 - 47,
                     decoration: BoxDecoration(
                       color: Color.fromARGB(255, 88, 172, 255),
                       borderRadius: BorderRadius.only(
@@ -40,28 +40,7 @@ class _FeedPageState extends State<FeedPage> {
                         bottomRight: Radius.circular(26),
                       ),
                     ),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Center(
-                            child: Transform.scale(
-                              scale: 1.2,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border:
-                                      Border.all(color: Colors.white, width: 2),
-                                ),
-                                child: CircleAvatar(
-                                  radius: 50,
-                                  //   backgroundImage: NetworkImage(
-                                  //       // state.userModel!.urlprofileimage!),
-                                  // ),
-                                ),
-                              ),
-                            ),
-                          )
-                        ])),
+                        ),
               ])),
           Expanded(
             child: ListView.builder(
@@ -92,92 +71,97 @@ class _FeedPageState extends State<FeedPage> {
 }
 
 Widget buildPostBox() {
-  return Container(
-    decoration: BoxDecoration(
-      color: Colors.green,
-      border: Border.all(
-        width: 3,
-        color: Colors.black,
+  return GestureDetector(
+    onTap: () {
+      print("tap in post box");
+    },
+    child: Container(
+      decoration: BoxDecoration(
+        color: AppColors.primaryPostBox,
+        border: Border.all(
+          width: 0.2,
+          color: Colors.black,
+        ),
+        borderRadius: BorderRadius.circular(10),
       ),
-      borderRadius: BorderRadius.circular(10),
-    ),
-    margin: EdgeInsets.all(20),
-    child: Column(
-      children: [
-        Container(
-          color: Colors.red,
-          margin: EdgeInsets.all(10),
-          width: 235.w,
-          height: 120.h,
-          child: Image.asset("assets/images/icon.png"),
-        ),
-        Align(
-          alignment: Alignment.centerRight,
-          child: Container(
-            margin: EdgeInsets.only(right: 10),
-            child: Text("1 hour ago"),
+      margin: EdgeInsets.all(20),
+      child: Column(
+        children: [
+          Container(
+            // color: Colors.red,
+            margin: EdgeInsets.all(10),
+            width: 235.w,
+            height: 120.h,
+            child: Image.asset("assets/images/icon.png"),
           ),
-        ),
-        Row(
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                margin: EdgeInsets.only(left: 20),
-                child: CircleAvatar(
-                  radius: 30,
-                  backgroundImage: AssetImage("assets/images/icon.png"),
-                ),
-              ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Container(
+              margin: EdgeInsets.only(right: 10),
+              child: Text("1 hour ago"),
             ),
-            Container(
-              margin: EdgeInsets.only(left: 10),
-              child: Text(
-                "This Heading",
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            Align(
-              child: Container(
-                margin: EdgeInsets.only(left: 20),
+          ),
+          Row(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
                 child: Container(
-                  width: 20.w,
-                  height: 20.h,
-                  child: Image.asset("assets/icons/location.png"),
+                  margin: EdgeInsets.only(left: 20),
+                  child: CircleAvatar(
+                    radius: 30,
+                    backgroundImage: AssetImage("assets/images/icon.png"),
+                  ),
                 ),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.all(5),
-              child: Text(
-                "This is the body of the post",
-                style: TextStyle(fontSize: 15),
+              Container(
+                margin: EdgeInsets.only(left: 10),
+                child: Text(
+                  "This Heading",
+                  style: TextStyle(fontSize: 20),
+                ),
               ),
-            ),
-            Align(
-              child: Container(
-                margin: EdgeInsets.only(left: 20),
+            ],
+          ),
+          Row(
+            children: [
+              Align(
                 child: Container(
-                  width: 20.w,
-                  height: 20.h,
-                  child: Image.asset("assets/icons/location.png"),
+                  margin: EdgeInsets.only(left: 20),
+                  child: Container(
+                    width: 20.w,
+                    height: 20.h,
+                    child: Image.asset("assets/icons/location.png"),
+                  ),
                 ),
               ),
-            ),
-            Container(
-              // margin: EdgeInsets.all(10),
-              child: Text(
-                "22 km",
-                style: TextStyle(fontSize: 15),
+              Container(
+                margin: EdgeInsets.all(5),
+                child: Text(
+                  "This is the body of the post",
+                  style: TextStyle(fontSize: 15),
+                ),
               ),
-            ),
-          ],
-        ),
-      ],
+              Align(
+                child: Container(
+                  margin: EdgeInsets.only(left: 20),
+                  child: Container(
+                    width: 20.w,
+                    height: 20.h,
+                    child: Image.asset("assets/icons/location.png"),
+                  ),
+                ),
+              ),
+              Container(
+                // margin: EdgeInsets.all(10),
+                child: Text(
+                  "22 km",
+                  style: TextStyle(fontSize: 15),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     ),
   );
 }

@@ -277,11 +277,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               
                           //   ),
                           // );
-                          return ListTile(
-                            title: Text("Title"),
-                            subtitle: Text("Subtitle"),
-                            leading: Icon(Icons.ac_unit),
-                            trailing: Icon(Icons.arrow_forward_ios),
+                          return Material(
+                            child: buildPostBox(),
                           );
                         }),
                       );
@@ -296,4 +293,100 @@ class _ProfilePageState extends State<ProfilePage> {
 
     // add gridview here
   }
+}
+
+Widget buildPostBox() {
+  return GestureDetector(
+    onTap: () {
+      print("tap in post box");
+    },
+    child: Container(
+      decoration: BoxDecoration(
+        color: AppColors.primaryPostBox,
+        border: Border.all(
+          width: 0.2,
+          color: Colors.black,
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      margin: EdgeInsets.all(20),
+      child: Column(
+        children: [
+          Container(
+            // color: Colors.red,
+            margin: EdgeInsets.all(10),
+            width: 235.w,
+            height: 120.h,
+            child: Image.asset("assets/images/icon.png"),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Container(
+              margin: EdgeInsets.only(right: 10),
+              child: Text("1 hour ago"),
+            ),
+          ),
+          Row(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  margin: EdgeInsets.only(left: 20),
+                  child: CircleAvatar(
+                    radius: 30,
+                    backgroundImage: AssetImage("assets/images/icon.png"),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 10),
+                child: Text(
+                  "This Heading",
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Align(
+                child: Container(
+                  margin: EdgeInsets.only(left: 20),
+                  child: Container(
+                    width: 20.w,
+                    height: 20.h,
+                    child: Image.asset("assets/icons/location.png"),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.all(5),
+                child: Text(
+                  "This is the body of the post",
+                  style: TextStyle(fontSize: 15),
+                ),
+              ),
+              Align(
+                child: Container(
+                  margin: EdgeInsets.only(left: 20),
+                  child: Container(
+                    width: 20.w,
+                    height: 20.h,
+                    child: Image.asset("assets/icons/location.png"),
+                  ),
+                ),
+              ),
+              Container(
+                // margin: EdgeInsets.all(10),
+                child: Text(
+                  "22 km",
+                  style: TextStyle(fontSize: 15),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
 }
