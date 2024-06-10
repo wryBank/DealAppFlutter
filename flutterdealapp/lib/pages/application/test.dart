@@ -3,67 +3,68 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdealapp/model/postmodel.dart';
 import 'package:flutterfire_ui/firestore.dart';
 
-import '../../model/postmodel.dart';
 import '../../values/color.dart';
 
-class FeedPage extends StatefulWidget {
-  const FeedPage({super.key});
-
+class test extends StatefulWidget {
   @override
-  State<FeedPage> createState() => _FeedPageState();
+  State<test> createState() => _testState();
+
 }
 
-class _FeedPageState extends State<FeedPage> {
+class _testState extends State<test> { 
+  @override
+  void initState() {
+    super.initState();
+    // uploadRandom();
+  }
   final queryPost = FirebaseFirestore.instance
       .collection('posts')
       .withConverter<PostModel>(
         fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
         toFirestore: (user, _) => user.toJson(),
       );
+  // void uploadRandom() async {
+  //   print("inra");
+  //   final postColl = FirebaseFirestore.instance
+  //       .collection('posts')
+  //       .withConverter<PostModel>(
+  //         fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
+  //         toFirestore: (post, _) => post.toJson(),
+  //       );
+  //   final numbers = List.generate(50, (index) => index + 1);
+  //   for (final number in numbers) {
+  //     final post = PostModel(
+  //       title: 'Post $number',
+  //       detail: 'Detail $number',
+  //       postimage:
+  //           'https://cdn.discordapp.com/attachments/756464270866120779/1249701504030478336/Rectangle_36.png?ex=666842b8&is=6666f138&hm=159dc4612cd2d66f905ddf37d7e9b2f489ec66cdfd55834d471b45a994507d4e&',
+  //       postby: 'Username',
+  //      postdate: Timestamp.now()
+
+  //     );
+  //     postColl.add(post);
+  //   }
+  // }
+
+ 
+  
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: AppColors.primaryAppbar,
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(1.0),
-            child: Container(
-              // color: AppColors.primaryAppbar,
-              height: 0.5,
-            ),
-          ),
-        ),
-        body: Column(children: <Widget>[
-          Stack(children: <Widget>[
-            Container(
-                height: size.height * 0.2 - 47,
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 88, 172, 255),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(26),
-                    bottomRight: Radius.circular(26),
-                  ),
-                ),
-                    ),
-          ]),
-        Expanded(
-          child: FirestoreListView(
-              query: queryPost,
-              pageSize: 2,
-              itemBuilder: (context, snapshot) {
-                final post = snapshot.data();
-                print("poss: ${post.postimage}");
-                print("poss: ${post.title}");
-                return buildPostBox(
-                    post.title!, post.detail!, "", post.postimage ?? "", "a",post.postdate!);
-              }),
-        )
- 
-        ])
-        );
+        body: FirestoreListView(
+            query: queryPost,
+            pageSize: 2,
+            itemBuilder: (context, snapshot) {
+              final post = snapshot.data();
+              print("poss: ${post.postimage}");
+              print("poss: ${post.title}");
+              return buildPostBox(
+                  post.title!, post.detail!, "", post.postimage ?? "", "a",post.postdate!);
+            })
+            );
   }
 }
 
