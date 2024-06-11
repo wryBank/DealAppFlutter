@@ -2,30 +2,44 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdealapp/model/postmodel.dart';
+import 'package:flutterdealapp/pages/post/bloc/post_bloc.dart';
+import 'package:flutterdealapp/pages/post/bloc/post_state.dart';
 import 'package:flutterfire_ui/firestore.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../values/color.dart';
+import '../post/bloc/post_event.dart';
 
 class test extends StatefulWidget {
   @override
   State<test> createState() => _testState();
-
 }
 
-class _testState extends State<test> { 
+class _testState extends State<test> {
+  void getLocation() async {
+    await Geolocator.checkPermission();
+    await Geolocator.requestPermission();
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.low);
+        print(position);
+  }
   @override
   void initState() {
     super.initState();
+    getLocation();
+    BlocProvider.of<PostBloc>(context).add(getPostData());
     // uploadRandom();
   }
-  final queryPost = FirebaseFirestore.instance
-      .collection('posts')
-      .withConverter<PostModel>(
-        fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
-        toFirestore: (user, _) => user.toJson(),
-      );
+
+  // final queryPost = FirebaseFirestore.instance
+  //     .collection('posts').orderBy('detail')
+  //     .withConverter<PostModel>(
+  //       fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
+  //       toFirestore: (user, _) => user.toJson(),
+  //     );
   // void uploadRandom() async {
   //   print("inra");
   //   final postColl = FirebaseFirestore.instance
@@ -37,6 +51,7 @@ class _testState extends State<test> {
   //   final numbers = List.generate(50, (index) => index + 1);
   //   for (final number in numbers) {
   //     final post = PostModel(
+  //       uid: 'uid $number',
   //       title: 'Post $number',
   //       detail: 'Detail $number',
   //       postimage:
@@ -49,27 +64,42 @@ class _testState extends State<test> {
   //   }
   // }
 
- 
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: FirestoreListView(
-            query: queryPost,
-            pageSize: 2,
-            itemBuilder: (context, snapshot) {
-              final post = snapshot.data();
-              print("poss: ${post.postimage}");
-              print("poss: ${post.title}");
-              return buildPostBox(
-                  post.title!, post.detail!, "", post.postimage ?? "", "a",post.postdate!);
-            })
-            );
+        body: RefreshIndicator(
+      onRefresh: () async {
+        getLocation();
+        BlocProvider.of<PostBloc>(context).add(getPostData());
+        
+      },
+      child: BlocBuilder<PostBloc,PostState>(
+        
+        builder: (context,state) {
+          if (state is PostInitial || state is PostLoading) {
+            return CircularProgressIndicator();
+          }
+          if (state is PostLoaded){
+            print("state.postModel: ${state.postModel}");
+          return FirestoreListView(
+              query: state.postModel,
+              pageSize: 2,
+              itemBuilder: (context, snapshot) {
+                final post = snapshot.data();
+                // print("poss: ${post.postimage}");
+                // print("poss: ${post.title}");
+                return buildPostBox(post.title!, post.detail!, "",
+                    post.postimage ?? "", "a", post.postdate!);
+              });
+        }
+        return Container(); // Add this line to return a non-null Widget
+      },
+    )));
   }
 }
 
 Widget buildPostBox(String title, String detail, String location,
-    String urlImage, String postby,Timestamp postdate) {
+    String urlImage, String postby, Timestamp postdate) {
   return GestureDetector(
     onTap: () {
       print("tap in post box");
@@ -101,7 +131,8 @@ Widget buildPostBox(String title, String detail, String location,
             alignment: Alignment.centerRight,
             child: Container(
               margin: EdgeInsets.only(right: 10),
-              child: Text("${postdate.toDate().day}/${postdate.toDate().month}/${postdate.toDate().year}"),
+              child: Text(
+                  "${postdate.toDate().day}/${postdate.toDate().month}/${postdate.toDate().year}"),
             ),
           ),
           Row(
