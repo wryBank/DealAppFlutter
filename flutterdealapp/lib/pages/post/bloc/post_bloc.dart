@@ -20,6 +20,17 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         emit(PostLoaded(postModel));
       } catch (e) {}
     });
+  on<getPostListData>((event, emit) async {
+    emit(PostLoading());
+    try {
+      print("inbloc post2");
+      // repository.getPosts();
+      print("------------------------------------------------------------------");
+      repository.postProvider.calculateDistances();
+      List postModel = await repository.postProvider.calculateDistances();
+      emit(PostListLoaded(postModel));
+    } catch (e) {}
+  });
   }
 
 }

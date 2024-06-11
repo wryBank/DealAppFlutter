@@ -11,5 +11,11 @@ class PostRepository {
   Future<Query<PostModel>> getPosts() async {
     return await postProvider.getPosts();
   }
+  // Future<List<PostModel>> getPosts2() async {
+  //   return await postProvider.getPosts2();
+  // }
+  Future<void> calculateDistances() async {
+    await postProvider.calculateDistances();
+  }
   
 }

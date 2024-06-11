@@ -23,14 +23,15 @@ class _testState extends State<test> {
     await Geolocator.checkPermission();
     await Geolocator.requestPermission();
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.low);
-        print(position);
+        desiredAccuracy: LocationAccuracy.high);
+    print(position);
   }
+
   @override
   void initState() {
     super.initState();
     getLocation();
-    BlocProvider.of<PostBloc>(context).add(getPostData());
+    BlocProvider.of<PostBloc>(context).add(getPostListData());
     // uploadRandom();
   }
 
@@ -48,14 +49,14 @@ class _testState extends State<test> {
   //         fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
   //         toFirestore: (post, _) => post.toJson(),
   //       );
-  //   final numbers = List.generate(50, (index) => index + 1);
+  //   final numbers = List.generate(5, (index) => index + 1);
   //   for (final number in numbers) {
   //     final post = PostModel(
   //       uid: 'uid $number',
   //       title: 'Post $number',
   //       detail: 'Detail $number',
   //       postimage:
-  //           'https://cdn.discordapp.com/attachments/756464270866120779/1249701504030478336/Rectangle_36.png?ex=666842b8&is=6666f138&hm=159dc4612cd2d66f905ddf37d7e9b2f489ec66cdfd55834d471b45a994507d4e&',
+  //           "https://firebasestorage.googleapis.com/v0/b/dealapp-363e7.appspot.com/o/files%2F%E0%B9%86.png?alt=media&token=9937d410-adab-4b66-a08e-a3d246de6236",
   //       postby: 'Username',
   //      postdate: Timestamp.now()
 
@@ -67,31 +68,46 @@ class _testState extends State<test> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: RefreshIndicator(
-      onRefresh: () async {
-        getLocation();
-        BlocProvider.of<PostBloc>(context).add(getPostData());
-        
-      },
-      child: BlocBuilder<PostBloc,PostState>(
-        
-        builder: (context,state) {
-          if (state is PostInitial || state is PostLoading) {
-            return CircularProgressIndicator();
-          }
-          if (state is PostLoaded){
-            print("state.postModel: ${state.postModel}");
-          return FirestoreListView(
-              query: state.postModel,
-              pageSize: 2,
-              itemBuilder: (context, snapshot) {
-                final post = snapshot.data();
-                // print("poss: ${post.postimage}");
-                // print("poss: ${post.title}");
+        body: RefreshIndicator(onRefresh: () async {
+      getLocation();
+      BlocProvider.of<PostBloc>(context).add(getPostListData());
+    }, child: BlocBuilder<PostBloc, PostState>(
+      builder: (context, state) {
+        if (state is PostInitial || state is PostLoading) {
+          return CircularProgressIndicator();
+        }
+        // if (state is PostListLoaded) {
+        //   print("state.postModel: ${state.postModel.toString()}");
+        //   // print("state.postModel: ${state.detail}");
+          
+        // }
+        if (state is PostListLoaded) {
+          print("state.postModel: ${state.postModel}\n ");
+          return ListView.builder(
+              itemCount: state.postModel.length,
+              itemBuilder: (context, index) {
+                
+                var postWithDistance = state.postModel[index];
+                var post = postWithDistance['post']as PostModel; ;
+                var distance = postWithDistance['distance'] as double;
+                // final post = state.postModel[index];
                 return buildPostBox(post.title!, post.detail!, "",
-                    post.postimage ?? "", "a", post.postdate!);
+                    post.postimage ?? "", "a", post.postdate!,distance);
               });
         }
+        // if (state is PostLoaded) {
+        //   // print("state.postModel: ${state.postModel}");
+        //   return FirestoreListView(
+        //       query: state.postModel,
+        //       pageSize: 2,
+        //       itemBuilder: (context, snapshot) {
+        //         final post = snapshot.data();
+        //         // print("poss: ${post.postimage}");
+        //         // print("poss: ${post.title}");
+        //         return buildPostBox(post.title!, post.detail!, "",
+        //             post.postimage ?? "", "a", post.postdate!,);
+        //       });
+        // }
         return Container(); // Add this line to return a non-null Widget
       },
     )));
@@ -99,7 +115,7 @@ class _testState extends State<test> {
 }
 
 Widget buildPostBox(String title, String detail, String location,
-    String urlImage, String postby, Timestamp postdate) {
+    String urlImage, String postby, Timestamp postdate,double distance) {
   return GestureDetector(
     onTap: () {
       print("tap in post box");
@@ -200,7 +216,7 @@ Widget buildPostBox(String title, String detail, String location,
               Container(
                 // margin: EdgeInsets.all(10),
                 child: Text(
-                  "22 km",
+                  "${distance.toStringAsFixed(1)} km",
                   style: TextStyle(fontSize: 15),
                 ),
               ),

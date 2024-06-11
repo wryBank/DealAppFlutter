@@ -13,3 +13,8 @@ class PostLoaded extends PostState {
   final Query<PostModel> postModel;
   PostLoaded(this.postModel);
 }
+class PostListLoaded extends PostState {
+  final List postModel;
+      // List<MapEntry<PostModel, double>> postModel ;
+  PostListLoaded(this.postModel);
+}

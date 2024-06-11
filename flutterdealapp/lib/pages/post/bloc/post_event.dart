@@ -9,3 +9,5 @@ abstract class PostEvent  {
 
 class getPostData extends PostEvent {
 }
+class getPostListData extends PostEvent {
+}
