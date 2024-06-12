@@ -2,11 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdealapp/pages/post/bloc/post_bloc.dart';
+import 'package:flutterdealapp/pages/post/bloc/post_state.dart';
 import 'package:flutterfire_ui/firestore.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../model/postmodel.dart';
 import '../../values/color.dart';
+import '../post/bloc/post_event.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
@@ -16,12 +21,33 @@ class FeedPage extends StatefulWidget {
 }
 
 class _FeedPageState extends State<FeedPage> {
+  Future<void> getLocation() async {
+    await Geolocator.checkPermission();
+    await Geolocator.requestPermission();
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    print(position);
+    currentLatitude = position.latitude;
+    currentLongtitude = position.longitude;
+  }
+
+  double currentLatitude = 0;
+  double currentLongtitude = 0;
   final queryPost = FirebaseFirestore.instance
       .collection('posts')
       .withConverter<PostModel>(
         fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
         toFirestore: (user, _) => user.toJson(),
       );
+
+  @override
+  void initState() {
+    super.initState();
+    getLocation();
+    BlocProvider.of<PostBloc>(context).add(getPostData());
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -36,9 +62,14 @@ class _FeedPageState extends State<FeedPage> {
             ),
           ),
         ),
-        body: Column(children: <Widget>[
-          Stack(children: <Widget>[
-            Container(
+        body: RefreshIndicator(
+          onRefresh: () async {
+            getLocation();
+            BlocProvider.of<PostBloc>(context).add(getPostData());
+          },
+          child: Column(children: <Widget>[
+            Stack(children: [
+              Container(
                 height: size.height * 0.2 - 47,
                 decoration: BoxDecoration(
                   color: Color.fromARGB(255, 88, 172, 255),
@@ -47,31 +78,46 @@ class _FeedPageState extends State<FeedPage> {
                     bottomRight: Radius.circular(26),
                   ),
                 ),
-                    ),
+              ),
+            ]),
+            BlocBuilder<PostBloc, PostState>(builder: (context, state) {
+              if (state is PostLoaded) {
+                return Expanded(
+                  child: FirestoreListView(
+                      query: state.postModel,
+                      pageSize: 2,
+                      itemBuilder: (context, snapshot) {
+                        final post = snapshot.data();
+                        double distance = calculateDistances(currentLatitude,
+                            currentLongtitude, post.latitude!, post.longitude!);
+                        return buildPostBox(
+                            post.title!,
+                            post.detail!,
+                            "",
+                            post.postimage ?? "",
+                            "a",
+                            post.postdate!,
+                            distance);
+                      }),
+                );
+              } else {
+                return Container(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+            })
           ]),
-        Expanded(
-          child: FirestoreListView(
-              query: queryPost,
-              pageSize: 2,
-              itemBuilder: (context, snapshot) {
-                final post = snapshot.data();
-                print("poss: ${post.postimage}");
-                print("poss: ${post.title}");
-                return buildPostBox(
-                    post.title!, post.detail!, "", post.postimage ?? "", "a",post.postdate!);
-              }),
-        )
- 
-        ])
-        );
+        ));
   }
 }
 
 Widget buildPostBox(String title, String detail, String location,
-    String urlImage, String postby,Timestamp postdate) {
+    String urlImage, String postby, Timestamp postdate, double distance) {
   return GestureDetector(
     onTap: () {
-      print("tap in post box");
+      print("tap in post box {$detail}");
     },
     child: Container(
       decoration: BoxDecoration(
@@ -100,7 +146,8 @@ Widget buildPostBox(String title, String detail, String location,
             alignment: Alignment.centerRight,
             child: Container(
               margin: EdgeInsets.only(right: 10),
-              child: Text("${postdate.toDate().day}/${postdate.toDate().month}/${postdate.toDate().year}"),
+              child: Text(
+                  "${postdate.toDate().day}/${postdate.toDate().month}/${postdate.toDate().year}"),
             ),
           ),
           Row(
@@ -116,7 +163,6 @@ Widget buildPostBox(String title, String detail, String location,
                 ),
               ),
               Container(
-                color: Colors.amber,
                 margin: EdgeInsets.only(left: 10),
                 child: Text(
                   "Warayut Saisi",
@@ -127,7 +173,6 @@ Widget buildPostBox(String title, String detail, String location,
           ),
           Container(
             // color: Colors.amber,
-            color: Colors.amber,
             width: 330.w,
             margin: EdgeInsets.all(20),
             child: Text(
@@ -168,7 +213,7 @@ Widget buildPostBox(String title, String detail, String location,
               Container(
                 // margin: EdgeInsets.all(10),
                 child: Text(
-                  "22 km",
+                  "${distance.toStringAsFixed(1)} km",
                   style: TextStyle(fontSize: 15),
                 ),
               ),
@@ -178,4 +223,15 @@ Widget buildPostBox(String title, String detail, String location,
       ),
     ),
   );
+}
+
+calculateDistances(double curLa, double CurLong, double la, double long) {
+  print("curla: $curLa");
+  print("curlong: $CurLong");
+  double distanceInMeters =
+      Geolocator.distanceBetween(curLa, CurLong, la, long);
+  double distanceInKilometers = distanceInMeters / 1000;
+  print(
+      'Distance from current location to post ${la}: post latitude is ${la}: post long is ${long} $distanceInKilometers km');
+  return distanceInKilometers;
 }

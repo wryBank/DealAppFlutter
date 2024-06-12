@@ -60,28 +60,31 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
         print("in editprofileevent");
         print("uiddddd = ${event.userModel.uid}");
         repository.editProfile(event.userModel);
-        UserModel userModel = await repository.provider.getUserData(event.userModel.uid!);
+        UserModel userModel =
+            await repository.provider.getUserData(event.userModel.uid!);
         emit(EditProfileState(userModelProfile: userModel));
       } catch (e) {}
     });
-  on<updateProfileBioEvent>((event, emit) async {
+    on<updateProfileBioEvent>((event, emit) async {
       emit(LoadingState());
       try {
         print("in editprofileevent");
         print("bio = ${event.bio}");
         repository.editBio(event.bio);
-        UserModel userModel = await repository.provider.getUserData(FirebaseAuth.instance.currentUser!.uid);
+        UserModel userModel = await repository.provider
+            .getUserData(FirebaseAuth.instance.currentUser!.uid);
         emit(updateProfileBioState(userModel.bio!));
         print("emit bio = ${userModel.bio}");
       } catch (e) {}
     });
-  on<updateProfileGenderEvent>((event, emit) async {
+    on<updateProfileGenderEvent>((event, emit) async {
       emit(LoadingState());
       try {
         print("in update gender");
         // print("bio = ${event.bio}");
         repository.editGender(event.Gender);
-        UserModel userModel = await repository.provider.getUserData(FirebaseAuth.instance.currentUser!.uid);
+        UserModel userModel = await repository.provider
+            .getUserData(FirebaseAuth.instance.currentUser!.uid);
         emit(updateProfileBioState(userModel.gender!));
         print("emit gender = ${userModel.gender}");
       } catch (e) {}
@@ -92,5 +95,4 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
     //     // emit(state.bio);
     // });
   }
-  }
-  
+}

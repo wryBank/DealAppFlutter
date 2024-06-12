@@ -380,7 +380,6 @@ Widget buildPostBox(String title, String detail, String location,
                 ),
               ),
               Container(
-                color: Colors.amber,
                 margin: EdgeInsets.only(left: 10),
                 child: Text(
                   "Warayut Saisi",
@@ -391,7 +390,6 @@ Widget buildPostBox(String title, String detail, String location,
           ),
           Container(
             // color: Colors.amber,
-            color: Colors.amber,
             width: 330.w,
             margin: EdgeInsets.all(20),
             child: Text(

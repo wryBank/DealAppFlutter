@@ -51,6 +51,7 @@ class _ApplicationPageState extends State<ApplicationPage> {
       color: Colors.white,
       child: SafeArea(
           child: Scaffold(
+ 
               body: buildPage(_index),
               bottomNavigationBar: BottomNavigationBar(
                 onTap: (value) {

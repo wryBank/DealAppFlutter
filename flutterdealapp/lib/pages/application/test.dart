@@ -4,7 +4,10 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdealapp/CustomFABLocation.dart';
 import 'package:flutterdealapp/model/postmodel.dart';
+import 'package:flutterdealapp/pages/createpost/createPost_page.dart';
+import 'package:flutterdealapp/pages/editProfile/editprofile_page.dart';
 import 'package:flutterdealapp/pages/post/bloc/post_bloc.dart';
 import 'package:flutterdealapp/pages/post/bloc/post_state.dart';
 import 'package:flutterfire_ui/firestore.dart';
@@ -30,16 +33,18 @@ class _testState extends State<test> {
     currentLongtitude = position.longitude;
   }
 
-  double currentLatitude =0;
-  double currentLongtitude =0 ;
+  double currentLatitude = 0;
+  double currentLongtitude = 0;
 
   @override
   void initState() {
     super.initState();
-    getLocation();
-    // getLocation2();
-    BlocProvider.of<PostBloc>(context).add(getPostData());
-    // uploadRandom();
+    getLocation().then((_) {
+      // getLocation2();
+      BlocProvider.of<PostBloc>(context).add(getPostData());
+
+      // uploadRandom();
+    });
   }
 
   // final queryPost = FirebaseFirestore.instance
@@ -75,54 +80,77 @@ class _testState extends State<test> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: RefreshIndicator(onRefresh: () async {
-      getLocation();
-      BlocProvider.of<PostBloc>(context).add(getPostData());
-    }, child: BlocBuilder<PostBloc, PostState>(
-      builder: (context, state) {
-        if (state is PostInitial || state is PostLoading) {
-          return CircularProgressIndicator();
-        }
-        // if (state is PostListLoaded) {
-        //   print("state.postModel: ${state.postModel.toString()}");
-        //   // print("state.postModel: ${state.detail}");
+      body: RefreshIndicator(onRefresh: () async {
+        getLocation();
+        BlocProvider.of<PostBloc>(context).add(getPostData());
+      }, child: BlocBuilder<PostBloc, PostState>(
+        builder: (context, state) {
+          if (state is PostInitial || state is PostLoading) {
+            return CircularProgressIndicator();
+          }
+          // if (state is PostListLoaded) {
+          //   print("state.postModel: ${state.postModel.toString()}");
+          //   // print("state.postModel: ${state.detail}");
 
-        // }
-        // if (state is PostListLoaded) {
-        //   print("state.postModel: ${state.postModel}\n ");
-        //   return ListView.builder(
-        //       itemCount: state.postModel.length,
-        //       itemBuilder: (context, index) {
+          // }
+          // if (state is PostListLoaded) {
+          //   print("state.postModel: ${state.postModel}\n ");
+          //   return ListView.builder(
+          //       itemCount: state.postModel.length,
+          //       itemBuilder: (context, index) {
 
-        //         var postWithDistance = state.postModel[index];
-        //         var post = postWithDistance['post']as PostModel; ;
-        //         var distance = postWithDistance['distance'] as double;
-        //         // final post = state.postModel[index];
-        //         return buildPostBox(post.title!, post.detail!, "",
-        //             post.postimage ?? "", "a", post.postdate!,distance);
-        //       });
-        // }
-        if (state is PostLoaded) {
-          // print("state.postModel: ${state.postModel}");
-          return FirestoreListView(
-              query: state.postModel,
-              pageSize: 2,
-              itemBuilder: (context, snapshot) {
-                final post = snapshot.data();
+          //         var postWithDistance = state.postModel[index];
+          //         var post = postWithDistance['post']as PostModel; ;
+          //         var distance = postWithDistance['distance'] as double;
+          //         // final post = state.postModel[index];
+          //         return buildPostBox(post.title!, post.detail!, "",
+          //             post.postimage ?? "", "a", post.postdate!,distance);
+          //       });
+          // }
+          if (state is PostLoaded) {
+            // print("state.postModel: ${state.postModel}");
+            return FirestoreListView(
+                query: state.postModel,
+                pageSize: 2,
+                itemBuilder: (context, snapshot) {
+                  final post = snapshot.data();
 
-                // double distance = 0.0;
-                
-                double distance = calculateDistances(currentLatitude,
-                    currentLongtitude, post.latitude!, post.longitude!);
-                // print("poss: ${post.postimage}");
-                // print("poss: ${post.title}");
-                return buildPostBox(post.title!, post.detail!, "",
-                    post.postimage ?? "", "a", post.postdate!, distance);
-              });
-        }
-        return Container(); // Add this line to return a non-null Widget
-      },
-    )));
+                  // double distance = 0.0;
+
+                  double distance = calculateDistances(currentLatitude,
+                      currentLongtitude, post.latitude!, post.longitude!);
+                  // print("poss: ${post.postimage}");
+                  // print("poss: ${post.title}");
+                  return buildPostBox(post.title!, post.detail!, "",
+                      post.postimage ?? "", "a", post.postdate!, distance);
+                });
+          }
+          return Container(); // Add this line to return a non-null Widget
+        },
+      )),
+      floatingActionButton: Container(
+        width: 120,
+        height: 30,
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            // Navigate to the CreatePostPage when the FAB is pressed
+            Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePostPage()));
+            
+          },
+          // icon:Icon(Icons.add),
+          label: Text('Create Post'),
+          tooltip: 'Create Post',
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))), // Make the FAB square
+              
+        ),
+      ),
+      floatingActionButtonLocation: CustomFABLocation(
+        FloatingActionButtonLocation.centerFloat,
+        offsetX: 0,
+        offsetY: 0,
+      ),
+    );
   }
 }
 
@@ -176,7 +204,6 @@ Widget buildPostBox(String title, String detail, String location,
                 ),
               ),
               Container(
-                color: Colors.amber,
                 margin: EdgeInsets.only(left: 10),
                 child: Text(
                   "Warayut Saisi",
@@ -187,7 +214,6 @@ Widget buildPostBox(String title, String detail, String location,
           ),
           Container(
             // color: Colors.amber,
-            color: Colors.amber,
             width: 330.w,
             margin: EdgeInsets.all(20),
             child: Text(
@@ -248,5 +274,5 @@ calculateDistances(double curLa, double CurLong, double la, double long) {
   double distanceInKilometers = distanceInMeters / 1000;
   print(
       'Distance from current location to post ${la}: post latitude is ${la}: post long is ${long} $distanceInKilometers km');
-      return distanceInKilometers;
+  return distanceInKilometers;
 }
