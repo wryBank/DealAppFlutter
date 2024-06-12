@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutterdealapp/model/postmodel_indevice.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../../model/postmodel.dart';
@@ -8,6 +9,16 @@ class PostProvider {
     final queryPost = FirebaseFirestore.instance
         .collection('posts')
         .orderBy('detail')
+        .withConverter<PostModel>(
+          fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
+          toFirestore: (post, _) => post.toJson(),
+        );
+    return queryPost;
+  }
+  Future<Query<PostModel>> getPostById(String userId)async{
+    final queryPost = FirebaseFirestore.instance
+        .collection('posts')
+        .where('uid', isEqualTo: userId)
         .withConverter<PostModel>(
           fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
           toFirestore: (post, _) => post.toJson(),
@@ -82,6 +93,8 @@ class PostProvider {
     //   print(sortedPostModel);
     //   return sortedPostModel;
     print(postsWithDistance);
+
     return postsWithDistance;
   }
+ 
 }

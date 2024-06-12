@@ -19,19 +19,26 @@ class test extends StatefulWidget {
 }
 
 class _testState extends State<test> {
-  void getLocation() async {
+  Future<void> getLocation() async {
     await Geolocator.checkPermission();
     await Geolocator.requestPermission();
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
+
     print(position);
+    currentLatitude = position.latitude;
+    currentLongtitude = position.longitude;
   }
+
+  double currentLatitude =0;
+  double currentLongtitude =0 ;
 
   @override
   void initState() {
     super.initState();
     getLocation();
-    BlocProvider.of<PostBloc>(context).add(getPostListData());
+    // getLocation2();
+    BlocProvider.of<PostBloc>(context).add(getPostData());
     // uploadRandom();
   }
 
@@ -49,18 +56,18 @@ class _testState extends State<test> {
   //         fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
   //         toFirestore: (post, _) => post.toJson(),
   //       );
-  //   final numbers = List.generate(5, (index) => index + 1);
+  //   final numbers = List.generate(500, (index) => index + 1);
   //   for (final number in numbers) {
   //     final post = PostModel(
-  //       uid: 'uid $number',
-  //       title: 'Post $number',
-  //       detail: 'Detail $number',
-  //       postimage:
-  //           "https://firebasestorage.googleapis.com/v0/b/dealapp-363e7.appspot.com/o/files%2F%E0%B9%86.png?alt=media&token=9937d410-adab-4b66-a08e-a3d246de6236",
-  //       postby: 'Username',
-  //      postdate: Timestamp.now()
-
-  //     );
+  //         uid: 'uid $number',
+  //         title: 'Post $number',
+  //         detail: 'Detail $number',
+  //         postimage:
+  //             "https://firebasestorage.googleapis.com/v0/b/dealapp-363e7.appspot.com/o/files%2F%E0%B9%86.png?alt=media&token=9937d410-adab-4b66-a08e-a3d246de6236",
+  //         postby: 'Username',
+  //         latitude: 13.736717,
+  //         longitude: 100.523186,
+  //         postdate: Timestamp.now());
   //     postColl.add(post);
   //   }
   // }
@@ -70,7 +77,7 @@ class _testState extends State<test> {
     return Scaffold(
         body: RefreshIndicator(onRefresh: () async {
       getLocation();
-      BlocProvider.of<PostBloc>(context).add(getPostListData());
+      BlocProvider.of<PostBloc>(context).add(getPostData());
     }, child: BlocBuilder<PostBloc, PostState>(
       builder: (context, state) {
         if (state is PostInitial || state is PostLoading) {
@@ -79,35 +86,40 @@ class _testState extends State<test> {
         // if (state is PostListLoaded) {
         //   print("state.postModel: ${state.postModel.toString()}");
         //   // print("state.postModel: ${state.detail}");
-          
+
         // }
-        if (state is PostListLoaded) {
-          print("state.postModel: ${state.postModel}\n ");
-          return ListView.builder(
-              itemCount: state.postModel.length,
-              itemBuilder: (context, index) {
-                
-                var postWithDistance = state.postModel[index];
-                var post = postWithDistance['post']as PostModel; ;
-                var distance = postWithDistance['distance'] as double;
-                // final post = state.postModel[index];
-                return buildPostBox(post.title!, post.detail!, "",
-                    post.postimage ?? "", "a", post.postdate!,distance);
-              });
-        }
-        // if (state is PostLoaded) {
-        //   // print("state.postModel: ${state.postModel}");
-        //   return FirestoreListView(
-        //       query: state.postModel,
-        //       pageSize: 2,
-        //       itemBuilder: (context, snapshot) {
-        //         final post = snapshot.data();
-        //         // print("poss: ${post.postimage}");
-        //         // print("poss: ${post.title}");
+        // if (state is PostListLoaded) {
+        //   print("state.postModel: ${state.postModel}\n ");
+        //   return ListView.builder(
+        //       itemCount: state.postModel.length,
+        //       itemBuilder: (context, index) {
+
+        //         var postWithDistance = state.postModel[index];
+        //         var post = postWithDistance['post']as PostModel; ;
+        //         var distance = postWithDistance['distance'] as double;
+        //         // final post = state.postModel[index];
         //         return buildPostBox(post.title!, post.detail!, "",
-        //             post.postimage ?? "", "a", post.postdate!,);
+        //             post.postimage ?? "", "a", post.postdate!,distance);
         //       });
         // }
+        if (state is PostLoaded) {
+          // print("state.postModel: ${state.postModel}");
+          return FirestoreListView(
+              query: state.postModel,
+              pageSize: 2,
+              itemBuilder: (context, snapshot) {
+                final post = snapshot.data();
+
+                // double distance = 0.0;
+                
+                double distance = calculateDistances(currentLatitude,
+                    currentLongtitude, post.latitude!, post.longitude!);
+                // print("poss: ${post.postimage}");
+                // print("poss: ${post.title}");
+                return buildPostBox(post.title!, post.detail!, "",
+                    post.postimage ?? "", "a", post.postdate!, distance);
+              });
+        }
         return Container(); // Add this line to return a non-null Widget
       },
     )));
@@ -115,10 +127,10 @@ class _testState extends State<test> {
 }
 
 Widget buildPostBox(String title, String detail, String location,
-    String urlImage, String postby, Timestamp postdate,double distance) {
+    String urlImage, String postby, Timestamp postdate, double distance) {
   return GestureDetector(
     onTap: () {
-      print("tap in post box");
+      print("tap in post box {$detail}");
     },
     child: Container(
       decoration: BoxDecoration(
@@ -226,4 +238,15 @@ Widget buildPostBox(String title, String detail, String location,
       ),
     ),
   );
+}
+
+calculateDistances(double curLa, double CurLong, double la, double long) {
+  print("curla: $curLa");
+  print("curlong: $CurLong");
+  double distanceInMeters =
+      Geolocator.distanceBetween(curLa, CurLong, la, long);
+  double distanceInKilometers = distanceInMeters / 1000;
+  print(
+      'Distance from current location to post ${la}: post latitude is ${la}: post long is ${long} $distanceInKilometers km');
+      return distanceInKilometers;
 }

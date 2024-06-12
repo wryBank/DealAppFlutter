@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutterdealapp/model/postmodel_indevice.dart';
 
 import '../../../model/postmodel.dart';
 
@@ -15,6 +16,6 @@ class PostLoaded extends PostState {
 }
 class PostListLoaded extends PostState {
   final List postModel;
-      // List<MapEntry<PostModel, double>> postModel ;
+    // final Query<PostModel_indevice> postModel;
   PostListLoaded(this.postModel);
 }

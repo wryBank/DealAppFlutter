@@ -17,5 +17,8 @@ class PostRepository {
   Future<void> calculateDistances() async {
     await postProvider.calculateDistances();
   }
+  Future<Query<PostModel>> getPostById(String userId) async {
+    return await postProvider.getPostById(userId);
+  }
   
 }

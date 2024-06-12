@@ -11,3 +11,7 @@ class getPostData extends PostEvent {
 }
 class getPostListData extends PostEvent {
 }
+class getPostById extends PostEvent {
+  final String userId;
+  getPostById(this.userId);
+}
