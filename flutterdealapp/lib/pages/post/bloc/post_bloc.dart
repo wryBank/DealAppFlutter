@@ -16,7 +16,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       emit(PostLoading());
       try {
         print("inbloc post");
-        repository.getPosts();
+        // repository.getPosts();
         Query<PostModel> postModel = await repository.postProvider.getPosts();
         emit(PostLoaded(postModel));
       } catch (e) {}

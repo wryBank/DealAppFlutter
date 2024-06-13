@@ -24,5 +24,15 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         emit(getProfileImageState(url));
       } catch (e) {}
     });
+    on<getUserByUid>((event, emit) async {
+      try {
+        print("inbloc");
+        emit(LoadingState());
+        print("eventusermodel = ${event.uid}");
+         repository.getUserData(event.uid);
+         UserModel userModel = await repository.provider.getUserData(event.uid);
+        emit(getUserByUidState(userModel));
+      } catch (e) {}
+    });
   }
 }

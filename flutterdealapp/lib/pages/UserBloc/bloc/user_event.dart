@@ -7,3 +7,7 @@ class getUser extends UserEvent {
   UserModel userModel;
   getUser({required this.userModel});
 }
+class getUserByUid extends UserEvent {
+  String uid;
+  getUserByUid({required this.uid});
+}

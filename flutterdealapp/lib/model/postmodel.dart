@@ -18,6 +18,7 @@ class PostModel {
   String? profileImage;
   String? takeby;
   bool? isTake;
+  double? pricePay;
   PostModel({
     this.pid,
     this.uid,
@@ -33,6 +34,7 @@ class PostModel {
     this.profileImage,
     this.takeby,
     this.isTake,
+    this.pricePay
   });
 
   PostModel copyWith({
@@ -50,6 +52,7 @@ class PostModel {
     String? profileImage,
     String? takeby,
     bool? isTake,
+    double? picePay,
   }) {
     return PostModel(
       pid: pid ?? this.pid,
@@ -66,6 +69,7 @@ class PostModel {
       profileImage: profileImage ?? this.profileImage,
       takeby: takeby ?? this.takeby,
       isTake: isTake ?? this.isTake,
+      pricePay: picePay ?? this.pricePay,
     );
   }
 
@@ -85,6 +89,7 @@ class PostModel {
       'profileImage': profileImage,
       'takeby': takeby,
       'isTake': isTake,
+      'pricePay': pricePay,
     };
   }
 
@@ -104,6 +109,7 @@ class PostModel {
       profileImage: map['profileImage'] != null ? map['profileImage'] as String : null,
       takeby: map['takeby'] != null ? map['takeby'] as String : null,
       isTake: map['isTake'] != null ? map['isTake'] as bool : null,
+      pricePay: map['pricePay'] != null ? map['pricePay'] as double : null,
     );
   }
 
@@ -113,7 +119,7 @@ class PostModel {
 
   @override
   String toString() {
-    return 'PostModel(pid: $pid, uid: $uid, postby: $postby, title: $title, detail: $detail, location_item: $location_item, location_pick: $location_pick, postimage: $postimage, latitude: $latitude, longitude: $longitude, postdate: $postdate, profileImage: $profileImage, takeby: $takeby, isTake: $isTake)';
+    return 'PostModel(pid: $pid, uid: $uid, postby: $postby, title: $title, detail: $detail, location_item: $location_item, location_pick: $location_pick, postimage: $postimage, latitude: $latitude, longitude: $longitude, postdate: $postdate, profileImage: $profileImage, takeby: $takeby, isTake: $isTake, pricePay: $pricePay)';
   }
 
   @override
@@ -134,7 +140,8 @@ class PostModel {
       other.postdate == postdate &&
       other.profileImage == profileImage &&
       other.takeby == takeby &&
-      other.isTake == isTake;
+      other.isTake == isTake &&
+      other.pricePay == pricePay;
   }
 
   @override
@@ -152,7 +159,8 @@ class PostModel {
       postdate.hashCode ^
       profileImage.hashCode ^
       takeby.hashCode ^
-      isTake.hashCode;
+      isTake.hashCode ^
+      pricePay.hashCode;
   }
   PostModel.fromJson(Map<String,Object?> json): this(
     pid: json['pid'] as String?,
@@ -169,6 +177,7 @@ class PostModel {
     profileImage: json['profileImage'] as String?,
     takeby: json['takeby'] as String?,
     isTake: json['isTake'] as bool?,
+    pricePay: json['pricePay'] as double?,
   );
   Map<String,Object?> toJson()=>{
     'pid':pid,
@@ -185,5 +194,6 @@ class PostModel {
     'profileImage':profileImage,
     'takeby':takeby,
     'isTake':isTake,
+    'pricePay':pricePay, 
   };
 }

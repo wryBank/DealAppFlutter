@@ -49,6 +49,7 @@ dependencies:
   flutterfire_ui: ^0.4.3+20
   geolocator: ^11.1.0
   intl: ^0.17.0
+  uuid: ^4.1.0
 
 dev_dependencies:
   flutter_test:

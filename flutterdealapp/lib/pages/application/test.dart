@@ -61,7 +61,7 @@ class _testState extends State<test> {
   //         fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
   //         toFirestore: (post, _) => post.toJson(),
   //       );
-  //   final numbers = List.generate(500, (index) => index + 1);
+  //   final numbers = List.generate(2, (index) => index + 1);
   //   for (final number in numbers) {
   //     final post = PostModel(
   //         uid: 'uid $number',
@@ -114,6 +114,7 @@ class _testState extends State<test> {
                 pageSize: 2,
                 itemBuilder: (context, snapshot) {
                   final post = snapshot.data();
+                  print(post);
 
                   // double distance = 0.0;
 
@@ -122,7 +123,7 @@ class _testState extends State<test> {
                   // print("poss: ${post.postimage}");
                   // print("poss: ${post.title}");
                   return buildPostBox(post.title!, post.detail!, "",
-                      post.postimage ?? "", "a", post.postdate!, distance);
+                      post.postimage ?? "", "a", post.postdate!, distance,post.profileImage??"");
                 });
           }
           return Container(); // Add this line to return a non-null Widget
@@ -155,7 +156,7 @@ class _testState extends State<test> {
 }
 
 Widget buildPostBox(String title, String detail, String location,
-    String urlImage, String postby, Timestamp postdate, double distance) {
+    String urlImage, String postby, Timestamp postdate, double distance,String userImage) {
   return GestureDetector(
     onTap: () {
       print("tap in post box {$detail}");
@@ -199,7 +200,8 @@ Widget buildPostBox(String title, String detail, String location,
                   margin: EdgeInsets.only(left: 20),
                   child: CircleAvatar(
                     radius: 30,
-                    backgroundImage: AssetImage("assets/images/icon.png"),
+                    backgroundImage: NetworkImage(userImage),
+                    
                   ),
                 ),
               ),

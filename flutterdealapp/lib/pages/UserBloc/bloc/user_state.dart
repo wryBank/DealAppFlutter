@@ -32,6 +32,10 @@ class getProfileImageState extends UserState{
   final String? url;
   getProfileImageState(this.url);
 }
+class getUserByUidState extends UserState{
+  final UserModel userModel;
+  getUserByUidState(this.userModel);
+}
 
 
 
