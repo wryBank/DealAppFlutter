@@ -3,13 +3,14 @@ import 'package:flutterdealapp/pages/Feed/Feed_page.dart';
 import 'package:flutterdealapp/pages/application/test.dart';
 import 'package:flutterdealapp/pages/editProfile/editprofile_image.dart';
 import 'package:flutterdealapp/pages/Profile/profile.dart';
+import 'package:flutterdealapp/pages/postDetail/postDetail_page.dart';
 
 Widget buildPage(int index){
   List<Widget> _widgets = [
-    // FeedPage(),
+    FeedPage(),
     
-    test(),
-    test(),
+    postDetailPage(),
+    // test(),
     ProfilePage(),
     Center(child: Text("home"),),
     Center(child: Text("home"),),

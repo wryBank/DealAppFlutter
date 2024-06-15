@@ -19,3 +19,7 @@ class addImage extends CreatePostEvent {
   addImage({this.imageFile});
 
 }
+class selectBox extends CreatePostEvent {
+  bool? isFindJob;
+  selectBox({this.isFindJob});
+}

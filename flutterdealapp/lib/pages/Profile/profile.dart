@@ -37,9 +37,10 @@ class _ProfilePageState extends State<ProfilePage> {
     BlocProvider.of<ProfileBloc>(context)
         .add(getUserData(uid: FirebaseAuth.instance.currentUser!.uid));
 
-        getLocation();
-        
-    BlocProvider.of<PostBloc>(context).add(getPostById(FirebaseAuth.instance.currentUser!.uid));
+    getLocation();
+
+    BlocProvider.of<PostBloc>(context)
+        .add(getPostById(FirebaseAuth.instance.currentUser!.uid));
   }
 
   Future<void> getLocation() async {
@@ -52,6 +53,7 @@ class _ProfilePageState extends State<ProfilePage> {
     currentLatitude = position.latitude;
     currentLongtitude = position.longitude;
   }
+
   double currentLatitude = 0;
   double currentLongtitude = 0;
   final uid = FirebaseAuth.instance.currentUser;
@@ -292,7 +294,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   if (state is PostLoaded) {
                     return Expanded(
                       child: FirestoreListView(
-                          query: state.postModel, 
+                          query: state.postModel,
                           pageSize: 2,
                           itemBuilder: (context, snapshot) {
                             final post = snapshot.data();
@@ -304,14 +306,16 @@ class _ProfilePageState extends State<ProfilePage> {
                             return buildPostBox(
                                 post.title!,
                                 post.detail!,
-                                "",
+                                post.location_item ??"",
                                 post.postimage ?? "",
                                 "a",
-                                post.postdate!,distance);
+                                post.postdate!,
+                                distance,
+                                post.profileImage ?? "",
+                                );
                           }),
                     );
-                  }
-                  else{
+                  } else {
                     return Container(
                       child: Center(
                         child: CircularProgressIndicator(),
@@ -330,8 +334,16 @@ class _ProfilePageState extends State<ProfilePage> {
     // add gridview here
   }
 }
-Widget buildPostBox(String title, String detail, String location,
-    String urlImage, String postby, Timestamp postdate, double distance) {
+
+Widget buildPostBox(
+    String title,
+    String detail,
+    String location,
+    String urlImage,
+    String postby,
+    Timestamp postdate,
+    double distance,
+    String userImage) {
   return GestureDetector(
     onTap: () {
       print("tap in post box {$detail}");
@@ -375,7 +387,7 @@ Widget buildPostBox(String title, String detail, String location,
                   margin: EdgeInsets.only(left: 20),
                   child: CircleAvatar(
                     radius: 30,
-                    backgroundImage: AssetImage("assets/images/icon.png"),
+                    backgroundImage: NetworkImage(userImage),
                   ),
                 ),
               ),
@@ -393,7 +405,7 @@ Widget buildPostBox(String title, String detail, String location,
             width: 330.w,
             margin: EdgeInsets.all(20),
             child: Text(
-              "asaaaaaaaaaaaaaaaaaaaaaaaaa",
+              detail,
               style: TextStyle(fontSize: 20),
             ),
           ),
@@ -413,7 +425,7 @@ Widget buildPostBox(String title, String detail, String location,
                 width: 150.w,
                 margin: EdgeInsets.all(5),
                 child: Text(
-                  detail,
+                  location,
                   style: TextStyle(fontSize: 15),
                 ),
               ),
@@ -450,6 +462,129 @@ calculateDistances(double curLa, double CurLong, double la, double long) {
   double distanceInKilometers = distanceInMeters / 1000;
   print(
       'Distance from current location to post ${la}: post latitude is ${la}: post long is ${long} $distanceInKilometers km');
-      return distanceInKilometers;
+  return distanceInKilometers;
 }
+
+// Widget buildPostBox(String title, String detail, String location,
+//     String urlImage, String postby, Timestamp postdate, double distance) {
+//   return GestureDetector(
+//     onTap: () {
+//       print("tap in post box {$detail}");
+//     },
+//     child: Container(
+//       decoration: BoxDecoration(
+//         color: AppColors.primaryPostBox,
+//         border: Border.all(
+//           width: 0.2,
+//           color: Colors.black,
+//         ),
+//         borderRadius: BorderRadius.circular(10),
+//       ),
+//       margin: EdgeInsets.all(20),
+//       child: Column(
+//         children: [
+//           Container(
+//               // color: Colors.red,
+//               margin: EdgeInsets.all(10),
+//               width: 235.w,
+//               height: 120.h,
+//               child: Image.network(urlImage)
+//               // urlImage != null ?? urlImage.isNotEmpty
+//               // ?Image.network(urlImage,fit: BoxFit.cover,)
+//               // :Image.asset("assets/images/icon.png")
+
+//               ),
+//           Align(
+//             alignment: Alignment.centerRight,
+//             child: Container(
+//               margin: EdgeInsets.only(right: 10),
+//               child: Text(
+//                   "${postdate.toDate().day}/${postdate.toDate().month}/${postdate.toDate().year}"),
+//             ),
+//           ),
+//           Row(
+//             children: [
+//               Align(
+//                 alignment: Alignment.centerLeft,
+//                 child: Container(
+//                   margin: EdgeInsets.only(left: 20),
+//                   child: CircleAvatar(
+//                     radius: 30,
+//                     backgroundImage: AssetImage("assets/images/icon.png"),
+//                   ),
+//                 ),
+//               ),
+//               Container(
+//                 margin: EdgeInsets.only(left: 10),
+//                 child: Text(
+//                   "Warayut Saisi",
+//                   style: TextStyle(fontSize: 20),
+//                 ),
+//               ),
+//             ],
+//           ),
+//           Container(
+//             // color: Colors.amber,
+//             width: 330.w,
+//             margin: EdgeInsets.all(20),
+//             child: Text(
+//               "asaaaaaaaaaaaaaaaaaaaaaaaaa",
+//               style: TextStyle(fontSize: 20),
+//             ),
+//           ),
+//           Row(
+//             children: [
+//               Align(
+//                 child: Container(
+//                   margin: EdgeInsets.only(left: 20),
+//                   child: Container(
+//                     width: 20.w,
+//                     height: 20.h,
+//                     child: Image.asset("assets/icons/location.png"),
+//                   ),
+//                 ),
+//               ),
+//               Container(
+//                 width: 150.w,
+//                 margin: EdgeInsets.all(5),
+//                 child: Text(
+//                   detail,
+//                   style: TextStyle(fontSize: 15),
+//                 ),
+//               ),
+//               Align(
+//                 child: Container(
+//                   margin: EdgeInsets.only(left: 20),
+//                   child: Container(
+//                     width: 20.w,
+//                     height: 20.h,
+//                     child: Image.asset("assets/icons/location.png"),
+//                   ),
+//                 ),
+//               ),
+//               Container(
+//                 // margin: EdgeInsets.all(10),
+//                 child: Text(
+//                   "${distance.toStringAsFixed(1)} km",
+//                   style: TextStyle(fontSize: 15),
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ],
+//       ),
+//     ),
+//   );
+// }
+
+// calculateDistances(double curLa, double CurLong, double la, double long) {
+//   print("curla: $curLa");
+//   print("curlong: $CurLong");
+//   double distanceInMeters =
+//       Geolocator.distanceBetween(curLa, CurLong, la, long);
+//   double distanceInKilometers = distanceInMeters / 1000;
+//   print(
+//       'Distance from current location to post ${la}: post latitude is ${la}: post long is ${long} $distanceInKilometers km');
+//       return distanceInKilometers;
+// }
 

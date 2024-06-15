@@ -19,3 +19,7 @@ class PostListLoaded extends PostState {
     // final Query<PostModel_indevice> postModel;
   PostListLoaded(this.postModel);
 }
+class selectBoxPostTypeSuccess extends PostState {
+  final bool isFindJob;
+  selectBoxPostTypeSuccess(this.isFindJob);
+}

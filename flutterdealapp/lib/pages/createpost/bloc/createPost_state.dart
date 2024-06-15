@@ -20,8 +20,10 @@ class  createPostError extends createPostState{
 
 }
 class addImageSuccess extends createPostState{
-  
-  
   PlatformFile image;
   addImageSuccess(this.image);
+}
+class selectBoxSuccess extends createPostState{
+  bool isFindJob;
+  selectBoxSuccess(this.isFindJob);
 }

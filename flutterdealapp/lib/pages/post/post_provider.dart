@@ -7,8 +7,8 @@ import '../../model/postmodel.dart';
 class PostProvider {
   Future<Query<PostModel>> getPosts() async {
     final queryPost = FirebaseFirestore.instance
-        .collection('posts')
-        .orderBy('detail')
+        .collection('posts').where('isTake',isEqualTo: false)
+        // .orderBy('detail')
         .withConverter<PostModel>(
           fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
           toFirestore: (post, _) => post.toJson(),
@@ -19,6 +19,18 @@ class PostProvider {
     final queryPost = FirebaseFirestore.instance
         .collection('posts')
         .where('uid', isEqualTo: userId)
+        .withConverter<PostModel>(
+          fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
+          toFirestore: (post, _) => post.toJson(),
+        );
+    return queryPost;
+  }
+  
+  Future<Query<PostModel>> getPostByType(bool isFindJob)async{
+    final queryPost = FirebaseFirestore.instance
+        .collection('posts')
+        .where('isFindJob', isEqualTo: isFindJob)
+        .where('isTake',isEqualTo: false)
         .withConverter<PostModel>(
           fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
           toFirestore: (post, _) => post.toJson(),

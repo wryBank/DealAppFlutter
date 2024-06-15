@@ -135,7 +135,7 @@ class _testState extends State<test> {
         child: FloatingActionButton.extended(
           onPressed: () {
             // Navigate to the CreatePostPage when the FAB is pressed
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePostPage()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePostPage(key: UniqueKey(),)));
             
           },
           // icon:Icon(Icons.add),
