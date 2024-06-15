@@ -23,3 +23,11 @@ class selectBoxPostTypeSuccess extends PostState {
   final bool isFindJob;
   selectBoxPostTypeSuccess(this.isFindJob);
 }
+class postDetailLoaded extends PostState {
+  final PostModel postModel;
+  postDetailLoaded(this.postModel);
+}
+class postDetailLoaded2 extends PostState {
+  final PostModel postModel;
+  postDetailLoaded2(this.postModel);
+}

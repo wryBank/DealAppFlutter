@@ -2,7 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdealapp/model/postmodel.dart';
+import 'package:flutterdealapp/pages/post/bloc/post_bloc.dart';
+import 'package:flutterdealapp/pages/post/bloc/post_state.dart';
 
 import '../../values/color.dart';
 
@@ -16,19 +20,43 @@ class postDetailPage extends StatefulWidget {
 class _postDetailPageState extends State<postDetailPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: SafeArea(
-        child: Scaffold(
-          body: buildPostBox("title", "detail", "location", "urlImage",
-              "postby", Timestamp.now(), 1.0, "userImage"),
-        ),
-      ),
-    );
+    // PostModel postModel = PostModel();
+    return BlocBuilder<PostBloc, PostState>(builder: (context, state) {
+      // print(state.toString());
+      
+      if (state is postDetailLoaded) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text("Post Detail"),
+          ),
+            body: buildPostBox(
+                context,
+                state.postModel.title.toString(),
+                state.postModel.detail.toString(),
+                state.postModel.location_item.toString(),
+                state.postModel.postimage.toString(),
+                state.postModel.postby.toString(),
+                state.postModel.postdate as Timestamp,
+                1.0,
+                state.postModel.profileImage.toString()));
+      } 
+      else {
+        return Scaffold(
+          body: Center(
+            child: Text(state.toString()),
+          ),
+        );
+      }
+    });
+    // return Scaffold(
+    //   body: Center(child: Text("test"),)
+
+    // );
   }
 }
 
 Widget buildPostBox(
+    context,
     String title,
     String detail,
     String location,

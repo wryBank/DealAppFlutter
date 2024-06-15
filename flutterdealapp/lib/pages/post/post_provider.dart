@@ -1,5 +1,8 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutterdealapp/model/postmodel_indevice.dart';
+import 'package:flutterdealapp/pages/post/bloc/post_event.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../../model/postmodel.dart';
@@ -7,7 +10,8 @@ import '../../model/postmodel.dart';
 class PostProvider {
   Future<Query<PostModel>> getPosts() async {
     final queryPost = FirebaseFirestore.instance
-        .collection('posts').where('isTake',isEqualTo: false)
+        .collection('posts')
+        .where('isTake', isEqualTo: false)
         // .orderBy('detail')
         .withConverter<PostModel>(
           fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
@@ -15,7 +19,8 @@ class PostProvider {
         );
     return queryPost;
   }
-  Future<Query<PostModel>> getPostById(String userId)async{
+
+  Future<Query<PostModel>> getPostById(String userId) async {
     final queryPost = FirebaseFirestore.instance
         .collection('posts')
         .where('uid', isEqualTo: userId)
@@ -25,12 +30,12 @@ class PostProvider {
         );
     return queryPost;
   }
-  
-  Future<Query<PostModel>> getPostByType(bool isFindJob)async{
+
+  Future<Query<PostModel>> getPostByType(bool isFindJob) async {
     final queryPost = FirebaseFirestore.instance
         .collection('posts')
         .where('isFindJob', isEqualTo: isFindJob)
-        .where('isTake',isEqualTo: false)
+        .where('isTake', isEqualTo: false)
         .withConverter<PostModel>(
           fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
           toFirestore: (post, _) => post.toJson(),
@@ -87,9 +92,10 @@ class PostProvider {
 
     postsWithDistance.sort((a, b) => a['distance'].compareTo(b['distance']));
 
-    List<Map<String,dynamic>> sortedPosts = postsWithDistance.map((e) {
+    List<Map<String, dynamic>> sortedPosts = postsWithDistance.map((e) {
       return {
-        'post': e['post'] as PostModel, // 'post' is the key, 'e['post']' is the value
+        'post': e['post']
+            as PostModel, // 'post' is the key, 'e['post']' is the value
         'distance': e['distance'] as double,
       };
     }).toList();
@@ -108,5 +114,19 @@ class PostProvider {
 
     return postsWithDistance;
   }
- 
+
+  final _fireCloud = FirebaseFirestore.instance.collection("posts");
+  Future<PostModel> getPostDetail(String postId) async {
+    print("in getpostdetail");
+    try {
+      DocumentSnapshot documentSnapshot = await _fireCloud.doc(postId).get();
+      // print(documentSnapshot.data());
+      return PostModel.fromMap(documentSnapshot.data() as Map<String, dynamic>);
+    } on FirebaseException catch (e) {
+      if (kDebugMode) {
+        print("Failed with error '${e.code}': ${e.message}");
+      }
+    }
+    throw Exception("Failed to get user data."); // Added throw statement
+  }
 }

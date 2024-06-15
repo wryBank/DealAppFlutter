@@ -63,6 +63,18 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       emit(selectBoxPostTypeSuccess(event.isFindJob));
     } catch (e) {}
   });
+  on<getPostDetail>((event, emit) async {
+    emit(PostLoading());
+    try {
+      print("inbloc post6");
+      // repository.getPosts();
+      print("------------------------------------------------------------------");
+      repository.getPostDetail(event.postId);
+      PostModel postModel = await repository.getPostDetail(event.postId);
+      print("postModel: $postModel");
+      emit(postDetailLoaded(postModel));
+    } catch (e) {}
+  });
   }
   
 

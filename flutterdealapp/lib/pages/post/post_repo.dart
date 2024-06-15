@@ -23,5 +23,8 @@ class PostRepository {
   Future<Query<PostModel>> getPostByType(bool isFindJob) async {
     return await postProvider.getPostByType(isFindJob);
   }
+  Future<PostModel> getPostDetail(String postId) async {
+    return await postProvider.getPostDetail(postId);
+  }
   
 }

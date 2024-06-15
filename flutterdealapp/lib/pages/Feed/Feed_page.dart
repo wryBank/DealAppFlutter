@@ -14,6 +14,7 @@ import '../../model/postmodel.dart';
 import '../../values/color.dart';
 import '../createpost/createPost_page.dart';
 import '../post/bloc/post_event.dart';
+import '../postDetail/postDetail_page.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
@@ -63,7 +64,7 @@ class _FeedPageState extends State<FeedPage> {
       //       height: 0.5,
       //     ),
       //   ),
-      
+
       // ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -95,10 +96,11 @@ class _FeedPageState extends State<FeedPage> {
                         double distance = calculateDistances(currentLatitude,
                             currentLongtitude, post.latitude!, post.longitude!);
                         return buildPostBox(
-                            post.pid??"",
+                            context,
+                            post.pid ?? "",
                             post.title!,
                             post.detail!,
-                            post.location_item??"",
+                            post.location_item ?? "",
                             post.postimage ?? "",
                             "a",
                             post.postdate!,
@@ -148,6 +150,7 @@ class _FeedPageState extends State<FeedPage> {
 }
 
 Widget buildPostBox(
+    context,
     String pid,
     String title,
     String detail,
@@ -160,6 +163,9 @@ Widget buildPostBox(
   return GestureDetector(
     onTap: () {
       print("tap in post box {$pid}");
+      BlocProvider.of<PostBloc>(context).add(getPostDetail(pid));
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => postDetailPage()));
     },
     child: Container(
       decoration: BoxDecoration(

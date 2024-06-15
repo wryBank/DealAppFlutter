@@ -23,3 +23,11 @@ class selectBoxPostType extends PostEvent {
   final bool isFindJob;
   selectBoxPostType(this.isFindJob);
 }
+class getPostDetail extends PostEvent {
+  final String postId;
+  getPostDetail(this.postId);
+}
+class getPostDetail2 extends PostEvent {
+  final String postId;
+  getPostDetail2(this.postId);
+}
