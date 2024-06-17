@@ -8,6 +8,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdealapp/model/usermodel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutterdealapp/pages/application/bloc/appBloc.dart';
+import 'package:flutterdealapp/pages/application/bloc/appEvent.dart';
+import 'package:flutterdealapp/pages/application/bloc/appState.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../editProfile/bloc/editprofile_bloc.dart';
@@ -38,7 +41,7 @@ class _ApplicationPageState extends State<ApplicationPage> {
   @override
   void initState() {
     super.initState();
-    _index = widget.initialIndex;
+    // _index = widget.initialIndex;
     // getLocation();
     // _timer = Timer.periodic(Duration(seconds: 5), (timer) {
     //   getLocation();
@@ -47,47 +50,57 @@ class _ApplicationPageState extends State<ApplicationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: SafeArea(
-          child: Scaffold(
- 
-              body: buildPage(_index),
-              bottomNavigationBar: BottomNavigationBar(
-                onTap: (value) {
-                  setState(() {
-                    _index = value;
-                  });
-                  if (value == 2) {
-                    // BlocProvider.of<EditProfileBloc>(context)
-                    //     .add(EditImageEvent(userModel: UserModel()));
-                  }
-                },
-                elevation: 0,
-                items: [
-                  BottomNavigationBarItem(
-                      label: "home",
-                      icon: SizedBox(
-                        width: 15.w,
-                        height: 15.h,
-                        child: Image.asset("assets/images/icon.png"),
-                      )),
-                  BottomNavigationBarItem(
-                      label: "home2",
-                      icon: SizedBox(
-                        width: 15.w,
-                        height: 15.h,
-                        child: Image.asset("assets/images/icon.png"),
-                      )),
-                  BottomNavigationBarItem(
-                      label: "home3",
-                      icon: SizedBox(
-                        width: 15.w,
-                        height: 15.h,
-                        child: Image.asset("assets/images/icon.png"),
-                      )),
-                ],
-              ))),
+    return BlocConsumer<LandingPageBloc,LandingPageState>(
+      listener: (context,state){},
+      builder: (context,state) {
+        return Container(
+          color: Colors.white,
+          child: SafeArea(
+              child: Scaffold(
+                  body: buildPage(state.tabIndex),
+                  bottomNavigationBar: BottomNavigationBar(
+                    // onTap: (value) {
+                    //   setState(() {
+                    //     _index = value;
+                    //   });
+                    //   if (value == 2) {
+                    //     // BlocProvider.of<EditProfileBloc>(context)
+                    //     //     .add(EditImageEvent(userModel: UserModel()));
+                    //   }
+                    // },
+                    elevation: 0,
+                    items: [
+                      BottomNavigationBarItem(
+                          label: "home",
+                          icon: SizedBox(
+                            width: 15.w,
+                            height: 15.h,
+                            child: Image.asset("assets/images/icon.png"),
+                          )),
+                      BottomNavigationBarItem(
+                          label: "home2",
+                          icon: SizedBox(
+                            width: 15.w,
+                            height: 15.h,
+                            child: Image.asset("assets/images/icon.png"),
+                          )),
+                      BottomNavigationBarItem(
+                          label: "home3",
+                          icon: SizedBox(
+                            width: 15.w,
+                            height: 15.h,
+                            child: Image.asset("assets/images/icon.png"),
+                          )),
+                    ],
+                    currentIndex: state.tabIndex,
+                    selectedItemColor: Colors.black,
+                    onTap: (value) {
+                      BlocProvider.of<LandingPageBloc>(context)
+                          .add(TapChange(tabIndex: value));
+                    },
+                  ))),
+        );
+      }
     );
   }
 }

@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geolocator/geolocator.dart';
 
 class PostModel {
   String? pid;
@@ -20,7 +21,8 @@ class PostModel {
   bool? isTake;
   double? pricePay;
   bool? isFindJob;
-  
+  double? distance;
+
   PostModel({
     this.pid,
     this.uid,
@@ -38,6 +40,7 @@ class PostModel {
     this.isTake,
     this.pricePay,
     this.isFindJob,
+    this.distance,
   });
 
   PostModel copyWith({
@@ -57,6 +60,7 @@ class PostModel {
     bool? isTake,
     double? picePay,
     bool? isFindJob,
+    double? distance,
   }) {
     return PostModel(
       pid: pid ?? this.pid,
@@ -75,6 +79,7 @@ class PostModel {
       isTake: isTake ?? this.isTake,
       pricePay: picePay ?? this.pricePay,
       isFindJob: isFindJob ?? this.isFindJob,
+      distance: distance ?? this.distance,
     );
   }
 
@@ -97,6 +102,7 @@ class PostModel {
       'isTake': isTake,
       'pricePay': pricePay,
       'isFindJob': isFindJob,
+      'distance': distance,
     };
   }
 
@@ -107,18 +113,22 @@ class PostModel {
       postby: map['postby'] != null ? map['postby'] as String : null,
       title: map['title'] != null ? map['title'] as String : null,
       detail: map['detail'] != null ? map['detail'] as String : null,
-      location_item: map['location_item'] != null ? map['location_item'] as String : null,
-      location_pick: map['location_pick'] != null ? map['location_pick'] as String : null,
+      location_item:
+          map['location_item'] != null ? map['location_item'] as String : null,
+      location_pick:
+          map['location_pick'] != null ? map['location_pick'] as String : null,
       postimage: map['postimage'] != null ? map['postimage'] as String : null,
       latitude: map['latitude'] != null ? map['latitude'] as double : null,
       longitude: map['longitude'] != null ? map['longitude'] as double : null,
       // postdate: map['postdate'] != null ? Timestamp.fromMillisecondsSinceEpoch(map['postdate'] as int) : null,
       postdate: map['postdate'] != null ? map['postdate'] as Timestamp : null,
-      profileImage: map['profileImage'] != null ? map['profileImage'] as String : null,
+      profileImage:
+          map['profileImage'] != null ? map['profileImage'] as String : null,
       takeby: map['takeby'] != null ? map['takeby'] as String : null,
       isTake: map['isTake'] != null ? map['isTake'] as bool : null,
       pricePay: map['pricePay'] != null ? map['pricePay'] as double : null,
       isFindJob: map['isFindJob'] != null ? map['isFindJob'] as bool : null,
+      distance: map['distance'] != null ? map['distance'] as double : null,
     );
   }
 
@@ -128,85 +138,90 @@ class PostModel {
 
   @override
   String toString() {
-    return 'PostModel(pid: $pid, uid: $uid, postby: $postby, title: $title, detail: $detail, location_item: $location_item, location_pick: $location_pick, postimage: $postimage, latitude: $latitude, longitude: $longitude, postdate: $postdate, profileImage: $profileImage, takeby: $takeby, isTake: $isTake, pricePay: $pricePay, isFindJob: $isFindJob)';
+    return 'PostModel(pid: $pid, uid: $uid, postby: $postby, title: $title, detail: $detail, location_item: $location_item, location_pick: $location_pick, postimage: $postimage, latitude: $latitude, longitude: $longitude, postdate: $postdate, profileImage: $profileImage, takeby: $takeby, isTake: $isTake, pricePay: $pricePay, isFindJob: $isFindJob, distance: $distance)';
   }
 
   @override
   bool operator ==(covariant PostModel other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.pid == pid &&
-      other.uid == uid &&
-      other.postby == postby &&
-      other.title == title &&
-      other.detail == detail &&
-      other.location_item == location_item &&
-      other.location_pick == location_pick &&
-      other.postimage == postimage &&
-      other.latitude == latitude &&
-      other.longitude == longitude &&
-      other.postdate == postdate &&
-      other.profileImage == profileImage &&
-      other.takeby == takeby &&
-      other.isTake == isTake &&
-      other.pricePay == pricePay &&
-      other.isFindJob == isFindJob;
+
+    return other.pid == pid &&
+        other.uid == uid &&
+        other.postby == postby &&
+        other.title == title &&
+        other.detail == detail &&
+        other.location_item == location_item &&
+        other.location_pick == location_pick &&
+        other.postimage == postimage &&
+        other.latitude == latitude &&
+        other.longitude == longitude &&
+        other.postdate == postdate &&
+        other.profileImage == profileImage &&
+        other.takeby == takeby &&
+        other.isTake == isTake &&
+        other.pricePay == pricePay &&
+        other.isFindJob == isFindJob &&
+        other.distance == distance;
   }
 
   @override
   int get hashCode {
     return pid.hashCode ^
-      uid.hashCode ^
-      postby.hashCode ^
-      title.hashCode ^
-      detail.hashCode ^
-      location_item.hashCode ^
-      location_pick.hashCode ^
-      postimage.hashCode ^
-      latitude.hashCode ^
-      longitude.hashCode ^
-      postdate.hashCode ^
-      profileImage.hashCode ^
-      takeby.hashCode ^
-      isTake.hashCode ^
-      pricePay.hashCode ^
-      isFindJob.hashCode;
+        uid.hashCode ^
+        postby.hashCode ^
+        title.hashCode ^
+        detail.hashCode ^
+        location_item.hashCode ^
+        location_pick.hashCode ^
+        postimage.hashCode ^
+        latitude.hashCode ^
+        longitude.hashCode ^
+        postdate.hashCode ^
+        profileImage.hashCode ^
+        takeby.hashCode ^
+        isTake.hashCode ^
+        pricePay.hashCode ^
+        isFindJob.hashCode ^
+        distance.hashCode;
   }
-  PostModel.fromJson(Map<String,Object?> json): this(
-    pid: json['pid'] as String?,
-    uid: json['uid'] as String?,
-    postby: json['postby'] as String?,
-    title: json['title'] as String?,
-    detail: json['detail'] as String?,
-    location_item: json['location_item'] as String?,
-    location_pick: json['location_pick'] as String?,
-    postimage: json['postimage'] as String?,
-    latitude: json['latitude'] as double?,
-    longitude: json['longitude'] as double?,
-    postdate: json['postdate'] as Timestamp?,
-    profileImage: json['profileImage'] as String?,
-    takeby: json['takeby'] as String?,
-    isTake: json['isTake'] as bool?,
-    pricePay: json['pricePay'] as double?,
-    isFindJob: json['isFindJob'] as bool?,
-  );
-  Map<String,Object?> toJson()=>{
-    'pid':pid,
-    'uid':uid,
-    'postby':postby,
-    'title':title,
-    'detail':detail,
-    'location_item':location_item,
-    'location_pick':location_pick,
-    'postimage':postimage,
-    'latitude':latitude,
-    'longitude':longitude,
-    'postdate':postdate,
-    'profileImage':profileImage,
-    'takeby':takeby,
-    'isTake':isTake,
-    'pricePay':pricePay, 
-    'isFindJob':isFindJob,  
-  };
+
+  PostModel.fromJson(Map<String, Object?> json)
+      : this(
+          pid: json['pid'] as String?,
+          uid: json['uid'] as String?,
+          postby: json['postby'] as String?,
+          title: json['title'] as String?,
+          detail: json['detail'] as String?,
+          location_item: json['location_item'] as String?,
+          location_pick: json['location_pick'] as String?,
+          postimage: json['postimage'] as String?,
+          latitude: json['latitude'] as double?,
+          longitude: json['longitude'] as double?,
+          postdate: json['postdate'] as Timestamp?,
+          profileImage: json['profileImage'] as String?,
+          takeby: json['takeby'] as String?,
+          isTake: json['isTake'] as bool?,
+          pricePay: json['pricePay'] as double?,
+          isFindJob: json['isFindJob'] as bool?,
+          distance: json['distance'] as double?,
+        );
+  Map<String, Object?> toJson() => {
+        'pid': pid,
+        'uid': uid,
+        'postby': postby,
+        'title': title,
+        'detail': detail,
+        'location_item': location_item,
+        'location_pick': location_pick,
+        'postimage': postimage,
+        'latitude': latitude,
+        'longitude': longitude,
+        'postdate': postdate,
+        'profileImage': profileImage,
+        'takeby': takeby,
+        'isTake': isTake,
+        'pricePay': pricePay,
+        'isFindJob': isFindJob,
+        'distance': distance,
+      };
 }

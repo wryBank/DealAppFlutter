@@ -4,6 +4,7 @@ import 'package:flutterdealapp/pages/Profile/bloc/profile_bloc.dart';
 import 'package:flutterdealapp/pages/UserBloc/bloc/user_bloc.dart';
 import 'package:flutterdealapp/pages/UserBloc/user_provider.dart';
 import 'package:flutterdealapp/pages/UserBloc/user_repo.dart';
+import 'package:flutterdealapp/pages/application/bloc/appBloc.dart';
 import 'package:flutterdealapp/pages/createpost/bloc/createPost_bloc.dart';
 import 'package:flutterdealapp/pages/createpost/createPost_provider.dart';
 import 'package:flutterdealapp/pages/createpost/createPost_repo.dart';
@@ -16,7 +17,6 @@ import 'package:flutterdealapp/pages/post/post_repo.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_blocs.dart';
 import 'package:flutterdealapp/pages/signIn/bloc/signin_blocs.dart';
 import 'package:flutterdealapp/pages/welcome/bloc/welcome_blocs.dart';
-import 'app/app_bloc.dart';
 import 'editProfile/bloc/editprofileGender_bloc.dart';
 import 'editProfile/bloc/editprofile_provider.dart';
 class AppBlocProviders{
@@ -34,6 +34,7 @@ class AppBlocProviders{
         BlocProvider(create: (context) => EditProfileGenderBloc()),
         BlocProvider(create: (context) => PostBloc(PostRepository(postProvider: PostProvider()))),
         BlocProvider(create: (context) => CreatePostBloc(CreatePostRepository(createPostProvider: CreatePostProvider()))),
+        BlocProvider(create: (context) => LandingPageBloc()),
 
   ];
   

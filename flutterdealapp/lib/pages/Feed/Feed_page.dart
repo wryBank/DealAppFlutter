@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -35,6 +36,7 @@ class _FeedPageState extends State<FeedPage> {
     currentLongtitude = position.longitude;
   }
 
+  final uid = FirebaseAuth.instance.currentUser!.uid;
   double currentLatitude = 0;
   double currentLongtitude = 0;
   // final queryPost = FirebaseFirestore.instance
@@ -43,17 +45,95 @@ class _FeedPageState extends State<FeedPage> {
   //       fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
   //       toFirestore: (user, _) => user.toJson(),
   //     );
+  // List<PostModel> postsList = [];
+  Future<List<PostModel>> getAndSortPosts() async {
+    // final querySanpshot = await postModel.get();
+    // final posts = querySanpshot.docs.map((doc) => doc.data()).toList();
+    final posts = FirebaseFirestore.instance.collection('posts').get();
 
-  List<Map<PostModel, double>> sortedPosts = [];
+    final querySnapshot = await posts;
+    // .where('isTake', isEqualTo: false)
+    // .orderBy('detail')
+    // .withConverter<PostModel>(
+    //   fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
+    //   toFirestore: (post, _) => post.toJson(),
+    // );
+    List<PostModel> postsList = querySnapshot.docs
+        .map((doc) => PostModel.fromJson(doc.data() as Map<String, dynamic>))
+        .toList();
+
+    postsList.forEach((element) async {
+      element.distance = calculateDistances(currentLatitude, currentLongtitude,
+          element.latitude!, element.longitude!);
+    });
+    postsList.sort((a, b) => a.distance!.compareTo(b.distance!));
+
+    // postsList = posts;
+    // final queryPost = FirebaseFirestore.instance
+    //     .collection('posts')
+    //     .where('isTake', isEqualTo: false)
+    //     .orderBy('distance')
+    //     .withConverter<PostModel>(
+    //       fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
+    //       toFirestore: (post, _) => post.toJson(),
+    //     );
+    print("posts length: ${postsList.length}");
+    return postsList ;
+  }
+
+  // Future<Query<PostModel>> getAndSortPosts() async {
+  //   final query = FirebaseFirestore.instance
+  //       .collection('posts')
+  //       .where('isTake', isEqualTo: false) // Add your filter here
+
+  //       .withConverter<PostModel>(
+  //         fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
+  //         toFirestore: (post, _) => post.toJson(),
+  //       );
+  //   return query;
+  // }
+
+  // List? postList;
+
+  // final ScrollController _scrollController = ScrollController();
+  // bool isLoading = false;
+  // bool hasMore = true;
 
   @override
   void initState() {
     super.initState();
+    // _scrollController.addListener((){
+    //   if(_scrollController.position.pixels == _scrollController.position.maxScrollExtent){
+    //     maxpage++;
+    //   getAndSortPosts();
+
+    //   }
+    // });
+
     // double currentLatitude = 0;
     // double currentLongtitude = 0;
     getLocation();
     BlocProvider.of<PostBloc>(context).add(getPostData());
   }
+
+  // void _scrollListener() {
+  //   if (_scrollController.position.pixels ==
+  //       _scrollController.position.maxScrollExtent) {
+  //     _fetchMorePost();
+  //     // BlocProvider.of<PostBloc>(context).add(getPostData());
+  //   }
+  // }
+
+  // void _fetchMorePost() {
+  //   if (isLoading || !hasMore) return;
+
+  //   setState(() {
+  //     isLoading = true;
+  //   });
+  //   setState(() {
+  //     isLoading = false;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +154,10 @@ class _FeedPageState extends State<FeedPage> {
         onRefresh: () async {
           getLocation();
           BlocProvider.of<PostBloc>(context).add(getPostData());
+          // setState(() {
+          // });
+          HireJobClick = false;
+          FindJobClick = false;
         },
         child: Column(
           children: [
@@ -90,32 +174,83 @@ class _FeedPageState extends State<FeedPage> {
               child: buildSelectBox(context),
             ),
             BlocBuilder<PostBloc, PostState>(builder: (context, state) {
-              if (state is PostLoaded) {
+              if (state is PostListLoaded) {
                 return Expanded(
-                  child: FirestoreListView(
-                      query: state.postModel,
-                      pageSize: 2,
-                      itemBuilder: (context, snapshot) {
-                        final post = snapshot.data();
-                        double distance = calculateDistances(currentLatitude,
-                            currentLongtitude, post.latitude!, post.longitude!);
+                  // child: FirestoreListView<List<PostModel>>(
+                  //     query: state.postModel,
+                  //     pageSize: 2,
+                  //     itemBuilder: (context, snapshot) {
+                  //       final post = snapshot.data();
 
-                        // if (distance < 6) {
-                        return buildPostBox(
-                            context,
-                            post.pid ?? "",
-                            post.title!,
-                            post.detail!,
-                            post.location_item ?? "",
-                            post.postimage ?? "",
-                            "a",
-                            post.postdate!,
-                            distance,
-                            post.profileImage ?? "");
-                        // } else {
-                        //   return Container();
-                        // }
-                      }),
+                  //       // posts
+                  //       //     .sort((a, b) => a.distance!.compareTo(b.distance!));
+
+                  //       final distance = calculateDistances(
+                  //           currentLatitude,
+                  //           currentLongtitude,
+                  //           post.latitude!,
+                  //           post.longitude!);
+                  //       // post.distance = calculateDistances(currentLatitude,
+                  //       //     currentLongtitude, post.latitude!, post.longitude!);
+
+                  //       //sort post.distance
+
+                  //       // getAndSortPosts(state.postModel);
+
+                  //       // if (distance < 6) {
+                  //       return buildPostBox(
+                  //           context,
+                  //           post.pid ?? "",
+                  //           post.title!,
+                  //           post.detail!,
+                  //           post.location_item ?? "",
+                  //           post.postimage ?? "",
+                  //           "a",
+                  //           post.postdate!,
+                  //           distance ,
+                  //           post.profileImage ?? "");
+                  //       // } else {
+                  //       //   return Container();
+                  //       // }
+                  //     }),
+
+                  // child: FutureBuilder(
+                    // future: state.postModel,
+                    // builder: (context, snapshot) {
+                      // if (snapshot.connectionState == ConnectionState.done &&
+                      //     snapshot.hasData) {
+                        // final posts = snapshot.data!;
+                        child: ListView.builder(
+                            // controller: _scrollController,
+                            itemCount: state.postModel.length,
+                            itemBuilder: (context, index) {
+                              // print("post distance: ${posts[index].distance}");
+                              if (state.postModel[index].uid! != uid) {
+                                final post = state.postModel[index];
+                                return buildPostBox(
+                                    context,
+                                    post.pid ?? "",
+                                    post.title!,
+                                    post.detail!,
+                                    post.location_item ?? "",
+                                    post.postimage ?? "",
+                                    "a",
+                                    post.postdate!,
+                                    post.distance!,
+                                    post.profileImage ?? "");
+                              } else {
+                                return Container();
+                              }
+                            })
+                      // } else {
+                      //   return Container(
+                      //     child: Center(
+                      //       child: CircularProgressIndicator(),
+                      //     ),
+                      //   );
+                      // }
+                    // },
+                  // ),
                 );
               } else {
                 return Container(

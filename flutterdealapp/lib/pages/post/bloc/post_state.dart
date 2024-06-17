@@ -9,13 +9,19 @@ class PostState {
 class PostInitial extends PostState {
 }
 class PostLoading extends PostState {
+  
 }
 class PostLoaded extends PostState {
-  final Query<PostModel> postModel;
+  final List<PostModel> postModel;
   PostLoaded(this.postModel);
 }
+// class PostListLoading extends PostState {
+//   final List<PostModel> oldPost;
+//   final bool isFirstFetch;
+//   PostListLoading(this.oldPost,{this.isFirstFetch = false});
+// }
 class PostListLoaded extends PostState {
-  final List postModel;
+  final List<PostModel> postModel;
     // final Query<PostModel_indevice> postModel;
   PostListLoaded(this.postModel);
 }
@@ -31,3 +37,4 @@ class postDetailLoaded2 extends PostState {
   final PostModel postModel;
   postDetailLoaded2(this.postModel);
 }
+

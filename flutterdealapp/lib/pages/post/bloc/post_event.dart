@@ -31,3 +31,5 @@ class getPostDetail2 extends PostEvent {
   final String postId;
   getPostDetail2(this.postId);
 }
+class getPostEvent extends PostEvent {
+}

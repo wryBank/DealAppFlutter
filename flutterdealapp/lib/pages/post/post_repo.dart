@@ -14,17 +14,20 @@ class PostRepository {
   // Future<List<PostModel>> getPosts2() async {
   //   return await postProvider.getPosts2();
   // }
-  Future<void> calculateDistances() async {
-    await postProvider.calculateDistances();
-  }
-  Future<Query<PostModel>> getPostById(String userId) async {
+  // Future<void> calculateDistances() async {
+  //   await postProvider.calculateDistances();
+  // }
+  Future<List<PostModel>> getPostById(String userId) async {
     return await postProvider.getPostById(userId);
   }
-  Future<Query<PostModel>> getPostByType(bool isFindJob) async {
+  Future<List<PostModel>> getPostByType(bool isFindJob) async {
     return await postProvider.getPostByType(isFindJob);
   }
   Future<PostModel> getPostDetail(String postId) async {
     return await postProvider.getPostDetail(postId);
+  }
+  Future<List<PostModel>> getPosts2(String postId) async {
+    return await postProvider.getPosts2();
   }
   
 }

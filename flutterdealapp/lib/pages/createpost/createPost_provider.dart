@@ -42,6 +42,7 @@ class CreatePostProvider {
       throw Exception(e.toString());
     }
   }
+  
 
   Future<String> imageToFirebase(PlatformFile imageFile) async {
     UploadTask? uploadTask;

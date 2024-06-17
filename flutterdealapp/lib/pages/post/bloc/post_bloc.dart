@@ -17,21 +17,24 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       try {
         print("inbloc post");
         // repository.getPosts();
-        Query<PostModel> postModel = await repository.postProvider.getPosts();
-        emit(PostLoaded(postModel));
+        List<PostModel> postModel = await repository.postProvider.getPosts2();
+        print("postModel: $postModel");
+        
+        // emit(PostLoaded(postModel));
+        emit(PostListLoaded(postModel));
       } catch (e) {}
     });
-  on<getPostListData>((event, emit) async {
-    emit(PostLoading());
-    try {
-      print("inbloc post2");
-      // repository.getPosts();
-      print("------------------------------------------------------------------");
-      repository.postProvider.calculateDistances();
-      List postModel = await repository.postProvider.calculateDistances();
-      emit(PostListLoaded(postModel));
-    } catch (e) {}
-  });
+  // on<getPostListData>((event, emit) async {
+  //   emit(PostLoading());
+  //   try {
+  //     print("inbloc post2");
+  //     // repository.getPosts();
+  //     print("------------------------------------------------------------------");
+  //     repository.postProvider.calculateDistances();
+  //     List postModel = await repository.postProvider.calculateDistances();
+  //     emit(PostListLoaded(postModel));
+  //   } catch (e) {}
+  // });
   on<getPostById>((event, emit) async {
     emit(PostLoading());
     try {
@@ -39,7 +42,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       // repository.getPosts();
       print("------------------------------------------------------------------");
       repository.getPostById(event.userId);
-      Query<PostModel> postModel = await repository.getPostById(event.userId);
+      List<PostModel> postModel = await repository.getPostById(event.userId);
       emit(PostLoaded(postModel));
     } catch (e) {}
   });
@@ -50,8 +53,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       // repository.getPosts();
       print("------------------------------------------------------------------");
       repository.getPostByType(event.isFindJob);
-      Query<PostModel> postModel = await repository.getPostByType(event.isFindJob);
-      emit(PostLoaded(postModel));
+      List<PostModel> postModel = await repository.getPostByType(event.isFindJob);
+      emit(PostListLoaded(postModel));
     } catch (e) {}
   });
   on<selectBoxPostType>((event, emit) async {

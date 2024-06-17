@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutterdealapp/model/postmodel_indevice.dart';
@@ -8,7 +7,38 @@ import 'package:geolocator/geolocator.dart';
 import '../../model/postmodel.dart';
 
 class PostProvider {
+  // double currentLatitude = 0;
+  // double currentLongtitude = 0;
+  // Future<void> getLocation() async {
+  //   Position position = await Geolocator.getCurrentPosition(
+  //       desiredAccuracy: LocationAccuracy.high);
+
+  //   print(position);
+  //   currentLatitude = position.latitude;
+  //   currentLongtitude = position.longitude;
+  // }
+  calculateDistances(double curLa, double CurLong, double la, double long) {
+    print("curla: $curLa");
+    print("curlong: $CurLong");
+    double distanceInMeters =
+        Geolocator.distanceBetween(curLa, CurLong, la, long);
+    double distanceInKilometers = distanceInMeters / 1000;
+    // print( 'Distance from current location to post ${la}: post latitude is ${la}: post long is ${long} $distanceInKilometers km');
+    return distanceInKilometers;
+  }
+
   Future<Query<PostModel>> getPosts() async {
+    // print("in getPosts");
+    // // Geolocator.checkPermission();
+    // // Geolocator.requestPermission();
+    // Position position = await Geolocator.getCurrentPosition(
+    //     desiredAccuracy: LocationAccuracy.high);
+
+    // print("Current location: ${position.latitude}, ${position.longitude}------");
+    // double currentLatitude = position.latitude;
+    // double currentLongtitude = position.longitude;
+
+    // --------------------------------------------------
     final queryPost = FirebaseFirestore.instance
         .collection('posts')
         .where('isTake', isEqualTo: false)
@@ -18,30 +48,158 @@ class PostProvider {
           toFirestore: (post, _) => post.toJson(),
         );
     return queryPost;
+    // final querySanpshot = await postModel.get();
+    // final posts = querySanpshot.docs.map((doc) => doc.data()).toList();
+    // final posts =  FirebaseFirestore.instance
+    //     .collection('posts').get();
+
+    //   final querySnapshot = await posts;
+    //     // .where('isTake', isEqualTo: false)
+    //     // .orderBy('detail')
+    //     // .withConverter<PostModel>(
+    //     //   fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
+    //     //   toFirestore: (post, _) => post.toJson(),
+    //     // );
+    //     List<PostModel> postsList = querySnapshot.docs
+    //   .map((doc) => PostModel.fromJson(doc.data() as Map<String, dynamic>))
+    //   .toList();
+
+    // postsList.forEach((element) async{
+    // Position position = await Geolocator.getCurrentPosition(
+    //     desiredAccuracy: LocationAccuracy.high);
+
+    //   element.distance = calculateDistances2(position.latitude, position.longitude,
+    //       element.latitude!, element.longitude!);
+
+    //   final docRef = FirebaseFirestore.instance.collection('posts').doc(element.pid);
+    //   await docRef.update({'distance': element.distance});
+
+    // });
+    // // postsList.sort((a, b) => a.distance!.compareTo(b.distance!));
+    // // postsList = posts;
+    // final queryPost = FirebaseFirestore.instance
+    //     .collection('posts')
+    //     .where('isTake', isEqualTo: false)
+    //     .orderBy('distance').limit(50)
+    //     .withConverter<PostModel>(
+    //       fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
+    //       toFirestore: (post, _) => post.toJson(),
+    //     );
+
+    // return queryPost;
   }
 
-  Future<Query<PostModel>> getPostById(String userId) async {
-    final queryPost = FirebaseFirestore.instance
-        .collection('posts')
-        .where('uid', isEqualTo: userId)
-        .withConverter<PostModel>(
-          fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
-          toFirestore: (post, _) => post.toJson(),
-        );
-    return queryPost;
+  Future<List<PostModel>> getPostById(String userId) async {
+    // final queryPost = FirebaseFirestore.instance
+    //     .collection('posts')
+    //     .where('uid', isEqualTo: userId)
+    //     .withConverter<PostModel>(
+    //       fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
+    //       toFirestore: (post, _) => post.toJson(),
+    //     );
+    // return queryPost;
+    await getLocation();
+    final posts = FirebaseFirestore.instance.collection('posts')
+    .where('uid', isEqualTo: userId)
+    .get();
+
+    final querySnapshot = await posts;
+    List<PostModel> postsList = querySnapshot.docs
+        .map((doc) => PostModel.fromJson(doc.data() as Map<String, dynamic>))
+        .toList();
+
+    postsList.forEach((element) async {
+      element.distance = calculateDistances(currentLatitude, currentLongtitude,
+          element.latitude!, element.longitude!);
+    });
+    postsList.sort((a, b) => a.distance!.compareTo(b.distance!));
+    print("posts length: ${postsList.length}");
+    return postsList;
   }
 
-  Future<Query<PostModel>> getPostByType(bool isFindJob) async {
-    final queryPost = FirebaseFirestore.instance
-        .collection('posts')
-        .where('isFindJob', isEqualTo: isFindJob)
-        .where('isTake', isEqualTo: false)
-        .withConverter<PostModel>(
-          fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
-          toFirestore: (post, _) => post.toJson(),
-        );
-    return queryPost;
+  Future<void> getLocation() async {
+    Geolocator.checkPermission();
+    Geolocator.requestPermission();
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    print(position);
+    currentLatitude = position.latitude;
+    currentLongtitude = position.longitude;
   }
+
+  Future<List<PostModel>> getPostByType(bool isFindJob) async {
+    // final queryPost = FirebaseFirestore.instance
+    //     .collection('posts')
+    //     .where('isFindJob', isEqualTo: isFindJob)
+    //     .where('isTake', isEqualTo: false)
+    //     .withConverter<PostModel>(
+    //       fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
+    //       toFirestore: (post, _) => post.toJson(),
+    //     );
+    // return queryPost;
+    await getLocation();
+    final posts = FirebaseFirestore.instance.collection('posts')
+    .where('isFindJob', isEqualTo: isFindJob)
+    .where('isTake', isEqualTo: false)
+    .get();
+
+    final querySnapshot = await posts;
+    List<PostModel> postsList = querySnapshot.docs
+        .map((doc) => PostModel.fromJson(doc.data() as Map<String, dynamic>))
+        .toList();
+
+    postsList.forEach((element) async {
+      element.distance = calculateDistances(currentLatitude, currentLongtitude,
+          element.latitude!, element.longitude!);
+    });
+    postsList.sort((a, b) => a.distance!.compareTo(b.distance!));
+    print("posts length: ${postsList.length}");
+    return postsList;
+  }
+
+  // Future<void> getLocation() async {
+  //   Geolocator.checkPermission();
+  //   Geolocator.requestPermission();
+  //   Position position = await Geolocator.getCurrentPosition(
+  //       desiredAccuracy: LocationAccuracy.high);
+
+  //   print(position);
+  //   currentLatitude = position.latitude;
+  //   currentLongtitude = position.longitude;
+  // }
+
+  double currentLatitude = 0;
+  double currentLongtitude = 0;
+
+  Future<List<PostModel>> getPosts2() async {
+    await getLocation();
+    final posts = FirebaseFirestore.instance.collection('posts').get();
+
+    final querySnapshot = await posts;
+    List<PostModel> postsList = querySnapshot.docs
+        .map((doc) => PostModel.fromJson(doc.data() as Map<String, dynamic>))
+        .toList();
+
+    postsList.forEach((element) async {
+      element.distance = calculateDistances(currentLatitude, currentLongtitude,
+          element.latitude!, element.longitude!);
+    });
+    postsList.sort((a, b) => a.distance!.compareTo(b.distance!));
+    print("posts length: ${postsList.length}");
+    return postsList;
+    
+  }
+
+  // calculateDistances(double curLa, double CurLong, double la, double long) {
+  //   print("curla: $curLa");
+  //   print("curlong: $CurLong");
+  //   double distanceInMeters =
+  //       Geolocator.distanceBetween(curLa, CurLong, la, long);
+  //   double distanceInKilometers = distanceInMeters / 1000;
+  //   // print( 'Distance from current location to post ${la}: post latitude is ${la}: post long is ${long} $distanceInKilometers km');
+  //   return distanceInKilometers;
+  // }
 
   // Future<List<PostModel>> getPosts2() async {
   // final queryPost =
@@ -59,61 +217,61 @@ class PostProvider {
   // return listBeforeSort;
   // }
 
-  Future<List> calculateDistances() async {
-    print("in calculateDistances");
-    Position currentLocation = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    print(
-        'Current location: ${currentLocation.latitude}, ${currentLocation.longitude}');
+  // Future<List> calculateDistances2() async {
+  //   print("in calculateDistances");
+  //   Position currentLocation = await Geolocator.getCurrentPosition(
+  //       desiredAccuracy: LocationAccuracy.high);
+  //   print(
+  //       'Current location: ${currentLocation.latitude}, ${currentLocation.longitude}');
 
-    final queryPost =
-        FirebaseFirestore.instance.collection('posts').orderBy('detail').get();
-    final querySnapshot = await queryPost;
-    List<Map<String, dynamic>> postsWithDistance = [];
+  //   final queryPost =
+  //       FirebaseFirestore.instance.collection('posts').orderBy('detail').get();
+  //   final querySnapshot = await queryPost;
+  //   List<Map<String, dynamic>> postsWithDistance = [];
 
-    List<PostModel> listBeforeSort =
-        querySnapshot.docs.map((e) => PostModel.fromJson(e.data())).toList();
-    Map<PostModel, double> postDistances = {};
-    for (var post in listBeforeSort) {
-      double distanceInMeters = Geolocator.distanceBetween(
-          currentLocation.latitude,
-          currentLocation.longitude,
-          post.latitude!,
-          post.longitude!);
-      double distanceInKilometers = distanceInMeters / 1000;
-      postsWithDistance.add({
-        'post': post,
-        'distance': distanceInKilometers,
-      });
-      postDistances[post] = distanceInKilometers;
-      print(
-          'Distance from current location to post ${post.detail}: post latitude is ${post.latitude}: post long is ${post.longitude} $distanceInKilometers km');
-    }
+  //   List<PostModel> listBeforeSort =
+  //       querySnapshot.docs.map((e) => PostModel.fromJson(e.data())).toList();
+  //   Map<PostModel, double> postDistances = {};
+  //   for (var post in listBeforeSort) {
+  //     double distanceInMeters = Geolocator.distanceBetween(
+  //         currentLocation.latitude,
+  //         currentLocation.longitude,
+  //         post.latitude!,
+  //         post.longitude!);
+  //     double distanceInKilometers = distanceInMeters / 1000;
+  //     postsWithDistance.add({
+  //       'post': post,
+  //       'distance': distanceInKilometers,
+  //     });
+  //     postDistances[post] = distanceInKilometers;
+  //     print(
+  //         'Distance from current location to post ${post.detail}: post latitude is ${post.latitude}: post long is ${post.longitude} $distanceInKilometers km');
+  //   }
 
-    postsWithDistance.sort((a, b) => a['distance'].compareTo(b['distance']));
+  //   postsWithDistance.sort((a, b) => a['distance'].compareTo(b['distance']));
 
-    List<Map<String, dynamic>> sortedPosts = postsWithDistance.map((e) {
-      return {
-        'post': e['post']
-            as PostModel, // 'post' is the key, 'e['post']' is the value
-        'distance': e['distance'] as double,
-      };
-    }).toList();
+  //   List<Map<String, dynamic>> sortedPosts = postsWithDistance.map((e) {
+  //     return {
+  //       'post': e['post']
+  //           as PostModel, // 'post' is the key, 'e['post']' is the value
+  //       'distance': e['distance'] as double,
+  //     };
+  //   }).toList();
 
-    // var sortedPosts = postDistances.entries.toList()
-    //   ..sort((e1, e2) => e1.value.compareTo(e2.value));
+  //   // var sortedPosts = postDistances.entries.toList()
+  //   //   ..sort((e1, e2) => e1.value.compareTo(e2.value));
 
-    //   for(var post in sortedPosts){
-    // print(
-    //     'Distance from current location to post ${post.key.detail}: ${post.value} km');
-    //   }
-    //   List<PostModel> sortedPostModel = sortedPosts.map((e) => e.key).toList();
-    //   print(sortedPostModel);
-    //   return sortedPostModel;
-    print(postsWithDistance);
+  //   //   for(var post in sortedPosts){
+  //   // print(
+  //   //     'Distance from current location to post ${post.key.detail}: ${post.value} km');
+  //   //   }
+  //   //   List<PostModel> sortedPostModel = sortedPosts.map((e) => e.key).toList();
+  //   //   print(sortedPostModel);
+  //   //   return sortedPostModel;
+  //   print(postsWithDistance);
 
-    return postsWithDistance;
-  }
+  //   return postsWithDistance;
+  // }
 
   final _fireCloud = FirebaseFirestore.instance.collection("posts");
   Future<PostModel> getPostDetail(String postId) async {

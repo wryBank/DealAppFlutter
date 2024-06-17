@@ -22,6 +22,7 @@ import '../../values/color.dart';
 import '../common_widgets.dart';
 import '../editProfile/bloc/editprofile_event.dart';
 import '../editProfile/editprofile_image.dart';
+import '../postDetail/postDetail_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -293,28 +294,46 @@ class _ProfilePageState extends State<ProfilePage> {
                 BlocBuilder<PostBloc, PostState>(builder: (context, state) {
                   if (state is PostLoaded) {
                     return Expanded(
-                      child: FirestoreListView(
-                          query: state.postModel,
-                          pageSize: 2,
-                          itemBuilder: (context, snapshot) {
-                            final post = snapshot.data();
-                            double distance = calculateDistances(
-                                currentLatitude,
-                                currentLongtitude,
-                                post.latitude!,
-                                post.longitude!);
-                            return buildPostBox(
-                                post.title!,
-                                post.detail!,
-                                post.location_item ??"",
-                                post.postimage ?? "",
-                                "a",
-                                post.postdate!,
-                                distance,
-                                post.profileImage ?? "",
-                                );
-                          }),
-                    );
+                        child: ListView.builder(
+                            // controller: _scrollController,
+                            itemCount: state.postModel.length,
+                            itemBuilder: (context, index) {
+                              // print("post distance: ${posts[index].distance}");
+                                final post = state.postModel[index];
+                                return buildPostBox(
+                                    context,
+                                    post.pid ?? "",
+                                    post.title!,
+                                    post.detail!,
+                                    post.location_item ?? "",
+                                    post.postimage ?? "",
+                                    "a",
+                                    post.postdate!,
+                                    post.distance!,
+                                    post.profileImage ?? "");
+                            })
+                        // child: FirestoreListView(
+                        //     query: state.postModel,
+                        //     pageSize: 2,
+                        //     itemBuilder: (context, snapshot) {
+                        //       final post = snapshot.data();
+                        //       double distance = calculateDistances(
+                        //           currentLatitude,
+                        //           currentLongtitude,
+                        //           post.latitude!,
+                        //           post.longitude!);
+                        //       return buildPostBox(
+                        //           post.title!,
+                        //           post.detail!,
+                        //           post.location_item ??"",
+                        //           post.postimage ?? "",
+                        //           "a",
+                        //           post.postdate!,
+                        //           distance,
+                        //           post.profileImage ?? "",
+                        //           );
+                        //     }),
+                        );
                   } else {
                     return Container(
                       child: Center(
@@ -334,8 +353,9 @@ class _ProfilePageState extends State<ProfilePage> {
     // add gridview here
   }
 }
-
 Widget buildPostBox(
+    context,
+    String pid,
     String title,
     String detail,
     String location,
@@ -346,7 +366,10 @@ Widget buildPostBox(
     String userImage) {
   return GestureDetector(
     onTap: () {
-      print("tap in post box {$detail}");
+      print("tap in post box {$pid}");
+      BlocProvider.of<PostBloc>(context).add(getPostDetail(pid));
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => postDetailPage()));
     },
     child: Container(
       decoration: BoxDecoration(

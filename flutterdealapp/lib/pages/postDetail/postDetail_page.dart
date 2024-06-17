@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -44,16 +45,21 @@ calculateDistances(double curLa, double CurLong, double la, double long) {
   return distanceInKilometers;
 }
 
+bool isowner = false;
+
 class _postDetailPageState extends State<postDetailPage> {
   @override
   void initState() {
     super.initState();
+    final uid = FirebaseAuth.instance.currentUser!.uid;
     // double currentLatitude = 0;
     // double currentLongtitude = 0;
     getLocation();
     // print(currentLatitude);
     // print(currentLongtitude);
   }
+
+  final uid = FirebaseAuth.instance.currentUser!.uid;
 
   Widget build(BuildContext context) {
     // PostModel postModel = PostModel();
@@ -70,13 +76,16 @@ class _postDetailPageState extends State<postDetailPage> {
 
       if (state is postDetailLoaded) {
         getLocation();
+        if (state.postModel.uid == uid) {
+          isowner = true;
+        } else {
+          isowner = false;
+        }
         double distance = calculateDistances(currentLatitude, currentLongtitude,
             state.postModel.latitude!, state.postModel.longitude!);
         return RefreshIndicator(
-          onRefresh: () async{
-            setState(() {
-
-            });
+          onRefresh: () async {
+            setState(() {});
           },
           child: Scaffold(
               appBar: AppBar(
@@ -100,7 +109,8 @@ class _postDetailPageState extends State<postDetailPage> {
                     state.postModel.postby.toString(),
                     state.postModel.postdate as Timestamp,
                     distance,
-                    state.postModel.profileImage.toString()),
+                    state.postModel.profileImage.toString(),
+                    isowner),
               )),
         );
       } else {
@@ -119,16 +129,18 @@ class _postDetailPageState extends State<postDetailPage> {
 }
 
 Widget buildPostBoxDetail(
-    context,
-    // String
-    String title,
-    String detail,
-    String location,
-    String urlImage,
-    String postby,
-    Timestamp postdate,
-    double distance,
-    String userImage) {
+  context,
+  // String
+  String title,
+  String detail,
+  String location,
+  String urlImage,
+  String postby,
+  Timestamp postdate,
+  double distance,
+  String userImage,
+  bool isowner,
+) {
   return GestureDetector(
     onTap: () {
       print("tap in post box {$detail}");
@@ -289,7 +301,9 @@ Widget buildPostBoxDetail(
               style: TextStyle(fontSize: 20),
             ),
           ),
-          buildCommonButton("Send Deal", () {}),
+
+          if (isowner == true) buildCommonButton("This is you post", () {}),
+          if (isowner == false) buildCommonButton("Send Deal", () {}),
           SizedBox(
             height: 20.h,
           ),
