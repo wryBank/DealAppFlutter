@@ -25,8 +25,8 @@ class FeedPage extends StatefulWidget {
 
 class _FeedPageState extends State<FeedPage> {
   Future<void> getLocation() async {
-    await Geolocator.checkPermission();
-    await Geolocator.requestPermission();
+    Geolocator.checkPermission();
+    Geolocator.requestPermission();
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
 
@@ -44,9 +44,13 @@ class _FeedPageState extends State<FeedPage> {
   //       toFirestore: (user, _) => user.toJson(),
   //     );
 
+  List<Map<PostModel, double>> sortedPosts = [];
+
   @override
   void initState() {
     super.initState();
+    // double currentLatitude = 0;
+    // double currentLongtitude = 0;
     getLocation();
     BlocProvider.of<PostBloc>(context).add(getPostData());
   }
@@ -95,6 +99,8 @@ class _FeedPageState extends State<FeedPage> {
                         final post = snapshot.data();
                         double distance = calculateDistances(currentLatitude,
                             currentLongtitude, post.latitude!, post.longitude!);
+
+                        // if (distance < 6) {
                         return buildPostBox(
                             context,
                             post.pid ?? "",
@@ -106,6 +112,9 @@ class _FeedPageState extends State<FeedPage> {
                             post.postdate!,
                             distance,
                             post.profileImage ?? "");
+                        // } else {
+                        //   return Container();
+                        // }
                       }),
                 );
               } else {

@@ -5,8 +5,11 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdealapp/model/postmodel.dart';
+import 'package:flutterdealapp/pages/common_widgets.dart';
 import 'package:flutterdealapp/pages/post/bloc/post_bloc.dart';
+import 'package:flutterdealapp/pages/post/bloc/post_event.dart';
 import 'package:flutterdealapp/pages/post/bloc/post_state.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../values/color.dart';
 
@@ -17,30 +20,90 @@ class postDetailPage extends StatefulWidget {
   State<postDetailPage> createState() => _postDetailPageState();
 }
 
+Future<void> getLocation() async {
+  await Geolocator.checkPermission();
+  await Geolocator.requestPermission();
+  Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high);
+
+  print(position);
+  currentLatitude = position.latitude;
+  currentLongtitude = position.longitude;
+}
+
+double currentLatitude = 0;
+double currentLongtitude = 0;
+
+calculateDistances(double curLa, double CurLong, double la, double long) {
+  print("curla: $curLa");
+  print("curlong: $CurLong");
+  double distanceInMeters =
+      Geolocator.distanceBetween(curLa, CurLong, la, long);
+  double distanceInKilometers = distanceInMeters / 1000;
+  // print( 'Distance from current location to post ${la}: post latitude is ${la}: post long is ${long} $distanceInKilometers km');
+  return distanceInKilometers;
+}
+
 class _postDetailPageState extends State<postDetailPage> {
   @override
+  void initState() {
+    super.initState();
+    // double currentLatitude = 0;
+    // double currentLongtitude = 0;
+    getLocation();
+    // print(currentLatitude);
+    // print(currentLongtitude);
+  }
+
   Widget build(BuildContext context) {
     // PostModel postModel = PostModel();
     return BlocBuilder<PostBloc, PostState>(builder: (context, state) {
       // print(state.toString());
-      
-      if (state is postDetailLoaded) {
+
+      if (state is PostLoading) {
         return Scaffold(
-          appBar: AppBar(
-            title: Text("Post Detail"),
+          body: Center(
+            child: CircularProgressIndicator(),
           ),
-            body: buildPostBox(
-                context,
-                state.postModel.title.toString(),
-                state.postModel.detail.toString(),
-                state.postModel.location_item.toString(),
-                state.postModel.postimage.toString(),
-                state.postModel.postby.toString(),
-                state.postModel.postdate as Timestamp,
-                1.0,
-                state.postModel.profileImage.toString()));
-      } 
-      else {
+        );
+      }
+
+      if (state is postDetailLoaded) {
+        getLocation();
+        double distance = calculateDistances(currentLatitude, currentLongtitude,
+            state.postModel.latitude!, state.postModel.longitude!);
+        return RefreshIndicator(
+          onRefresh: () async{
+            setState(() {
+
+            });
+          },
+          child: Scaffold(
+              appBar: AppBar(
+                automaticallyImplyLeading: false,
+                leading: IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () {
+                    BlocProvider.of<PostBloc>(context).add(getPostData());
+                    Navigator.of(context).pop();
+                  },
+                ),
+                title: Text("Post Detail"),
+              ),
+              body: SingleChildScrollView(
+                child: buildPostBoxDetail(
+                    context,
+                    state.postModel.title.toString(),
+                    state.postModel.detail.toString(),
+                    state.postModel.location_item.toString(),
+                    state.postModel.postimage.toString(),
+                    state.postModel.postby.toString(),
+                    state.postModel.postdate as Timestamp,
+                    distance,
+                    state.postModel.profileImage.toString()),
+              )),
+        );
+      } else {
         return Scaffold(
           body: Center(
             child: Text(state.toString()),
@@ -55,8 +118,9 @@ class _postDetailPageState extends State<postDetailPage> {
   }
 }
 
-Widget buildPostBox(
+Widget buildPostBoxDetail(
     context,
+    // String
     String title,
     String detail,
     String location,
@@ -70,6 +134,7 @@ Widget buildPostBox(
       print("tap in post box {$detail}");
     },
     child: Container(
+      // height: 500.h,
       decoration: BoxDecoration(
         color: AppColors.primaryPostBox,
         border: Border.all(
@@ -81,24 +146,8 @@ Widget buildPostBox(
       margin: EdgeInsets.all(20),
       child: Column(
         children: [
-          Container(
-              // color: Colors.red,
-              margin: EdgeInsets.all(10),
-              width: 235.w,
-              height: 120.h,
-              child: Image.network(urlImage)
-              // urlImage != null ?? urlImage.isNotEmpty
-              // ?Image.network(urlImage,fit: BoxFit.cover,)
-              // :Image.asset("assets/images/icon.png")
-
-              ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Container(
-              margin: EdgeInsets.only(right: 10),
-              child: Text(
-                  "${postdate.toDate().day}/${postdate.toDate().month}/${postdate.toDate().year}"),
-            ),
+          SizedBox(
+            height: 20.h,
           ),
           Row(
             children: [
@@ -115,20 +164,53 @@ Widget buildPostBox(
               Container(
                 margin: EdgeInsets.only(left: 10),
                 child: Text(
-                  "Warayut Saisi",
+                  postby,
                   style: TextStyle(fontSize: 20),
                 ),
               ),
             ],
           ),
           Container(
-            // color: Colors.amber,
-            width: 330.w,
-            margin: EdgeInsets.all(20),
-            child: Text(
-              detail,
-              style: TextStyle(fontSize: 20),
+              // color: Colors.red,
+              margin: EdgeInsets.all(10),
+              width: 350.w,
+              height: 200.h,
+              child: Image.network(
+                urlImage,
+              )
+              // urlImage != null ?? urlImage.isNotEmpty
+              // ?Image.network(urlImage,fit: BoxFit.cover,)
+              // :Image.asset("assets/images/icon.png")
+
+              ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Container(
+              margin: EdgeInsets.only(right: 10),
+              child: Text(
+                  "${postdate.toDate().day}/${postdate.toDate().month}/${postdate.toDate().year}"),
             ),
+          ),
+          Row(
+            children: [
+              // Align(
+              //   alignment: Alignment.centerLeft,
+              //   child: Container(
+              //     margin: EdgeInsets.only(left: 20),
+              //     child: CircleAvatar(
+              //       radius: 30,
+              //       backgroundImage: NetworkImage(userImage),
+              //     ),
+              //   ),
+              // ),
+              // Container(
+              //   margin: EdgeInsets.only(left: 10),
+              //   child: Text(
+              //     "Warayut Saisi",
+              //     style: TextStyle(fontSize: 20),
+              //   ),
+              // ),
+            ],
           ),
           Row(
             children: [
@@ -168,6 +250,48 @@ Widget buildPostBox(
                 ),
               ),
             ],
+          ),
+          Container(
+            // color: Colors.amber,
+            width: 330.w,
+            margin: EdgeInsets.all(20),
+            child: Text(
+              title,
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+          // Divider(
+          //   color: Colors.black,
+          //   thickness: 0.3,
+          // ),
+          Divider(
+            thickness: 0.5, // Custom thickness
+            // height:
+            //     20, // Total height of the divider including space above and below it
+            indent: 20, // Starting space (left padding)
+            endIndent: 20, // Ending space (right padding)
+            color: Colors.grey, // Color of the divider
+          ),
+          // VerticalDivider(
+          //   width:
+          //       20, // Total width of the divider including space on both sides
+          //   thickness: 2, // Thickness of the line
+          //   indent: 10, // Top padding
+          //   endIndent: 10, // Bottom padding
+          //   color: Colors.grey, // Color of the divider
+          // ),
+          Container(
+            // color: Colors.amber,
+            width: 330.w,
+            margin: EdgeInsets.all(20),
+            child: Text(
+              "wadcxzcjxxjxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+          buildCommonButton("Send Deal", () {}),
+          SizedBox(
+            height: 20.h,
           ),
         ],
       ),
