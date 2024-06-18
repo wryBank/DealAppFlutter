@@ -29,5 +29,11 @@ class PostRepository {
   Future<List<PostModel>> getPosts2(String postId) async {
     return await postProvider.getPosts2();
   }
+  Future takePost(String postId, String uid) async {
+    return await postProvider.takePost(postId, uid);
+  }
+  Future getOwnDeal(String uid) async {
+    return await postProvider.getOwnDeal(uid);
+  }
   
 }

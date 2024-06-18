@@ -33,3 +33,13 @@ class getPostDetail2 extends PostEvent {
 }
 class getPostEvent extends PostEvent {
 }
+class takePostEvent extends PostEvent {
+  final String postId;
+  final String uid;
+  takePostEvent({required this.postId, required this.uid});
+}
+class getOwnDeal extends PostEvent {
+  // final String postId;
+  final String uid;
+  getOwnDeal({required this.uid});
+}

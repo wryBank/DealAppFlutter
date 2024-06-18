@@ -1,0 +1,343 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdealapp/pages/common_widgets.dart';
+import 'package:flutterdealapp/pages/post/bloc/post_state.dart';
+
+import '../../values/color.dart';
+import '../post/bloc/post_bloc.dart';
+import '../post/bloc/post_event.dart';
+
+class DealPage extends StatefulWidget {
+  const DealPage({super.key});
+
+  @override
+  State<DealPage> createState() => _DealPageState();
+}
+
+final uid = FirebaseAuth.instance.currentUser!.uid;
+
+class _DealPageState extends State<DealPage> {
+@override
+void initState() {
+  BlocProvider.of<PostBloc>(context).add(getOwnDeal(uid:uid));
+}
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    bool bt1Click = false;
+    bool bt2Click = false;
+    bool bt3Click = false;
+    return Scaffold(
+        // appBar: AppBar(
+        //   backgroundColor: AppColors.primaryAppbar,
+        //   bottom: PreferredSize(
+        //     preferredSize: const Size.fromHeight(1.0),
+        //     child: Container(
+        //       // color: AppColors.primaryAppbar,
+        //       height: 0.5,
+        //     ),
+        //   ),
+
+        // ),
+        body: RefreshIndicator(
+            onRefresh: () async {
+              BlocProvider.of<PostBloc>(context).add(getOwnDeal(uid: uid));
+            },
+            child: Column(children: [
+              Stack(
+                children: <Widget>[
+                  Container(
+                    // height: size.height * 0.3 - 47,
+                    height: 130,
+                    // color: AppColors.primaryAppbar,
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryAppbar,
+                      // borderRadius: BorderRadius.only(
+                      //   bottomLeft: Radius.circular(26),
+                      //   bottomRight: Radius.circular(26),
+                      // ),
+                    ),
+                  ),
+                  Center(
+                    child: Container(
+                      margin: EdgeInsets.only(top: 50),
+ 
+                      child: Text(
+                        "Deal",
+                        style: TextStyle(
+                            fontSize: 30.sp,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                  height: 50,
+                  // color: AppColors.primaryAppbar,
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryAppbar,
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(26),
+                      bottomRight: Radius.circular(26),
+                    ),
+                  ),
+                  child: buildCommonButton3(
+                      context, "กำลังดำเนินการ", "สำเร็จแล้ว", "test3",uid)),
+            BlocBuilder<PostBloc, PostState>(builder: (context, state) {
+              if (state is PostListLoaded) {
+                return Expanded(
+                    child: Container(
+                  color: AppColors.primaryPostBox,
+                  child: ListView.builder(
+                      // controller: _scrollController,
+                      itemCount: state.postModel.length,
+                      itemBuilder: (context, index) {
+                        // print("post distance: ${posts[index].distance}");
+                          final post = state.postModel[index];
+                          return buildPostBox(
+                              context,
+                              post.pid ?? "",
+                              post.title!,
+                              post.detail!,
+                              post.location_item ?? "",
+                              post.postimage ?? "",
+                              "a",
+                              post.postdate!,
+                              post.distance!,
+                              post.profileImage ?? "");
+                      }),
+                )
+ 
+                    );
+              } else {
+                return Container(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+            })
+            ]
+            ),
+            ),
+        backgroundColor: AppColors.primaryPostBox);
+  }
+}
+
+Widget buildPostBox(
+    context,
+    String pid,
+    String title,
+    String detail,
+    String location,
+    String urlImage,
+    String postby,
+    Timestamp postdate,
+    double distance,
+    String userImage) {
+  return GestureDetector(
+    onTap: () {
+      print("tap in post box {$pid}");
+      // BlocProvider.of<PostBloc>(context).add(getPostDetail(pid));
+      // Navigator.of(context)
+      //     .push(MaterialPageRoute(builder: (context) => postDetailPage()));
+    },
+    child: Container(
+      decoration: BoxDecoration(
+        color: AppColors.primaryPostBox,
+        border: Border.all(
+          width: 0.2,
+          color: Colors.black,
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      margin: EdgeInsets.all(20),
+      child: Column(
+        children: [
+          Container(
+              // color: Colors.red,
+              margin: EdgeInsets.all(10),
+              width: 235.w,
+              height: 120.h,
+              child: Image.network(urlImage)
+              // urlImage != null ?? urlImage.isNotEmpty
+              // ?Image.network(urlImage,fit: BoxFit.cover,)
+              // :Image.asset("assets/images/icon.png")
+
+              ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Container(
+              margin: EdgeInsets.only(right: 10),
+              child: Text(
+                  "${postdate.toDate().day}/${postdate.toDate().month}/${postdate.toDate().year}"),
+            ),
+          ),
+          Row(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  margin: EdgeInsets.only(left: 20),
+                  child: CircleAvatar(
+                    radius: 30,
+                    backgroundImage: NetworkImage(userImage),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 10),
+                child: Text(
+                  "Warayut Saisi",
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+            ],
+          ),
+          Container(
+            // color: Colors.amber,
+            width: 330.w,
+            margin: EdgeInsets.all(20),
+            child: Text(
+              detail,
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+          Row(
+            children: [
+              Align(
+                child: Container(
+                  margin: EdgeInsets.only(left: 20),
+                  child: Container(
+                    width: 20.w,
+                    height: 20.h,
+                    child: Image.asset("assets/icons/location.png"),
+                  ),
+                ),
+              ),
+              Container(
+                width: 150.w,
+                margin: EdgeInsets.all(5),
+                child: Text(
+                  location,
+                  style: TextStyle(fontSize: 15),
+                ),
+              ),
+              Align(
+                child: Container(
+                  margin: EdgeInsets.only(left: 20),
+                  child: Container(
+                    width: 20.w,
+                    height: 20.h,
+                    child: Image.asset("assets/icons/location.png"),
+                  ),
+                ),
+              ),
+              Container(
+                // margin: EdgeInsets.all(10),
+                child: Text(
+                  "${distance.toStringAsFixed(1)} km",
+                  style: TextStyle(fontSize: 15),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+buildCommonButton3(
+  context,
+  String buttonName1,
+  String buttonName2,
+  String buttonName3,
+  String uid,
+) {
+  bool bt1Click = false;
+  bool bt2Click = false;
+  bool bt3Click = false;
+  return BlocBuilder<PostBloc, PostState>(builder: (context, state) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        GestureDetector(
+          onTap: () {
+            bt1Click = !bt1Click;
+            bt2Click = false;
+            bt3Click = false;
+            // BlocProvider.of<PostBloc>(context).add(getPostByType(true));
+            BlocProvider.of<PostBloc>(context).add(getOwnDeal(uid: uid));
+
+          },
+          child: Center(
+            child: Container(
+              width: 130.w,
+              height: 30.h,
+              // margin: EdgeInsets.only(left: 150.w,right: 25.w,),
+              decoration: BoxDecoration(
+                  color: bt1Click ? AppColors.primaryAppbar : Colors.white,
+                  borderRadius: BorderRadius.circular(30.w),
+                  boxShadow: [
+                    BoxShadow(
+                        spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: Offset(0, 3),
+                        color: Colors.grey.withOpacity(0.5))
+                  ]),
+              child: Center(
+                  child: Text(
+                buttonName1,
+                style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black),
+              )),
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            bt1Click = false;
+            bt2Click = !bt2Click;
+            bt3Click = false;
+            BlocProvider.of<PostBloc>(context).add(getPostByType(false));
+          },
+          child: Center(
+            child: Container(
+              width: 130.w,
+              height: 30.h,
+              // margin: EdgeInsets.only(left: 150.w,right: 25.w,),
+              decoration: BoxDecoration(
+                  color: bt2Click ? AppColors.primaryAppbar : Colors.white,
+                  borderRadius: BorderRadius.circular(30.w),
+                  boxShadow: [
+                    BoxShadow(
+                        spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: Offset(0, 3),
+                        color: Colors.grey.withOpacity(0.5))
+                  ]),
+              child: Center(
+                  child: Text(
+                buttonName2,
+                style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black),
+              )),
+            ),
+          ),
+        ),
+      ],
+    );
+  });
+}

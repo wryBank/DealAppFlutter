@@ -78,7 +78,7 @@ class _FeedPageState extends State<FeedPage> {
     //       toFirestore: (post, _) => post.toJson(),
     //     );
     print("posts length: ${postsList.length}");
-    return postsList ;
+    return postsList;
   }
 
   // Future<Query<PostModel>> getAndSortPosts() async {
@@ -162,7 +162,19 @@ class _FeedPageState extends State<FeedPage> {
         child: Column(
           children: [
             Container(
-              height: 130,
+              height: 50,
+              // color: AppColors.primaryAppbar,
+              decoration: BoxDecoration(
+                color: AppColors.primaryAppbar,
+                // borderRadius: BorderRadius.only(
+                //   bottomLeft: Radius.circular(26),
+                //   bottomRight: Radius.circular(26),
+                // ),
+              ),
+              // child: buildSelectBox(context),
+            ),
+            Container(
+              height: 50,
               // color: AppColors.primaryAppbar,
               decoration: BoxDecoration(
                 color: AppColors.primaryAppbar,
@@ -176,82 +188,85 @@ class _FeedPageState extends State<FeedPage> {
             BlocBuilder<PostBloc, PostState>(builder: (context, state) {
               if (state is PostListLoaded) {
                 return Expanded(
-                  // child: FirestoreListView<List<PostModel>>(
-                  //     query: state.postModel,
-                  //     pageSize: 2,
-                  //     itemBuilder: (context, snapshot) {
-                  //       final post = snapshot.data();
+                    // child: FirestoreListView<List<PostModel>>(
+                    //     query: state.postModel,
+                    //     pageSize: 2,
+                    //     itemBuilder: (context, snapshot) {
+                    //       final post = snapshot.data();
 
-                  //       // posts
-                  //       //     .sort((a, b) => a.distance!.compareTo(b.distance!));
+                    //       // posts
+                    //       //     .sort((a, b) => a.distance!.compareTo(b.distance!));
 
-                  //       final distance = calculateDistances(
-                  //           currentLatitude,
-                  //           currentLongtitude,
-                  //           post.latitude!,
-                  //           post.longitude!);
-                  //       // post.distance = calculateDistances(currentLatitude,
-                  //       //     currentLongtitude, post.latitude!, post.longitude!);
+                    //       final distance = calculateDistances(
+                    //           currentLatitude,
+                    //           currentLongtitude,
+                    //           post.latitude!,
+                    //           post.longitude!);
+                    //       // post.distance = calculateDistances(currentLatitude,
+                    //       //     currentLongtitude, post.latitude!, post.longitude!);
 
-                  //       //sort post.distance
+                    //       //sort post.distance
 
-                  //       // getAndSortPosts(state.postModel);
+                    //       // getAndSortPosts(state.postModel);
 
-                  //       // if (distance < 6) {
-                  //       return buildPostBox(
-                  //           context,
-                  //           post.pid ?? "",
-                  //           post.title!,
-                  //           post.detail!,
-                  //           post.location_item ?? "",
-                  //           post.postimage ?? "",
-                  //           "a",
-                  //           post.postdate!,
-                  //           distance ,
-                  //           post.profileImage ?? "");
-                  //       // } else {
-                  //       //   return Container();
-                  //       // }
-                  //     }),
+                    //       // if (distance < 6) {
+                    //       return buildPostBox(
+                    //           context,
+                    //           post.pid ?? "",
+                    //           post.title!,
+                    //           post.detail!,
+                    //           post.location_item ?? "",
+                    //           post.postimage ?? "",
+                    //           "a",
+                    //           post.postdate!,
+                    //           distance ,
+                    //           post.profileImage ?? "");
+                    //       // } else {
+                    //       //   return Container();
+                    //       // }
+                    //     }),
 
-                  // child: FutureBuilder(
+                    // child: FutureBuilder(
                     // future: state.postModel,
                     // builder: (context, snapshot) {
-                      // if (snapshot.connectionState == ConnectionState.done &&
-                      //     snapshot.hasData) {
-                        // final posts = snapshot.data!;
-                        child: ListView.builder(
-                            // controller: _scrollController,
-                            itemCount: state.postModel.length,
-                            itemBuilder: (context, index) {
-                              // print("post distance: ${posts[index].distance}");
-                              if (state.postModel[index].uid! != uid) {
-                                final post = state.postModel[index];
-                                return buildPostBox(
-                                    context,
-                                    post.pid ?? "",
-                                    post.title!,
-                                    post.detail!,
-                                    post.location_item ?? "",
-                                    post.postimage ?? "",
-                                    "a",
-                                    post.postdate!,
-                                    post.distance!,
-                                    post.profileImage ?? "");
-                              } else {
-                                return Container();
-                              }
-                            })
-                      // } else {
-                      //   return Container(
-                      //     child: Center(
-                      //       child: CircularProgressIndicator(),
-                      //     ),
-                      //   );
-                      // }
+                    // if (snapshot.connectionState == ConnectionState.done &&
+                    //     snapshot.hasData) {
+                    // final posts = snapshot.data!;
+                    child: Container(
+                  color: AppColors.primaryPostBox,
+                  child: ListView.builder(
+                      // controller: _scrollController,
+                      itemCount: state.postModel.length,
+                      itemBuilder: (context, index) {
+                        // print("post distance: ${posts[index].distance}");
+                        if (state.postModel[index].uid! != uid) {
+                          final post = state.postModel[index];
+                          return buildPostBox(
+                              context,
+                              post.pid ?? "",
+                              post.title!,
+                              post.detail!,
+                              post.location_item ?? "",
+                              post.postimage ?? "",
+                              "a",
+                              post.postdate!,
+                              post.distance!,
+                              post.profileImage ?? "");
+                        } else {
+                          return Container();
+                        }
+                      }),
+                )
+                    // } else {
+                    //   return Container(
+                    //     child: Center(
+                    //       child: CircularProgressIndicator(),
+                    //     ),
+                    //   );
+                    // }
                     // },
-                  // ),
-                );
+                    // ),
+                    );
               } else {
                 return Container(
                   child: Center(
@@ -313,7 +328,7 @@ Widget buildPostBox(
     },
     child: Container(
       decoration: BoxDecoration(
-        color: AppColors.primaryPostBox,
+        color: Colors.white,
         border: Border.all(
           width: 0.2,
           color: Colors.black,
@@ -455,33 +470,45 @@ buildSelectBox(BuildContext context) {
             }
             print("FindJobClick: $FindJobClick HireJobClick: $HireJobClick");
           },
-          child: Container(
-            width: 120.w,
-            height: 50.h,
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            decoration: BoxDecoration(
-              color: FindJobClick ? Colors.white : AppColors.primaryAppbar,
-              // border: Border.all(color: Colors.grey),
-              border: FindJobClick
-                  ? Border.all(
-                      color: AppColors.primaryAppbar,
-                      width: 1.0,
-                    )
-                  : Border.all(color: Colors.white),
-              borderRadius: BorderRadius.circular(50),
-              // border: FindJobClick ? Border.all( color: AppColors.primaryAppbar,
-              // width: 1.0,
-              //       )
-              //     : Border.all(color: Colors.white , width: 1.0),
-              // borderRadius: BorderRadius.circular(50),
-              // borderRadius: BorderRadius.circular(50),
-            ),
-            child: Center(
-              child: Text(
-                'รับจ้าง',
-                style: TextStyle(
-                  color: FindJobClick ? Colors.black : Colors.white,
-                  fontSize: 20.sp,
+          child: Center(
+            child: Container(
+              width: 80.w,
+              height: 30.h,
+              // padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              decoration: BoxDecoration(
+                  color: FindJobClick ? Colors.white : AppColors.primaryAppbar,
+                  // border: Border.all(color: Colors.grey),
+                  // border: FindJobClick
+                  //     ? Border.all(
+                  //         color: AppColors.primaryAppbar,
+                  //         width: 1.0,
+                  //       )
+                  //     : Border.all(color: Colors.white),
+                  borderRadius: BorderRadius.circular(30),
+                  boxShadow: [
+                    BoxShadow(
+                        spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: Offset(0, 3),
+                        color:  Colors.grey.withOpacity(0.5))
+                  ]
+                  // border: FindJobClick ? Border.all( color: AppColors.primaryAppbar,
+                  // width: 1.0,
+                  //       )
+                  //     : Border.all(color: Colors.white , width: 1.0),
+                  // borderRadius: BorderRadius.circular(50),
+                  // borderRadius: BorderRadius.circular(50),
+                  ),
+              child: Center(
+                child: Text(
+                  'รับจ้าง',
+                  style: TextStyle(
+                    color: FindJobClick
+                        ? Colors.black.withOpacity(0.5)
+                        : Colors.white,
+                    fontWeight: FontWeight.normal,
+                    fontSize: 16.sp,
+                  ),
                 ),
               ),
             ),
@@ -505,38 +532,49 @@ buildSelectBox(BuildContext context) {
             }
             print("HireJobClick: $HireJobClick");
           },
-          child: Container(
-            width: 120.w,
-            height: 50.h,
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            decoration: BoxDecoration(
-              color: HireJobClick ? Colors.white : AppColors.primaryAppbar,
-              // color: AppColors.primaryAppbar,
-              border: HireJobClick
-                  ? Border.all(
-                      color: AppColors.primaryAppbar,
-                      width: 1.0,
-                    )
-                  : Border.all(color: Colors.white),
-              borderRadius: BorderRadius.circular(50),
-              // boxShadow: [
-              //   BoxShadow(
-              //     color: Colors.white,
-              //     spreadRadius: 3,
-              //     blurRadius: 1,
-              //     offset: Offset(0, 1), // changes position of shadow
-              //   )
-              // ]
-            ),
-            child: Center(
-              child: Text(
-                'จ้างงาน',
-                style: TextStyle(
-                  // color: HireJobClick ? Colors.white : Colors.black,
+          child: Center(
+            child: Container(
+              width: 80.w,
+              height: 30.h,
+              // padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              decoration: BoxDecoration(
+                  color: HireJobClick ? Colors.white : AppColors.primaryAppbar,
+                  // color: AppColors.primaryAppbar,
+                  // border: HireJobClick
+                  //     ? Border.all(
+                  //         color: AppColors.primaryAppbar,
+                  //         width: 1.0,
+                  //       )
+                  //     : Border.all(color: Colors.white),
+                  borderRadius: BorderRadius.circular(50),
+                  boxShadow: [
+                    BoxShadow(
+                        spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: Offset(0, 3),
+                        color: Colors.grey.withOpacity(0.5))
+                  ]
+                  // boxShadow: [
+                  //   BoxShadow(
+                  //     color: Colors.white,
+                  //     spreadRadius: 3,
+                  //     blurRadius: 1,
+                  //     offset: Offset(0, 1), // changes position of shadow
+                  //   )
+                  // ]
+                  ),
+              child: Center(
+                child: Text(
+                  'จ้างงาน',
+                  style: TextStyle(
+                    // color: HireJobClick ? Colors.white : Colors.black,
 
-                  color: HireJobClick ? Colors.black : Colors.white,
-                  // : Color.fromARGB(255, 207, 207, 207),
-                  fontSize: 20.sp,
+                    color: HireJobClick
+                        ? Colors.black.withOpacity(0.5)
+                        : Colors.white,
+                    // : Color.fromARGB(255, 207, 207, 207),
+                    fontSize: 16.sp,
+                  ),
                 ),
               ),
             ),

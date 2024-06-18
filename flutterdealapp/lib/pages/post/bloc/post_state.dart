@@ -37,4 +37,9 @@ class postDetailLoaded2 extends PostState {
   final PostModel postModel;
   postDetailLoaded2(this.postModel);
 }
+class takePostSuccess extends PostState {
+  // final String postId;
+  // final String uid;
+  // takePostSuccess({required this.postId, required this.uid});
+}
 

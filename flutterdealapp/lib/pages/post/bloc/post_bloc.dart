@@ -78,6 +78,33 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       emit(postDetailLoaded(postModel));
     } catch (e) {}
   });
+
+  on<takePostEvent>((event, emit) async {
+    emit(PostLoading());
+    try {
+      print("inbloc post7");
+      // repository.getPosts();
+      print("------------------------------------------------------------------");
+      var takepost  = await repository.takePost(event.postId, event.uid);
+      if(takepost == true ){
+      emit(takePostSuccess());
+      }
+      else{
+        print("takepost fail");
+      }
+    } catch (e) {}
+  });
+  on<getOwnDeal>((event, emit) async {
+    emit(PostLoading());
+    try {
+      print("inbloc post8");
+      // repository.getPosts();
+      print("------------------------------------------------------------------");
+      // repository.getOwnDeal(event.uid);
+      List<PostModel> postModel = await repository.getOwnDeal(event.uid);
+      emit(PostListLoaded(postModel));
+    } catch (e) {}});
+
   }
   
 

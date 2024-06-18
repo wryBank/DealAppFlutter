@@ -22,8 +22,8 @@ class postDetailPage extends StatefulWidget {
 }
 
 Future<void> getLocation() async {
-  await Geolocator.checkPermission();
-  await Geolocator.requestPermission();
+  // await Geolocator.checkPermission();
+  // await Geolocator.requestPermission();
   Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high);
 
@@ -46,6 +46,7 @@ calculateDistances(double curLa, double CurLong, double la, double long) {
 }
 
 bool isowner = false;
+final uid = FirebaseAuth.instance.currentUser!.uid;
 
 class _postDetailPageState extends State<postDetailPage> {
   @override
@@ -102,6 +103,8 @@ class _postDetailPageState extends State<postDetailPage> {
               body: SingleChildScrollView(
                 child: buildPostBoxDetail(
                     context,
+                    state.postModel.pid.toString(),
+                    // state.postModel.takeby.toString(),
                     state.postModel.title.toString(),
                     state.postModel.detail.toString(),
                     state.postModel.location_item.toString(),
@@ -131,6 +134,7 @@ class _postDetailPageState extends State<postDetailPage> {
 Widget buildPostBoxDetail(
   context,
   // String
+  String pid,
   String title,
   String detail,
   String location,
@@ -303,7 +307,37 @@ Widget buildPostBoxDetail(
           ),
 
           if (isowner == true) buildCommonButton("This is you post", () {}),
-          if (isowner == false) buildCommonButton("Send Deal", () {}),
+          if (isowner == false)
+            buildCommonButton("Send Deal", () {
+              // print("awa");
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      // title: Text("Send Deal"),
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Send Deal"),
+                          IconButton(
+                            icon: Icon(Icons.close),
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
+                          ),
+                        ],
+                      ),
+                      content: Text("Do you want to send deal to this post?"),
+                      actions: [
+                        buildCommonButton("Yes", () {
+                          BlocProvider.of<PostBloc>(context)
+                              .add(takePostEvent(postId: pid, uid: uid));
+                          Navigator.of(context).pop();
+                        }),
+                      ],
+                    );
+                  });
+            }),
           SizedBox(
             height: 20.h,
           ),
@@ -312,3 +346,4 @@ Widget buildPostBoxDetail(
     ),
   );
 }
+

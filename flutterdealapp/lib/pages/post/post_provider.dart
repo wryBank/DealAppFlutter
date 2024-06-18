@@ -27,6 +27,56 @@ class PostProvider {
     return distanceInKilometers;
   }
 
+  Future<List<PostModel>> getOwnDeal(String uid) async {
+    final docRef = await FirebaseFirestore.instance
+        .collection('posts')
+        .where('isTake', isEqualTo: true,)
+        .where('takeby', isEqualTo: uid,)
+        .get();
+    final docRef2 = await FirebaseFirestore.instance
+        .collection('posts')
+        .where('isTake', isEqualTo: true,)
+        .where('uid', isEqualTo: uid,)
+        .get();
+
+        final alldocs = {...docRef.docs, ...docRef2.docs};
+    await getLocation();
+
+    // final querySnapshot = await docRef;
+    List<PostModel> postsList = alldocs
+        .map((doc) => PostModel.fromJson(doc.data() as Map<String, dynamic>))
+        .toList();
+
+    postsList.forEach((element) async {
+      element.distance = calculateDistances(currentLatitude, currentLongtitude,
+          element.latitude!, element.longitude!);
+    });
+    postsList.sort((a, b) => a.distance!.compareTo(b.distance!));
+    print("posts length: ${postsList.length}");
+    return postsList;
+  }
+
+  Future<void> takePost(String postId, String uid) async {
+    final docRef = FirebaseFirestore.instance.collection('posts').doc(postId);
+    if (checkPostStatus(postId) == false) {
+      await docRef.update({'isTake': true, 'takeby': uid, 'status': 'request'});
+    } else {}
+  }
+
+  Future checkPostStatus(String postId) async {
+    final docRef = FirebaseFirestore.instance.collection('posts').doc(postId);
+    final snapshot = await docRef.get();
+
+    if (snapshot.exists) {
+      final data = snapshot.data() as Map<String, dynamic>;
+      if (data['istake'] == true) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
   Future<Query<PostModel>> getPosts() async {
     // print("in getPosts");
     // // Geolocator.checkPermission();
@@ -99,9 +149,10 @@ class PostProvider {
     //     );
     // return queryPost;
     await getLocation();
-    final posts = FirebaseFirestore.instance.collection('posts')
-    .where('uid', isEqualTo: userId)
-    .get();
+    final posts = FirebaseFirestore.instance
+        .collection('posts')
+        .where('uid', isEqualTo: userId)
+        .get();
 
     final querySnapshot = await posts;
     List<PostModel> postsList = querySnapshot.docs
@@ -139,10 +190,11 @@ class PostProvider {
     //     );
     // return queryPost;
     await getLocation();
-    final posts = FirebaseFirestore.instance.collection('posts')
-    .where('isFindJob', isEqualTo: isFindJob)
-    .where('isTake', isEqualTo: false)
-    .get();
+    final posts = FirebaseFirestore.instance
+        .collection('posts')
+        .where('isFindJob', isEqualTo: isFindJob)
+        .where('isTake', isEqualTo: false)
+        .get();
 
     final querySnapshot = await posts;
     List<PostModel> postsList = querySnapshot.docs
@@ -174,7 +226,10 @@ class PostProvider {
 
   Future<List<PostModel>> getPosts2() async {
     await getLocation();
-    final posts = FirebaseFirestore.instance.collection('posts').get();
+    final posts = FirebaseFirestore.instance
+        .collection('posts')
+        .where('isTake', isEqualTo: false)
+        .get();
 
     final querySnapshot = await posts;
     List<PostModel> postsList = querySnapshot.docs
@@ -188,7 +243,6 @@ class PostProvider {
     postsList.sort((a, b) => a.distance!.compareTo(b.distance!));
     print("posts length: ${postsList.length}");
     return postsList;
-    
   }
 
   // calculateDistances(double curLa, double CurLong, double la, double long) {
