@@ -6,6 +6,10 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdealapp/model/postmodel.dart';
+import 'package:flutterdealapp/pages/Deal/deal_page.dart';
+import 'package:flutterdealapp/pages/application/application_page.dart';
+import 'package:flutterdealapp/pages/application/bloc/appBloc.dart';
+import 'package:flutterdealapp/pages/application/bloc/appEvent.dart';
 import 'package:flutterdealapp/pages/common_widgets.dart';
 import 'package:flutterdealapp/pages/post/bloc/post_bloc.dart';
 import 'package:flutterdealapp/pages/post/bloc/post_event.dart';
@@ -67,6 +71,17 @@ class _postDetailPageState extends State<postDetailPage> {
     return BlocBuilder<PostBloc, PostState>(builder: (context, state) {
       // print(state.toString());
 
+      if (state is takePostSuccess) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ApplicationPage(),
+            ),
+          );
+        });
+            BlocProvider.of<LandingPageBloc>(context).add(TapChange(tabIndex: 1));
+      }
       if (state is PostLoading) {
         return Scaffold(
           body: Center(
@@ -332,7 +347,7 @@ Widget buildPostBoxDetail(
                         buildCommonButton("Yes", () {
                           BlocProvider.of<PostBloc>(context)
                               .add(takePostEvent(postId: pid, uid: uid));
-                          Navigator.of(context).pop();
+                          
                         }),
                       ],
                     );
@@ -346,4 +361,3 @@ Widget buildPostBoxDetail(
     ),
   );
 }
-

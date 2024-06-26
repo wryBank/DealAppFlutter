@@ -69,3 +69,8 @@ class EditingBioEvent extends EditProfileEvent{
   String bio;
   EditingBioEvent(this.bio);
 }
+class updateCoinEvent extends EditProfileEvent{
+  String uid;
+  double coin;
+  updateCoinEvent(this.uid,this.coin);
+}

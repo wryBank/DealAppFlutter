@@ -23,6 +23,8 @@ class PostModel {
   bool? isFindJob;
   double? distance;
   String? status;
+  double? priceBuy;
+  double? totalPrice;
 
   PostModel({
     this.pid,
@@ -43,6 +45,8 @@ class PostModel {
     this.isFindJob,
     this.distance,
     this.status,
+    this.priceBuy,
+    this.totalPrice,
   });
 
   PostModel copyWith({
@@ -64,6 +68,8 @@ class PostModel {
     bool? isFindJob,
     double? distance,
     String? status,
+    double? priceBuy,
+    double? totalPrice,
   }) {
     return PostModel(
       pid: pid ?? this.pid,
@@ -84,6 +90,8 @@ class PostModel {
       isFindJob: isFindJob ?? this.isFindJob,
       distance: distance ?? this.distance,
       status: status ?? this.status,
+      priceBuy: priceBuy ?? this.priceBuy,
+      totalPrice: totalPrice ?? this.totalPrice,
     );
   }
 
@@ -108,6 +116,8 @@ class PostModel {
       'isFindJob': isFindJob,
       'distance': distance,
       'status': status ,
+      'priceBuy': priceBuy,
+      'totalPrice': totalPrice,
     };
   }
 
@@ -135,6 +145,10 @@ class PostModel {
       isFindJob: map['isFindJob'] != null ? map['isFindJob'] as bool : null,
       distance: map['distance'] != null ? map['distance'] as double : null,
       status: map['status'] != null ? map['status'] as String : null,
+      priceBuy: map['priceBuy'] != null ? map['priceBuy'] as double : null,
+      totalPrice: map['totalPrice'] != null ? map['totalPrice'] as double : null,
+
+
     );
   }
 
@@ -144,7 +158,7 @@ class PostModel {
 
   @override
   String toString() {
-    return 'PostModel(pid: $pid, uid: $uid, postby: $postby, title: $title, detail: $detail, location_item: $location_item, location_pick: $location_pick, postimage: $postimage, latitude: $latitude, longitude: $longitude, postdate: $postdate, profileImage: $profileImage, takeby: $takeby, isTake: $isTake, pricePay: $pricePay, isFindJob: $isFindJob, distance: $distance, status: $status)';
+    return 'PostModel(pid: $pid, uid: $uid, postby: $postby, title: $title, detail: $detail, location_item: $location_item, location_pick: $location_pick, postimage: $postimage, latitude: $latitude, longitude: $longitude, postdate: $postdate, profileImage: $profileImage, takeby: $takeby, isTake: $isTake, pricePay: $pricePay, isFindJob: $isFindJob, distance: $distance, status: $status,piceBuy: $priceBuy,totalPrice: $totalPrice)';
   }
 
   @override
@@ -168,7 +182,9 @@ class PostModel {
         other.pricePay == pricePay &&
         other.isFindJob == isFindJob &&
         other.distance == distance &&
-        other.status == status;
+        other.status == status&&
+        other.priceBuy == priceBuy&&
+        other.totalPrice == totalPrice;
   }
 
   @override
@@ -190,7 +206,8 @@ class PostModel {
         pricePay.hashCode ^
         isFindJob.hashCode ^
         distance.hashCode ^
-        status.hashCode;
+        status.hashCode^
+        totalPrice.hashCode;
   }
 
   PostModel.fromJson(Map<String, Object?> json)
@@ -213,6 +230,8 @@ class PostModel {
           isFindJob: json['isFindJob'] as bool?,
           distance: json['distance'] as double?,
           status: json['status'] as String?,
+          priceBuy: json['priceBuy'] as double?,
+          totalPrice: json['totalPrice'] as double?,
         );
   Map<String, Object?> toJson() => {
         'pid': pid,
@@ -233,5 +252,7 @@ class PostModel {
         'isFindJob': isFindJob,
         'distance': distance,
         'status': status,
+        'priceBuy': priceBuy,
+        'totalprice': totalPrice 
       };
 }

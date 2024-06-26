@@ -20,6 +20,8 @@ class RegisterController {
     String email = state.email;
     String password = state.password;
     String rePassword = state.rePassword;
+    double coin = 0.0;
+    userModel.coin = coin;
     userModel.email = email;
     userModel.username = userName;
     userModel.urlprofileimage = "https://firebasestorage.googleapis.com/v0/b/dealapp-363e7.appspot.com/o/files%2FdefaultProfile.png?alt=media&token=a025938a-fe31-4100-8601-c41169db88eb";

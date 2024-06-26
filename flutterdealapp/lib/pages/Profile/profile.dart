@@ -310,7 +310,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                     "a",
                                     post.postdate!,
                                     post.distance!,
-                                    post.profileImage ?? "");
+                                    post.profileImage ?? "",
+                                    post.pricePay!
+                                    
+                                    );
                             })
                         // child: FirestoreListView(
                         //     query: state.postModel,
@@ -354,16 +357,18 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 Widget buildPostBox(
-    context,
-    String pid,
-    String title,
-    String detail,
-    String location,
-    String urlImage,
-    String postby,
-    Timestamp postdate,
-    double distance,
-    String userImage) {
+  context,
+  String pid,
+  String title,
+  String detail,
+  String location,
+  String urlImage,
+  String postby,
+  Timestamp postdate,
+  double distance,
+  String userImage,
+  double coin,
+) {
   return GestureDetector(
     onTap: () {
       print("tap in post box {$pid}");
@@ -373,7 +378,7 @@ Widget buildPostBox(
     },
     child: Container(
       decoration: BoxDecoration(
-        color: AppColors.primaryPostBox,
+        color: Colors.white,
         border: Border.all(
           width: 0.2,
           color: Colors.black,
@@ -471,11 +476,33 @@ Widget buildPostBox(
               ),
             ],
           ),
+          Row(
+            children: [
+              Align(
+                child: Container(
+                  margin: EdgeInsets.only(left: 20),
+                  child: Container(
+                    width: 20.w,
+                    height: 20.h,
+                    child: Image.asset("assets/icons/coin.png"),
+                  ),
+                ),
+              ),
+              Container(
+                // margin: EdgeInsets.all(10),
+                child: Text(
+                  "${coin} coin",
+                  style: TextStyle(fontSize: 15),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     ),
   );
 }
+
 
 calculateDistances(double curLa, double CurLong, double la, double long) {
   print("curla: $curLa");

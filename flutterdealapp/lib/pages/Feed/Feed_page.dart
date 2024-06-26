@@ -5,6 +5,10 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdealapp/model/usermodel.dart';
+import 'package:flutterdealapp/pages/UserBloc/bloc/user_bloc.dart';
+import 'package:flutterdealapp/pages/createpost/bloc/createPost_bloc.dart';
+import 'package:flutterdealapp/pages/createpost/bloc/createPost_state.dart';
 import 'package:flutterdealapp/pages/post/bloc/post_bloc.dart';
 import 'package:flutterdealapp/pages/post/bloc/post_state.dart';
 import 'package:flutterfire_ui/firestore.dart';
@@ -13,6 +17,7 @@ import 'package:geolocator/geolocator.dart';
 import '../../CustomFABLocation.dart';
 import '../../model/postmodel.dart';
 import '../../values/color.dart';
+import '../Profile/bloc/profile_bloc.dart';
 import '../createpost/createPost_page.dart';
 import '../post/bloc/post_event.dart';
 import '../postDetail/postDetail_page.dart';
@@ -102,6 +107,8 @@ class _FeedPageState extends State<FeedPage> {
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<ProfileBloc>(context)
+        .add(getUserData(uid: FirebaseAuth.instance.currentUser!.uid));
     // _scrollController.addListener((){
     //   if(_scrollController.position.pixels == _scrollController.position.maxScrollExtent){
     //     maxpage++;
@@ -113,6 +120,8 @@ class _FeedPageState extends State<FeedPage> {
     // double currentLatitude = 0;
     // double currentLongtitude = 0;
     getLocation();
+
+    // UserModel userModel =
     BlocProvider.of<PostBloc>(context).add(getPostData());
   }
 
@@ -135,11 +144,18 @@ class _FeedPageState extends State<FeedPage> {
   //   });
   // }
 
+  void getcoin() {
+    print("getcoin");
+  }
+
+  UserModel userModel = UserModel();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    getcoin();
     return Scaffold(
       // appBar: AppBar(
+      //   automaticallyImplyLeading: false,
       //   backgroundColor: AppColors.primaryAppbar,
       //   bottom: PreferredSize(
       //     preferredSize: const Size.fromHeight(1.0),
@@ -148,7 +164,15 @@ class _FeedPageState extends State<FeedPage> {
       //       height: 0.5,
       //     ),
       //   ),
-
+      //   title: Row(
+      //     mainAxisAlignment: MainAxisAlignment.end,
+      //     children: [
+      //     Image.asset(
+      //       "assets/icons/coin.png",
+      //       width: 50.w,
+      //       height: 50.h,
+      //     ),
+      //   ]),
       // ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -159,124 +183,184 @@ class _FeedPageState extends State<FeedPage> {
           HireJobClick = false;
           FindJobClick = false;
         },
-        child: Column(
-          children: [
-            Container(
-              height: 50,
-              // color: AppColors.primaryAppbar,
-              decoration: BoxDecoration(
-                color: AppColors.primaryAppbar,
-                // borderRadius: BorderRadius.only(
-                //   bottomLeft: Radius.circular(26),
-                //   bottomRight: Radius.circular(26),
-                // ),
-              ),
-              // child: buildSelectBox(context),
-            ),
-            Container(
-              height: 50,
-              // color: AppColors.primaryAppbar,
-              decoration: BoxDecoration(
-                color: AppColors.primaryAppbar,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(26),
-                  bottomRight: Radius.circular(26),
-                ),
-              ),
-              child: buildSelectBox(context),
-            ),
-            BlocBuilder<PostBloc, PostState>(builder: (context, state) {
-              if (state is PostListLoaded) {
-                return Expanded(
-                    // child: FirestoreListView<List<PostModel>>(
-                    //     query: state.postModel,
-                    //     pageSize: 2,
-                    //     itemBuilder: (context, snapshot) {
-                    //       final post = snapshot.data();
-
-                    //       // posts
-                    //       //     .sort((a, b) => a.distance!.compareTo(b.distance!));
-
-                    //       final distance = calculateDistances(
-                    //           currentLatitude,
-                    //           currentLongtitude,
-                    //           post.latitude!,
-                    //           post.longitude!);
-                    //       // post.distance = calculateDistances(currentLatitude,
-                    //       //     currentLongtitude, post.latitude!, post.longitude!);
-
-                    //       //sort post.distance
-
-                    //       // getAndSortPosts(state.postModel);
-
-                    //       // if (distance < 6) {
-                    //       return buildPostBox(
-                    //           context,
-                    //           post.pid ?? "",
-                    //           post.title!,
-                    //           post.detail!,
-                    //           post.location_item ?? "",
-                    //           post.postimage ?? "",
-                    //           "a",
-                    //           post.postdate!,
-                    //           distance ,
-                    //           post.profileImage ?? "");
-                    //       // } else {
-                    //       //   return Container();
-                    //       // }
-                    //     }),
-
-                    // child: FutureBuilder(
-                    // future: state.postModel,
-                    // builder: (context, snapshot) {
-                    // if (snapshot.connectionState == ConnectionState.done &&
-                    //     snapshot.hasData) {
-                    // final posts = snapshot.data!;
-                    child: Container(
-                  color: AppColors.primaryPostBox,
-                  child: ListView.builder(
-                      // controller: _scrollController,
-                      itemCount: state.postModel.length,
-                      itemBuilder: (context, index) {
-                        // print("post distance: ${posts[index].distance}");
-                        if (state.postModel[index].uid! != uid) {
-                          final post = state.postModel[index];
-                          return buildPostBox(
-                              context,
-                              post.pid ?? "",
-                              post.title!,
-                              post.detail!,
-                              post.location_item ?? "",
-                              post.postimage ?? "",
-                              "a",
-                              post.postdate!,
-                              post.distance!,
-                              post.profileImage ?? "");
-                        } else {
-                          return Container();
-                        }
-                      }),
-                )
-                    // } else {
-                    //   return Container(
-                    //     child: Center(
-                    //       child: CircularProgressIndicator(),
-                    //     ),
-                    //   );
-                    // }
-                    // },
-                    // ),
-                    );
-              } else {
-                return Container(
-                  child: Center(
-                    child: CircularProgressIndicator(),
+        child:
+            BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
+          if (state is getDataState) {
+            userModel = state.userModel!;
+            double coin = state.userModel!.coin!;
+            return Column(
+              children: [
+                AppBar(
+                  backgroundColor: AppColors.primaryAppbar,
+                  automaticallyImplyLeading: false,
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Column(
+                        children: [
+                          Image.asset(
+                            "assets/icons/coin.png",
+                            width: 25.w,
+                            height: 25.h,
+                          ),
+                          Text(state.userModel!.coin.toString(),
+                              style: TextStyle(
+                                fontSize: 15.sp,
+                                color: Colors.white,
+                              ))
+                        ],
+                      ),
+                    ],
                   ),
-                );
-              }
-            })
-          ],
-        ),
+                ),
+
+                // return AppBar(
+                //   backgroundColor: AppColors.primaryAppbar,
+                //   automaticallyImplyLeading: false,
+                //   title: Row(
+                //     mainAxisAlignment: MainAxisAlignment.end,
+                //     children: [
+                //       Column(
+                //         children: [
+                //           Image.asset(
+                //             "assets/icons/coin.png",
+                //             width: 25.w,
+                //             height: 25.h,
+                //           ),
+                //           BlocBuilder<UserBloc, UserState>(
+                //               builder: (context, state) {
+                //             if (state is getUserByUidState) {
+                //               return Text(state.userModel.coin.toString(),
+                //                   style: TextStyle(
+                //                     fontSize: 15.sp,
+                //                     color: Colors.white,
+                //                   ));
+                //             } else {
+                //               return Text("100",
+                //                   style: TextStyle(
+                //                     fontSize: 15.sp,
+                //                     color: Colors.white,
+                //                   ));
+                //             }
+                //           })
+                //         ],
+                //       ),
+                //     ],
+                //   ),
+                // );
+                Container(
+                  height: 50,
+                  // color: AppColors.primaryAppbar,
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryAppbar,
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(26),
+                      bottomRight: Radius.circular(26),
+                    ),
+                  ),
+                  child: buildSelectBox(context),
+                ),
+                BlocBuilder<PostBloc, PostState>(builder: (context, state) {
+                  if (state is PostListLoaded) {
+                    return Expanded(
+                        // child: FirestoreListView<List<PostModel>>(
+                        //     query: state.postModel,
+                        //     pageSize: 2,
+                        //     itemBuilder: (context, snapshot) {
+                        //       final post = snapshot.data();
+
+                        //       // posts
+                        //       //     .sort((a, b) => a.distance!.compareTo(b.distance!));
+
+                        //       final distance = calculateDistances(
+                        //           currentLatitude,
+                        //           currentLongtitude,
+                        //           post.latitude!,
+                        //           post.longitude!);
+                        //       // post.distance = calculateDistances(currentLatitude,
+                        //       //     currentLongtitude, post.latitude!, post.longitude!);
+
+                        //       //sort post.distance
+
+                        //       // getAndSortPosts(state.postModel);
+
+                        //       // if (distance < 6) {
+                        //       return buildPostBox(
+                        //           context,
+                        //           post.pid ?? "",
+                        //           post.title!,
+                        //           post.detail!,
+                        //           post.location_item ?? "",
+                        //           post.postimage ?? "",
+                        //           "a",
+                        //           post.postdate!,
+                        //           distance ,
+                        //           post.profileImage ?? "");
+                        //       // } else {
+                        //       //   return Container();
+                        //       // }
+                        //     }),
+
+                        // child: FutureBuilder(
+                        // future: state.postModel,
+                        // builder: (context, snapshot) {
+                        // if (snapshot.connectionState == ConnectionState.done &&
+                        //     snapshot.hasData) {
+                        // final posts = snapshot.data!;
+                        child: Container(
+                      color: AppColors.primaryPostBox,
+                      child: ListView.builder(
+                          // controller: _scrollController,
+                          itemCount: state.postModel.length,
+                          itemBuilder: (context, index) {
+                            // print("post distance: ${posts[index].distance}");
+                            if (state.postModel[index].uid! != uid) {
+                              final post = state.postModel[index];
+                              return buildPostBox(
+                                  context,
+                                  post.pid ?? "",
+                                  post.title!,
+                                  post.detail!,
+                                  post.location_item ?? "",
+                                  post.postimage ?? "",
+                                  "a",
+                                  post.postdate!,
+                                  post.distance!,
+                                  post.profileImage ?? "",
+                                  post.pricePay!);
+                            } else {
+                              return Container();
+                            }
+                          }),
+                    )
+                        // } else {
+                        //   return Container(
+                        //     child: Center(
+                        //       child: CircularProgressIndicator(),
+                        //     ),
+                        //   );
+                        // }
+                        // },
+                        // ),
+                        );
+                  } else {
+                    return Container(
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  }
+                })
+              ],
+            );
+          } else {
+            return Container(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+        }),
       ),
       floatingActionButton: Container(
         width: 120,
@@ -309,16 +393,18 @@ class _FeedPageState extends State<FeedPage> {
 }
 
 Widget buildPostBox(
-    context,
-    String pid,
-    String title,
-    String detail,
-    String location,
-    String urlImage,
-    String postby,
-    Timestamp postdate,
-    double distance,
-    String userImage) {
+  context,
+  String pid,
+  String title,
+  String detail,
+  String location,
+  String urlImage,
+  String postby,
+  Timestamp postdate,
+  double distance,
+  String userImage,
+  double coin,
+) {
   return GestureDetector(
     onTap: () {
       print("tap in post box {$pid}");
@@ -426,6 +512,27 @@ Widget buildPostBox(
               ),
             ],
           ),
+          Row(
+            children: [
+              Align(
+                child: Container(
+                  margin: EdgeInsets.only(left: 20),
+                  child: Container(
+                    width: 20.w,
+                    height: 20.h,
+                    child: Image.asset("assets/icons/coin.png"),
+                  ),
+                ),
+              ),
+              Container(
+                // margin: EdgeInsets.all(10),
+                child: Text(
+                  "${coin} coin",
+                  style: TextStyle(fontSize: 15),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     ),
@@ -490,7 +597,7 @@ buildSelectBox(BuildContext context) {
                         spreadRadius: 1,
                         blurRadius: 3,
                         offset: Offset(0, 3),
-                        color:  Colors.grey.withOpacity(0.5))
+                        color: Colors.grey.withOpacity(0.5))
                   ]
                   // border: FindJobClick ? Border.all( color: AppColors.primaryAppbar,
                   // width: 1.0,

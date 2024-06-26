@@ -43,3 +43,8 @@ class getOwnDeal extends PostEvent {
   final String uid;
   getOwnDeal({required this.uid});
 }
+class getOwnDealDone extends PostEvent {
+  // final String postId;
+  final String uid;
+  getOwnDealDone({required this.uid});
+}

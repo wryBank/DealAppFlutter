@@ -10,7 +10,7 @@ class CreatePostRepository {
 
   Future<void> createPost(PostModel postModel) async {
     
-    await createPostProvider.createPost(postModel);
+    createPostProvider.createPost(postModel);
   }
   Future<void> getUserByID(String uid) async {
     await createPostProvider.getUserData(uid);

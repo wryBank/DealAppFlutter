@@ -17,7 +17,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         print("inbloc profile");
         emit(LoadingState());
         print("evet get userdata = ${event.uid}");
-         repository.getUserData(event.uid!);
+        //  repository.getUserData(event.uid!);
          UserModel userModel = await repository.provider.getUserData(event.uid!);
         emit(getDataState(userModel));
       } catch (e) {}

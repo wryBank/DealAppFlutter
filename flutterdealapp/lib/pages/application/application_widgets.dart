@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutterdealapp/pages/Deal/deal_page.dart';
 import 'package:flutterdealapp/pages/Feed/Feed_page.dart';
+import 'package:flutterdealapp/pages/Wallet/WalletPage.dart';
 import 'package:flutterdealapp/pages/application/test.dart';
 import 'package:flutterdealapp/pages/editProfile/editprofile_image.dart';
 import 'package:flutterdealapp/pages/Profile/profile.dart';
@@ -14,7 +15,7 @@ Widget buildPage(int index){
     // postDetailPage(),
     // test(),
     ProfilePage(),
-    Center(child: Text("home"),),
+    WalletPage(),
     Center(child: Text("home"),),
     
   ];

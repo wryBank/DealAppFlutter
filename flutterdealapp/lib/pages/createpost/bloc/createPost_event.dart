@@ -23,3 +23,8 @@ class selectBox extends CreatePostEvent {
   bool? isFindJob;
   selectBox({this.isFindJob});
 }
+class calTotal extends CreatePostEvent {
+  double? pricePay;
+  double? priceBuy;
+  calTotal({this.pricePay, this.priceBuy});
+}

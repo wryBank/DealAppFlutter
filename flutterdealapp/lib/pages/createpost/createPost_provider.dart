@@ -21,28 +21,40 @@ class CreatePostProvider {
     try {
       print("inprovicer");
       print("uid = " + _uid!);
-
+      final userRef = _fireCloudUser.doc(_uid);
+      final usersnapshot = await userRef.get();
+      if (usersnapshot.exists) {
+        final userData = usersnapshot.data() as Map<String, dynamic>;
+        if (userData['coin'] < postModel.totalPrice) {
+          throw Exception("Not enough coin");
+        } else if (userData['coin'] >= postModel.totalPrice) {
+          await userRef
+              .update({'coin': userData['coin'] - postModel.totalPrice});
+          DocumentReference<PostModel> docRef = await _fireCloudPost
+              // final postColl = FirebaseFirestore.instance
+              // .collection('posts')
+              .withConverter<PostModel>(
+                fromFirestore: (snapshot, _) =>
+                    PostModel.fromJson(snapshot.data()!),
+                toFirestore: (post, _) => post.toJson(),
+              )
+              .add(postModel);
+          await docRef.update({'pid': docRef.id});
+          // double coinleft = userData['coin'] - postModel.totalPrice;
+          // return coinleft;
+        }
+      }
+      else{
+        throw Exception("No user data found");
+        }
       // await _fireCloudPost.add(postModel.toMap()).then((DocumentReference docRef) {
       //   docRef.update({'pid': docRef.id});
-      DocumentReference<PostModel> docRef = await _fireCloudPost
-          // final postColl = FirebaseFirestore.instance
-          // .collection('posts')
-          .withConverter<PostModel>(
-            fromFirestore: (snapshot, _) =>
-                PostModel.fromJson(snapshot.data()!),
-            toFirestore: (post, _) => post.toJson(),
-          )
-          .add(postModel);
-      await docRef.update({'pid': docRef.id});
 
       // });
-    } on FirebaseException catch (e) {
-      print("Failed with error '${e.code}': ${e.message}");
     } catch (e) {
       throw Exception(e.toString());
     }
   }
-  
 
   Future<String> imageToFirebase(PlatformFile imageFile) async {
     UploadTask? uploadTask;

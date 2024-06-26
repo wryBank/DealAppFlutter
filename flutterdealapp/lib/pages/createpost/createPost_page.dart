@@ -35,12 +35,18 @@ class _CreatePostPageState extends State<CreatePostPage> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController detailController = TextEditingController();
   final TextEditingController pricePayController = TextEditingController();
+  final TextEditingController priceBuyController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final TextEditingController locationDetailController =
       TextEditingController();
   // final TextEditingController dateTimeController = TextEditingController();
   final FocusNode pricePayFocusNode = FocusNode();
+  final FocusNode priceBuyFocusNode = FocusNode();
   PostModel postModel = PostModel();
+
+  double? pricePayValue = 0;
+  double? priceBuyValue = 0;
+                        double total = 0;
 
   @override
   void initState() {
@@ -55,12 +61,23 @@ class _CreatePostPageState extends State<CreatePostPage> {
         }
       }
     });
+    priceBuyFocusNode.addListener(() {
+      if (!priceBuyFocusNode.hasFocus) {
+        final text = priceBuyController.text.replaceAll(',', '');
+        final number = int.tryParse(text);
+        if (number != null) {
+          priceBuyController.text = NumberFormat('#,##0').format(number);
+        }
+      }
+    });
   }
 
   @override
   void dispose() {
     pricePayController.dispose();
     pricePayFocusNode.dispose();
+    priceBuyController.dispose();
+    priceBuyFocusNode.dispose();
     super.dispose();
   }
 
@@ -107,7 +124,9 @@ class _CreatePostPageState extends State<CreatePostPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => ApplicationPage(initialIndex: 2,),
+            builder: (context) => ApplicationPage(
+              initialIndex: 2,
+            ),
           ),
         );
         print("success");
@@ -174,34 +193,131 @@ class _CreatePostPageState extends State<CreatePostPage> {
               //   ),
               // ),
               SizedBox(height: 16),
-              TextFormField(
-                maxLines: null,
-                controller: pricePayController,
-                focusNode: pricePayFocusNode,
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(
-                      RegExp(r'^\d*,?\d*\.{0,1}\d{0,2}$')), // Corrected regex
-                ],
-                decoration: InputDecoration(
-                  labelText: 'Price Pay',
-                  suffixIcon: Icon(Icons.arrow_forward_ios),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Container(
+                    width: 100,
+                    height: 50,
+                    child: TextFormField(
+                      maxLines: 1,
+                      controller: pricePayController,
+                      focusNode: pricePayFocusNode,
+                      keyboardType:
+                          TextInputType.numberWithOptions(decimal: true),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(
+                            r'^\d*,?\d*\.{0,1}\d{0,2}$')), // Corrected regex
+                      ],
+                      decoration: InputDecoration(
+                        labelText: 'Price Pay',
+                        labelStyle: TextStyle(fontSize: 12),
+                        // suffixIcon: Icon(Icons.arrow_forward_ios),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      onChanged: (value) {
+                        pricePayValue = double.tryParse(value.toString());
+                        // priceBuyValue = double.tryParse(value.toString());
+                        BlocProvider.of<CreatePostBloc>(context).add(calTotal(
+                            priceBuy: priceBuyValue, pricePay: pricePayValue));
+                      },
+                      validator: (value) {
+                        pricePayValue = double.tryParse(value.toString());
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a price';
+                        }
+                        String valueWithoutCommas = value.replaceAll(',', '');
+                        final n = num.tryParse(valueWithoutCommas);
+                        if (n == null) {
+                          return '"$value" is not a valid number';
+                        }
+                        return null; // Return null if the input is valid
+                      },
+                    ),
                   ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a price';
-                  }
-                  String valueWithoutCommas = value.replaceAll(',', '');
-                  final n = num.tryParse(valueWithoutCommas);
-                  if (n == null) {
-                    return '"$value" is not a valid number';
-                  }
-                  return null; // Return null if the input is valid
-                },
+                  Container(
+                    height: 50,
+                    width: 100,
+                    child: TextFormField(
+                      maxLines: 1,
+                      controller: priceBuyController,
+                      focusNode: priceBuyFocusNode,
+                      keyboardType:
+                          TextInputType.numberWithOptions(decimal: true),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(
+                            r'^\d*,?\d*\.{0,1}\d{0,2}$')), // Corrected regex
+                      ],
+                      onChanged: (value) {
+                        // pricePayValue = double.tryParse(value.toString());
+                        priceBuyValue = double.tryParse(value.toString());
+                        BlocProvider.of<CreatePostBloc>(context).add(calTotal(
+                            priceBuy: priceBuyValue, pricePay: pricePayValue));
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Price Buy',
+                        labelStyle: TextStyle(fontSize: 12),
+                        // suffixIcon: Icon(Icons.arrow_forward_ios),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      validator: (value) {
+                        priceBuyValue = double.tryParse(value.toString());
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a price';
+                        }
+                        String valueWithoutCommas = value.replaceAll(',', '');
+                        final n = num.tryParse(valueWithoutCommas);
+                        if (n == null) {
+                          return '"$value" is not a valid number';
+                        }
+                        return null; // Return null if the input is valid
+                      },
+                    ),
+                  ),
+                  BlocBuilder<CreatePostBloc, createPostState>(
+                      builder: (context, state) {
+                        if(state is calTotalSuccess){
+                          total = state.total;
+                        }
+                        else{
+                          
+                        }
+                    return Container(
+                      width: 100,
+                      height: 50,
+                      child: TextFormField(
+                          enabled: false,
+                          maxLines: 1,
+                          // controller: priceBuyController,
+                          // focusNode: priceBuyFocusNode,
+                          keyboardType:
+                              TextInputType.numberWithOptions(decimal: true),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp(
+                                r'^\d*,?\d*\.{0,1}\d{0,2}$')), // Corrected regex
+                          ],
+                          decoration: InputDecoration(
+                            labelText: total.toString(),
+                            // labelStyle: TextStyle(fontSize: 12),
+                            // suffixIcon: Icon(Icons.arrow_forward_ios),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          )),
+                    );
+                    // return Container(height: 50, width: 100, child: Text(
+                    //   'Total: ${state is calTotalSuccess ? state.total : 0}',
+                    //   style: TextStyle(fontSize: 12),
+
+                    // ));
+                  }),
+                ],
               ),
+
               SizedBox(height: 20),
               GestureDetector(
                 onTap: () {
@@ -243,7 +359,9 @@ class _CreatePostPageState extends State<CreatePostPage> {
                           detailController.text.isEmpty ||
                           locationController.text.isEmpty ||
                           pricePayController.text.isEmpty ||
-                          locationController.text.isEmpty
+                          locationController.text.isEmpty ||
+                          priceBuyController.text.isEmpty
+
                       // locationDetailController.text.isEmpty
 
                       ) {
@@ -280,7 +398,10 @@ class _CreatePostPageState extends State<CreatePostPage> {
 
                   String priceText =
                       pricePayController.text.replaceAll(',', "");
-                  double price = double.parse(priceText); // Convert to double
+                  double pricePay = double.parse(priceText); // Convert to double
+                  String priceBuyText =
+                      priceBuyController.text.replaceAll(',', "");
+                  double priceBuy = double.parse(priceBuyText); // Convert to double
 
                   // double price = double.parse(pricePayController.text);
                   Timestamp now = Timestamp.now();
@@ -292,7 +413,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
                       detail: detailController.text,
                       location_item: locationController.text,
                       // locationDetail: locationDetailController.text,
-                      pricePay: price,
+                      // pricePay: price,
                       postdate: Timestamp.now(),
                       postimage: imageUrl,
                       uid: uid,
@@ -302,7 +423,11 @@ class _CreatePostPageState extends State<CreatePostPage> {
                       isTake: false,
                       takeby: 'none',
                       profileImage: userModel!.urlprofileimage,
-                      isFindJob: isSelectedReceive);
+                      isFindJob: isSelectedReceive,
+                      pricePay: pricePay,
+                      priceBuy: priceBuy,
+                      totalPrice: priceBuy+pricePay
+                      );
 
                   BlocProvider.of<CreatePostBloc>(context).add(
                     SubmitPost(postModel),
@@ -355,7 +480,7 @@ buildSelectBox(BuildContext context) {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              'รับงาน',
+              'รับจ้าง',
               style: TextStyle(
                 color: isSelectedReceive ? Colors.white : Colors.grey,
               ),
@@ -377,7 +502,7 @@ buildSelectBox(BuildContext context) {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              'หางาน',
+              'จ้างงาน',
               style: TextStyle(
                 color: isSelectedReceive ? Colors.grey : Colors.white,
               ),

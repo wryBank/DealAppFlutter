@@ -17,6 +17,9 @@ class createPostLoading extends createPostState{
 class createPostSuccess extends createPostState{
 }
 class  createPostError extends createPostState{
+  String? error;
+
+  createPostError([this.error]);
 
 }
 class addImageSuccess extends createPostState{
@@ -26,4 +29,8 @@ class addImageSuccess extends createPostState{
 class selectBoxSuccess extends createPostState{
   bool isFindJob;
   selectBoxSuccess(this.isFindJob);
+}
+class calTotalSuccess extends createPostState{
+  double total;
+  calTotalSuccess(this.total);
 }

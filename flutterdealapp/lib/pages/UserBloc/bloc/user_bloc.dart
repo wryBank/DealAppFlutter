@@ -26,7 +26,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     });
     on<getUserByUid>((event, emit) async {
       try {
-        print("inbloc");
+        print("inbloc userbyid");
         emit(LoadingState());
         print("eventusermodel = ${event.uid}");
          repository.getUserData(event.uid);

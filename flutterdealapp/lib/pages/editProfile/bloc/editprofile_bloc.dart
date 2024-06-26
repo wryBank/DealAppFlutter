@@ -89,6 +89,17 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
         print("emit gender = ${userModel.gender}");
       } catch (e) {}
     });
+    on<updateCoinEvent>((event, emit) async {
+      emit(LoadingState());
+      try {
+        print("in update coin");
+        // print("bio = ${event.bio}");
+        double coin =  await repository.updateCoin(event.uid, event.coin);
+        
+        emit(updateCoinState(coin));
+        print("emit coin = ${coin}");
+      } catch (e) {}
+    });
     // on<EditingBioEvent>((event, emit)  {
     //     print("in editprofileevent");
     //     print("bio = ${event.bio}");

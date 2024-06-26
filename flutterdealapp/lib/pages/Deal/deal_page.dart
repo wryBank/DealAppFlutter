@@ -11,6 +11,7 @@ import 'package:flutterdealapp/pages/post/bloc/post_state.dart';
 import '../../values/color.dart';
 import '../post/bloc/post_bloc.dart';
 import '../post/bloc/post_event.dart';
+import '../postDetail/postDetail_page.dart';
 
 class DealPage extends StatefulWidget {
   const DealPage({super.key});
@@ -22,10 +23,11 @@ class DealPage extends StatefulWidget {
 final uid = FirebaseAuth.instance.currentUser!.uid;
 
 class _DealPageState extends State<DealPage> {
-@override
-void initState() {
-  BlocProvider.of<PostBloc>(context).add(getOwnDeal(uid:uid));
-}
+  @override
+  void initState() {
+    BlocProvider.of<PostBloc>(context).add(getOwnDeal(uid: uid));
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -45,51 +47,57 @@ void initState() {
 
         // ),
         body: RefreshIndicator(
-            onRefresh: () async {
-              BlocProvider.of<PostBloc>(context).add(getOwnDeal(uid: uid));
-            },
-            child: Column(children: [
-              Stack(
-                children: <Widget>[
-                  Container(
-                    // height: size.height * 0.3 - 47,
-                    height: 130,
-                    // color: AppColors.primaryAppbar,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryAppbar,
-                      // borderRadius: BorderRadius.only(
-                      //   bottomLeft: Radius.circular(26),
-                      //   bottomRight: Radius.circular(26),
-                      // ),
-                    ),
-                  ),
-                  Center(
-                    child: Container(
-                      margin: EdgeInsets.only(top: 50),
- 
-                      child: Text(
-                        "Deal",
-                        style: TextStyle(
-                            fontSize: 30.sp,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                  height: 50,
+          onRefresh: () async {
+            bool bt1Click = false;
+            bool bt2Click = false;
+            BlocProvider.of<PostBloc>(context).add(getOwnDeal(uid: uid));
+          },
+          child: Column(children: [
+            Stack(
+              children: <Widget>[
+                Container(
+                  // height: size.height * 0.3 - 47,
+                  height: 130,
                   // color: AppColors.primaryAppbar,
                   decoration: BoxDecoration(
                     color: AppColors.primaryAppbar,
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(26),
-                      bottomRight: Radius.circular(26),
+                    // borderRadius: BorderRadius.only(
+                    //   bottomLeft: Radius.circular(26),
+                    //   bottomRight: Radius.circular(26),
+                    // ),
+                  ),
+                ),
+                Center(
+                  child: Container(
+                    margin: EdgeInsets.only(top: 50),
+                    child: Text(
+                      "Deal",
+                      style: TextStyle(
+                          fontSize: 30.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
                     ),
                   ),
-                  child: buildCommonButton3(
-                      context, "กำลังดำเนินการ", "สำเร็จแล้ว", "test3",uid)),
+                ),
+              ],
+            ),
+            Container(
+                height: 50,
+                // color: AppColors.primaryAppbar,
+                decoration: BoxDecoration(
+                  color: AppColors.primaryAppbar,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(26),
+                    bottomRight: Radius.circular(26),
+                  ),
+                ),
+                child: buildCommonButton3(
+                    context, "กำลังดำเนินการ", "สำเร็จแล้ว", "test3", uid)),
+            Container(
+              child: buildSelectBox(context),),
+              SizedBox(
+                height: 10,
+            ),
             BlocBuilder<PostBloc, PostState>(builder: (context, state) {
               if (state is PostListLoaded) {
                 return Expanded(
@@ -100,22 +108,21 @@ void initState() {
                       itemCount: state.postModel.length,
                       itemBuilder: (context, index) {
                         // print("post distance: ${posts[index].distance}");
-                          final post = state.postModel[index];
-                          return buildPostBox(
-                              context,
-                              post.pid ?? "",
-                              post.title!,
-                              post.detail!,
-                              post.location_item ?? "",
-                              post.postimage ?? "",
-                              "a",
-                              post.postdate!,
-                              post.distance!,
-                              post.profileImage ?? "");
+                        final post = state.postModel[index];
+                        return buildPostBox(
+                            context,
+                            post.pid ?? "",
+                            post.title!,
+                            post.detail!,
+                            post.location_item ?? "",
+                            post.postimage ?? "",
+                            "a",
+                            post.postdate!,
+                            post.distance!,
+                            post.profileImage ?? "",
+                            post.pricePay!);
                       }),
-                )
- 
-                    );
+                ));
               } else {
                 return Container(
                   child: Center(
@@ -124,34 +131,35 @@ void initState() {
                 );
               }
             })
-            ]
-            ),
-            ),
+          ]),
+        ),
         backgroundColor: AppColors.primaryPostBox);
   }
 }
 
 Widget buildPostBox(
-    context,
-    String pid,
-    String title,
-    String detail,
-    String location,
-    String urlImage,
-    String postby,
-    Timestamp postdate,
-    double distance,
-    String userImage) {
+  context,
+  String pid,
+  String title,
+  String detail,
+  String location,
+  String urlImage,
+  String postby,
+  Timestamp postdate,
+  double distance,
+  String userImage,
+  double coin,
+) {
   return GestureDetector(
     onTap: () {
       print("tap in post box {$pid}");
-      // BlocProvider.of<PostBloc>(context).add(getPostDetail(pid));
-      // Navigator.of(context)
-      //     .push(MaterialPageRoute(builder: (context) => postDetailPage()));
+      BlocProvider.of<PostBloc>(context).add(getPostDetail(pid));
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => postDetailPage()));
     },
     child: Container(
       decoration: BoxDecoration(
-        color: AppColors.primaryPostBox,
+        color: Colors.white,
         border: Border.all(
           width: 0.2,
           color: Colors.black,
@@ -249,12 +257,35 @@ Widget buildPostBox(
               ),
             ],
           ),
+          Row(
+            children: [
+              Align(
+                child: Container(
+                  margin: EdgeInsets.only(left: 20),
+                  child: Container(
+                    width: 20.w,
+                    height: 20.h,
+                    child: Image.asset("assets/icons/coin.png"),
+                  ),
+                ),
+              ),
+              Container(
+                // margin: EdgeInsets.all(10),
+                child: Text(
+                  "${coin} coin",
+                  style: TextStyle(fontSize: 15),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     ),
   );
 }
 
+bool bt1Click = false;
+bool bt2Click = false;
 buildCommonButton3(
   context,
   String buttonName1,
@@ -262,8 +293,8 @@ buildCommonButton3(
   String buttonName3,
   String uid,
 ) {
-  bool bt1Click = false;
-  bool bt2Click = false;
+  // bool bt1Click = false;
+  // bool bt2Click = false;
   bool bt3Click = false;
   return BlocBuilder<PostBloc, PostState>(builder: (context, state) {
     return Row(
@@ -276,7 +307,9 @@ buildCommonButton3(
             bt3Click = false;
             // BlocProvider.of<PostBloc>(context).add(getPostByType(true));
             BlocProvider.of<PostBloc>(context).add(getOwnDeal(uid: uid));
-
+            // if(bt1Click == false && bt2Click == false){
+            //   BlocProvider.of<PostBloc>(context).add(getOwnDeal(uid: uid));
+            // }
           },
           child: Center(
             child: Container(
@@ -308,8 +341,14 @@ buildCommonButton3(
           onTap: () {
             bt1Click = false;
             bt2Click = !bt2Click;
-            bt3Click = false;
-            BlocProvider.of<PostBloc>(context).add(getPostByType(false));
+            print("bt2Click: $bt2Click");
+            print("bt1Click: $bt1Click");
+            // BlocProvider.of<PostBloc>(context).add(getPostByType(false));
+            if (bt1Click == false && bt2Click == false) {
+              BlocProvider.of<PostBloc>(context).add(getOwnDeal(uid: uid));
+            } else {
+              BlocProvider.of<PostBloc>(context).add(getOwnDealDone(uid: uid));
+            }
           },
           child: Center(
             child: Container(
@@ -334,6 +373,148 @@ buildCommonButton3(
                     fontWeight: FontWeight.normal,
                     color: Colors.black),
               )),
+            ),
+          ),
+        ),
+      ],
+    );
+  });
+}
+
+bool FindJobClick = false;
+bool HireJobClick = false;
+buildSelectBox(BuildContext context) {
+  return BlocBuilder<PostBloc, PostState>(builder: (context, state) {
+    print("11111111 FindJobClick: $FindJobClick HireJobClick: $HireJobClick");
+    // if (state is selectBoxSuccess) {
+    //   print(state.isFindJob);
+    // }
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        GestureDetector(
+          onTap: () {
+            // BlocProvider.of<PostBloc>(context)
+            //     .add(selectBoxPostType(true));
+            BlocProvider.of<PostBloc>(context).add(getPostByType(true));
+            if (FindJobClick == false) {
+              FindJobClick = true;
+            } else {
+              FindJobClick = false;
+            }
+            if (FindJobClick && HireJobClick ||
+                !FindJobClick && !HireJobClick) {
+              BlocProvider.of<PostBloc>(context).add(getPostData());
+            }
+            print("FindJobClick: $FindJobClick HireJobClick: $HireJobClick");
+          },
+          child: Center(
+            child: Container(
+              width: 80.w,
+              height: 30.h,
+              // padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              decoration: BoxDecoration(
+                  color: FindJobClick ? Colors.white : AppColors.primaryAppbar,
+                  // border: Border.all(color: Colors.grey),
+                  // border: FindJobClick
+                  //     ? Border.all(
+                  //         color: AppColors.primaryAppbar,
+                  //         width: 1.0,
+                  //       )
+                  //     : Border.all(color: Colors.white),
+                  borderRadius: BorderRadius.circular(30),
+                  boxShadow: [
+                    BoxShadow(
+                        spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: Offset(0, 3),
+                        color: Colors.grey.withOpacity(0.5))
+                  ]
+                  // border: FindJobClick ? Border.all( color: AppColors.primaryAppbar,
+                  // width: 1.0,
+                  //       )
+                  //     : Border.all(color: Colors.white , width: 1.0),
+                  // borderRadius: BorderRadius.circular(50),
+                  // borderRadius: BorderRadius.circular(50),
+                  ),
+              child: Center(
+                child: Text(
+                  'รับจ้าง',
+                  style: TextStyle(
+                    color: FindJobClick
+                        ? Colors.black.withOpacity(0.5)
+                        : Colors.white,
+                    fontWeight: FontWeight.normal,
+                    fontSize: 16.sp,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(width: 10),
+        GestureDetector(
+          onTap: () {
+            // BlocProvider.of<PostBloc>(context)
+            //     .add(selectBoxPostType(false));
+
+            BlocProvider.of<PostBloc>(context).add(getPostByType(false));
+            if (HireJobClick == true) {
+              HireJobClick = false;
+            } else {
+              HireJobClick = true;
+            }
+            if (FindJobClick && HireJobClick ||
+                !FindJobClick && !HireJobClick) {
+              BlocProvider.of<PostBloc>(context).add(getPostData());
+            }
+            print("HireJobClick: $HireJobClick");
+          },
+          child: Center(
+            child: Container(
+              width: 80.w,
+              height: 30.h,
+              // padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              decoration: BoxDecoration(
+                  color: HireJobClick ? Colors.white : AppColors.primaryAppbar,
+                  // color: AppColors.primaryAppbar,
+                  // border: HireJobClick
+                  //     ? Border.all(
+                  //         color: AppColors.primaryAppbar,
+                  //         width: 1.0,
+                  //       )
+                  //     : Border.all(color: Colors.white),
+                  borderRadius: BorderRadius.circular(50),
+                  boxShadow: [
+                    BoxShadow(
+                        spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: Offset(0, 3),
+                        color: Colors.grey.withOpacity(0.5))
+                  ]
+                  // boxShadow: [
+                  //   BoxShadow(
+                  //     color: Colors.white,
+                  //     spreadRadius: 3,
+                  //     blurRadius: 1,
+                  //     offset: Offset(0, 1), // changes position of shadow
+                  //   )
+                  // ]
+                  ),
+              child: Center(
+                child: Text(
+                  'จ้างงาน',
+                  style: TextStyle(
+                    // color: HireJobClick ? Colors.white : Colors.black,
+
+                    color: HireJobClick
+                        ? Colors.black.withOpacity(0.5)
+                        : Colors.white,
+                    // : Color.fromARGB(255, 207, 207, 207),
+                    fontSize: 16.sp,
+                  ),
+                ),
+              ),
             ),
           ),
         ),

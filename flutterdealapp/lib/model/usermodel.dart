@@ -14,6 +14,7 @@ class UserModel {
   int? dealcount;
   int? dealsucceed;
   int? ondeal;
+  double? coin;
   UserModel({
     this.uid,
     this.username,
@@ -25,6 +26,7 @@ class UserModel {
     this.dealcount,
     this.dealsucceed,
     this.ondeal,
+    this.coin,
   });
   
 
@@ -41,6 +43,7 @@ class UserModel {
     int? dealcount,
     int? dealsucceed,
     int? ondeal,
+    double? coin
   }) {
     return UserModel(
       uid: uid ?? this.uid,
@@ -53,6 +56,7 @@ class UserModel {
       dealcount: dealcount ?? this.dealcount,
       dealsucceed: dealsucceed ?? this.dealsucceed,
       ondeal: ondeal ?? this.ondeal,
+      coin: coin ?? this.coin,
     );
   }
 
@@ -68,6 +72,7 @@ class UserModel {
       'dealcount': dealcount,
       'dealsucceed': dealsucceed,
       'ondeal': ondeal,
+      'coin': coin
     };
   }
 
@@ -83,6 +88,7 @@ class UserModel {
       dealcount: map['dealcount'] != null ? map['dealcount'] as int : null,
       dealsucceed: map['dealsucceed'] != null ? map['dealsucceed'] as int : null,
       ondeal: map['ondeal'] != null ? map['ondeal'] as int : null,
+      coin: map['coin'] != null ? map['coin'] as double : null,
     );
   }
 
@@ -92,7 +98,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(uid: $uid, username: $username, email: $email, gender: $gender, phonenumber: $phonenumber, urlprofileimage: $urlprofileimage, bio: $bio, dealcount: $dealcount, dealsucceed: $dealsucceed, ondeal: $ondeal)';
+    return 'UserModel(uid: $uid, username: $username, email: $email, gender: $gender, phonenumber: $phonenumber, urlprofileimage: $urlprofileimage, bio: $bio, dealcount: $dealcount, dealsucceed: $dealsucceed, ondeal: $ondeal, coin: $coin)';
   }
 
   @override
@@ -109,7 +115,8 @@ class UserModel {
       other.bio == bio &&
       other.dealcount == dealcount &&
       other.dealsucceed == dealsucceed &&
-      other.ondeal == ondeal;
+      other.ondeal == ondeal &&
+      other.coin == coin;
   }
 
   @override
@@ -123,7 +130,8 @@ class UserModel {
       bio.hashCode ^
       dealcount.hashCode ^
       dealsucceed.hashCode ^
-      ondeal.hashCode;
+      ondeal.hashCode ^
+      coin.hashCode;
   }
   UserModel.fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc):
   uid = doc.data()!["uid"],
@@ -135,6 +143,7 @@ class UserModel {
   bio = doc.data()!["bio"],
   dealcount = doc.data()!["dealcount"],
   dealsucceed = doc.data()!["dealsucceed"],
-  ondeal = doc.data()!["ondeal"];
+  ondeal = doc.data()!["ondeal"],
+  coin = doc.data()!["coin"];
 
 }

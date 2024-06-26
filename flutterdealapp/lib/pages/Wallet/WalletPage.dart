@@ -1,0 +1,183 @@
+import 'dart:math';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_bloc.dart';
+import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_state.dart';
+import 'package:intl/intl.dart';
+
+import '../Profile/bloc/profile_bloc.dart';
+import 'DepositPage.dart';
+
+class WalletPage extends StatefulWidget {
+  const WalletPage({super.key});
+
+  @override
+  State<WalletPage> createState() => _WalletPageState();
+}
+
+class _WalletPageState extends State<WalletPage> {
+  double coin = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    BlocProvider.of<ProfileBloc>(context)
+        .add(getUserData(uid: FirebaseAuth.instance.currentUser!.uid));
+    //  date = DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
+      if (state is getDataState) {
+        coin = state.userModel!.coin!;
+        DateFormat date = DateFormat('dd/MM/yyyy HH:mm');
+
+        print('coin = $coin');
+        print('state = $state');
+        return Scaffold(
+          body: RefreshIndicator(
+            onRefresh: () {
+              BlocProvider.of<ProfileBloc>(context).add(
+                  getUserData(uid: FirebaseAuth.instance.currentUser!.uid));
+              return Future.delayed(Duration(seconds: 1));
+            },
+            child: Center(
+              child: Container(
+                width: 300,
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundImage:
+                          NetworkImage('${state.userModel!.urlprofileimage}'),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      state.userModel!.username.toString(),
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Account Balance',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    // SizedBox(height: 10),
+                    Container(
+                      width: 100,
+                      height: 50,
+                      child: Center(
+                        child: Text(
+                          coin.toString(),
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+
+                      //  color: Colors.red,
+                    ),
+                    // SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "ยอดล่าสุด ${date.format(DateTime.now())}",
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Container(
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.refresh,
+                              size: 15,
+                              color: Colors.grey,
+                            ),
+                            onPressed: () {
+                              date.format(DateTime.now());
+                              BlocProvider.of<ProfileBloc>(context).add(
+                                  getUserData(
+                                      uid: FirebaseAuth
+                                          .instance.currentUser!.uid));
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    // }
+                    // }),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DepositPage(),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.lightBlue,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Text('deposit'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            BlocProvider.of<ProfileBloc>(context).add(
+                                getUserData(
+                                    uid: FirebaseAuth
+                                        .instance.currentUser!.uid));
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.lightBlue,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Text('Withdraw'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      } else {
+        return Container(
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }
+    });
+  }
+}

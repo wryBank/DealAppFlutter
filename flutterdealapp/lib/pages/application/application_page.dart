@@ -42,7 +42,7 @@ class _ApplicationPageState extends State<ApplicationPage> {
   void initState() {
     super.initState();
     // _index = widget.initialIndex;
-    // getLocation();
+    // getLocation()
     // _timer = Timer.periodic(Duration(seconds: 5), (timer) {
     //   getLocation();
     // });
@@ -79,6 +79,13 @@ class _ApplicationPageState extends State<ApplicationPage> {
                           )),
                       BottomNavigationBarItem(
                           label: "home2",
+                          icon: SizedBox(
+                            width: 15.w,
+                            height: 15.h,
+                            child: Image.asset("assets/images/icon.png"),
+                          )),
+                      BottomNavigationBarItem(
+                          label: "home3",
                           icon: SizedBox(
                             width: 15.w,
                             height: 15.h,

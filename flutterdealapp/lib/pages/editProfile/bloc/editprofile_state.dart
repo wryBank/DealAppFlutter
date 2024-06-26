@@ -66,3 +66,7 @@ class EditingBio extends EditProfileState{
   final String bio;
   EditingBio(this.bio);
 }
+class updateCoinState extends EditProfileState{
+  final double coin;
+  updateCoinState(this.coin);
+}

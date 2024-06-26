@@ -42,4 +42,3 @@ class takePostSuccess extends PostState {
   // final String uid;
   // takePostSuccess({required this.postId, required this.uid});
 }
-

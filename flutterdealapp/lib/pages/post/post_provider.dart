@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutterdealapp/model/postmodel_indevice.dart';
 import 'package:flutterdealapp/pages/post/bloc/post_event.dart';
@@ -18,8 +19,8 @@ class PostProvider {
   //   currentLongtitude = position.longitude;
   // }
   calculateDistances(double curLa, double CurLong, double la, double long) {
-    print("curla: $curLa");
-    print("curlong: $CurLong");
+    // print("curla: $curLa");
+    // print("curlong: $CurLong");
     double distanceInMeters =
         Geolocator.distanceBetween(curLa, CurLong, la, long);
     double distanceInKilometers = distanceInMeters / 1000;
@@ -30,16 +31,30 @@ class PostProvider {
   Future<List<PostModel>> getOwnDeal(String uid) async {
     final docRef = await FirebaseFirestore.instance
         .collection('posts')
-        .where('isTake', isEqualTo: true,)
-        .where('takeby', isEqualTo: uid,)
+        .where(
+          'isTake',
+          isEqualTo: true,
+        )
+        .where(
+          'takeby',
+          isEqualTo: uid,
+        )
+        .where('status', isEqualTo: 'inprogress')
         .get();
     final docRef2 = await FirebaseFirestore.instance
         .collection('posts')
-        .where('isTake', isEqualTo: true,)
-        .where('uid', isEqualTo: uid,)
+        .where(
+          'isTake',
+          isEqualTo: true,
+        )
+        .where(
+          'uid',
+          isEqualTo: uid,
+        )
+        .where('status', isEqualTo: 'inprogress')
         .get();
 
-        final alldocs = {...docRef.docs, ...docRef2.docs};
+    final alldocs = {...docRef.docs, ...docRef2.docs};
     await getLocation();
 
     // final querySnapshot = await docRef;
@@ -56,28 +71,105 @@ class PostProvider {
     return postsList;
   }
 
-  Future<void> takePost(String postId, String uid) async {
-    final docRef = FirebaseFirestore.instance.collection('posts').doc(postId);
-    if (checkPostStatus(postId) == false) {
-      await docRef.update({'isTake': true, 'takeby': uid, 'status': 'request'});
-    } else {}
+  Future<List<PostModel>> getOwnDealDone(String uid) async {
+    final docRef = await FirebaseFirestore.instance
+        .collection('posts')
+        .where(
+          'isTake',
+          isEqualTo: true,
+        )
+        .where(
+          'takeby',
+          isEqualTo: uid,
+        )
+        .where('status', isEqualTo: 'done')
+        .get();
+    final docRef2 = await FirebaseFirestore.instance
+        .collection('posts')
+        .where(
+          'isTake',
+          isEqualTo: true,
+        )
+        .where(
+          'uid',
+          isEqualTo: uid,
+        )
+        .where('status', isEqualTo: 'done')
+        .get();
+
+    final alldocs = {...docRef.docs, ...docRef2.docs};
+    await getLocation();
+
+    // final querySnapshot = await docRef;
+    List<PostModel> postsList = alldocs
+        .map((doc) => PostModel.fromJson(doc.data() as Map<String, dynamic>))
+        .toList();
+
+    postsList.forEach((element) async {
+      element.distance = calculateDistances(currentLatitude, currentLongtitude,
+          element.latitude!, element.longitude!);
+    });
+    postsList.sort((a, b) => a.distance!.compareTo(b.distance!));
+    print("posts length: ${postsList.length}");
+    return postsList;
   }
 
-  Future checkPostStatus(String postId) async {
+  Future takePost(String postId, String uid) async {
+    print("in takePost");
     final docRef = FirebaseFirestore.instance.collection('posts').doc(postId);
     final snapshot = await docRef.get();
 
+    final userRef = FirebaseFirestore.instance.collection('users').doc(uid);
+    final usernapshot = await userRef.get();
+
     if (snapshot.exists) {
       final data = snapshot.data() as Map<String, dynamic>;
-      if (data['istake'] == true) {
+      final userdata = usernapshot.data() as Map<String, dynamic>;
+      print("data: $data");
+      if (userdata['coin'] < data['totalprice']) {
+          return "not enough coin2";
+      }
+      if (data['isTake'] == false) {
+        if (userdata['coin'] > data['totalprice']) {
+          await userRef.update({'coin': userdata['coin'] - data['totalprice']});
+          await docRef
+              .update({'isTake': true, 'takeby': uid, 'status': 'inprogress'});
         return true;
+        }
+        else{
+          return "not enough coin";
+          
+        }
       } else {
+        print("post is taken");
         return false;
       }
+    } else {
+      return false;
     }
   }
 
+  Future<bool> checkPostStatus(String postId) async {
+    final docRef = FirebaseFirestore.instance.collection('posts').doc(postId);
+    final snapshot = await docRef.get();
+    bool cantake = false;
+
+    if (snapshot.exists) {
+      final data = snapshot.data() as Map<String, dynamic>;
+      print("data: $data");
+      if (data['isTake'] == false) {
+        print("post is not");
+        cantake = true;
+      } else {
+        print("post is taken");
+        cantake = false;
+      }
+    }
+    return cantake;
+  }
+
   Future<Query<PostModel>> getPosts() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
     // print("in getPosts");
     // // Geolocator.checkPermission();
     // // Geolocator.requestPermission();
@@ -91,7 +183,9 @@ class PostProvider {
     // --------------------------------------------------
     final queryPost = FirebaseFirestore.instance
         .collection('posts')
+        .where('uid', isNotEqualTo: uid)
         .where('isTake', isEqualTo: false)
+
         // .orderBy('detail')
         .withConverter<PostModel>(
           fromFirestore: (snapshot, _) => PostModel.fromJson(snapshot.data()!),
@@ -206,7 +300,7 @@ class PostProvider {
           element.latitude!, element.longitude!);
     });
     postsList.sort((a, b) => a.distance!.compareTo(b.distance!));
-    print("posts length: ${postsList.length}");
+    // print("posts length: ${postsList.length}");
     return postsList;
   }
 
@@ -241,7 +335,7 @@ class PostProvider {
           element.latitude!, element.longitude!);
     });
     postsList.sort((a, b) => a.distance!.compareTo(b.distance!));
-    print("posts length: ${postsList.length}");
+    // print("posts length: ${postsList.length}");
     return postsList;
   }
 

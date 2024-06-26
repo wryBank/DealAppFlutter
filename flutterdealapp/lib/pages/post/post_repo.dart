@@ -35,5 +35,7 @@ class PostRepository {
   Future getOwnDeal(String uid) async {
     return await postProvider.getOwnDeal(uid);
   }
-  
+  Future getOwnDealDone(String uid) async {
+    return await postProvider.getOwnDealDone(uid);
+  }
 }
