@@ -8,10 +8,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdealapp/pages/common_widgets.dart';
 import 'package:flutterdealapp/pages/post/bloc/post_state.dart';
 
+import '../../model/postmodel.dart';
 import '../../values/color.dart';
 import '../post/bloc/post_bloc.dart';
 import '../post/bloc/post_event.dart';
 import '../postDetail/postDetail_page.dart';
+import 'filterPostDeal.dart';
 
 class DealPage extends StatefulWidget {
   const DealPage({super.key});
@@ -22,7 +24,13 @@ class DealPage extends StatefulWidget {
 
 final uid = FirebaseAuth.instance.currentUser!.uid;
 
-class _DealPageState extends State<DealPage> {
+class _DealPageState extends State<DealPage> 
+{ void _openFilterPostDeal() {
+    showModalBottomSheet(context: context, builder: (ctx) => Container(
+      height: 250,
+      child: filterPosts()));
+    
+  }
   @override
   void initState() {
     BlocProvider.of<PostBloc>(context).add(getOwnDeal(uid: uid));
@@ -53,34 +61,56 @@ class _DealPageState extends State<DealPage> {
             BlocProvider.of<PostBloc>(context).add(getOwnDeal(uid: uid));
           },
           child: Column(children: [
-            Stack(
-              children: <Widget>[
-                Container(
-                  // height: size.height * 0.3 - 47,
-                  height: 130,
-                  // color: AppColors.primaryAppbar,
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryAppbar,
-                    // borderRadius: BorderRadius.only(
-                    //   bottomLeft: Radius.circular(26),
-                    //   bottomRight: Radius.circular(26),
-                    // ),
+                AppBar(
+                  backgroundColor: AppColors.primaryAppbar,
+                  automaticallyImplyLeading: false,
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Column(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              _openFilterPostDeal();
+                            },
+                            icon: Icon(
+                              Icons.filter_list,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-                Center(
-                  child: Container(
-                    margin: EdgeInsets.only(top: 50),
-                    child: Text(
-                      "Deal",
-                      style: TextStyle(
-                          fontSize: 30.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            // Stack(
+            //   children: <Widget>[
+            //     Container(
+            //       // height: size.height * 0.3 - 47,
+            //       height: 130,
+            //       // color: AppColors.primaryAppbar,
+            //       decoration: BoxDecoration(
+            //         color: AppColors.primaryAppbar,
+            //         // borderRadius: BorderRadius.only(
+            //         //   bottomLeft: Radius.circular(26),
+            //         //   bottomRight: Radius.circular(26),
+            //         // ),
+            //       ),
+            //     ),
+            //     Center(
+            //       child: Container(
+            //         margin: EdgeInsets.only(top: 50),
+            //         child: Text(
+            //           "Deal",
+            //           style: TextStyle(
+            //               fontSize: 30.sp,
+            //               fontWeight: FontWeight.bold,
+            //               color: Colors.white),
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
             Container(
                 height: 50,
                 // color: AppColors.primaryAppbar,
@@ -94,21 +124,25 @@ class _DealPageState extends State<DealPage> {
                 child: buildCommonButton3(
                     context, "กำลังดำเนินการ", "สำเร็จแล้ว", "test3", uid)),
             Container(
-              child: buildSelectBox(context),),
-              SizedBox(
-                height: 10,
+              // child: buildSelectBox(context),
+            ),
+            SizedBox(
+              height: 10,
             ),
             BlocBuilder<PostBloc, PostState>(builder: (context, state) {
+              print("state in feed is $state");
               if (state is PostListLoaded) {
+                List<PostModel> postModel = state.postModel;
+                print("postModel: $postModel");
                 return Expanded(
                     child: Container(
                   color: AppColors.primaryPostBox,
                   child: ListView.builder(
                       // controller: _scrollController,
-                      itemCount: state.postModel.length,
+                      itemCount: postModel.length,
                       itemBuilder: (context, index) {
                         // print("post distance: ${posts[index].distance}");
-                        final post = state.postModel[index];
+                        final post = postModel[index];
                         return buildPostBox(
                             context,
                             post.pid ?? "",
@@ -118,7 +152,7 @@ class _DealPageState extends State<DealPage> {
                             post.postimage ?? "",
                             "a",
                             post.postdate!,
-                            post.distance!,
+                            post.distance??0.0,
                             post.profileImage ?? "",
                             post.pricePay!);
                       }),
@@ -396,7 +430,7 @@ buildSelectBox(BuildContext context) {
           onTap: () {
             // BlocProvider.of<PostBloc>(context)
             //     .add(selectBoxPostType(true));
-            BlocProvider.of<PostBloc>(context).add(getPostByType(true));
+            // BlocProvider.of<PostBloc>(context).add(getPostByType(true));
             if (FindJobClick == false) {
               FindJobClick = true;
             } else {
@@ -458,7 +492,7 @@ buildSelectBox(BuildContext context) {
             // BlocProvider.of<PostBloc>(context)
             //     .add(selectBoxPostType(false));
 
-            BlocProvider.of<PostBloc>(context).add(getPostByType(false));
+            // BlocProvider.of<PostBloc>(context).add(getPostByType(false));
             if (HireJobClick == true) {
               HireJobClick = false;
             } else {

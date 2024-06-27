@@ -18,6 +18,10 @@ class getPostById extends PostEvent {
 class getPostByType extends PostEvent {
   final bool isFindJob;
   getPostByType(this.isFindJob);
+  // final bool isFindJob;
+  // final bool isTake;
+  
+  // getPostByType(this.isFindJob );
 }
 class selectBoxPostType extends PostEvent {
   final bool isFindJob;
@@ -47,4 +51,14 @@ class getOwnDealDone extends PostEvent {
   // final String postId;
   final String uid;
   getOwnDealDone({required this.uid});
+}
+class getPostFilter extends PostEvent {
+  final bool isFindJob;
+  final bool isFindJobAll;
+  final bool inprogress;
+  final bool statusAll;
+  final bool ownPost;
+  final bool allPost;
+  
+  getPostFilter(this.isFindJob, this.isFindJobAll, this.inprogress, this.statusAll, this.ownPost, this.allPost);
 }

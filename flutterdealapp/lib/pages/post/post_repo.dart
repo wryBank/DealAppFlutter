@@ -38,4 +38,7 @@ class PostRepository {
   Future getOwnDealDone(String uid) async {
     return await postProvider.getOwnDealDone(uid);
   }
+  Future getPostFilter(bool isFindJob, bool isFindJobAll, bool inprogress,bool statusAll, bool ownPost, bool allPost  ) async {
+    return await postProvider.getPostFilter(isFindJob, isFindJobAll, inprogress, statusAll, ownPost, allPost);
+  }
 }

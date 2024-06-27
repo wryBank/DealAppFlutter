@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterdealapp/model/postmodel.dart';
 import 'package:flutterdealapp/model/postmodel_indevice.dart';
+import 'package:flutterdealapp/pages/Deal/deal_page.dart';
 import 'package:flutterdealapp/pages/UserBloc/bloc/user_state.dart';
 import 'package:flutterdealapp/pages/post/bloc/post_event.dart';
 import 'package:flutterdealapp/pages/post/bloc/post_state.dart';
@@ -46,6 +47,19 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         emit(PostLoaded(postModel));
       } catch (e) {}
     });
+    // on<getPostByType>((event, emit) async {
+    //   emit(PostLoading());
+    //   try {
+    //     print("inbloc post4");
+    //     // repository.getPosts();
+    //     print(
+    //         "------------------------------------------------------------------");
+    //     // repository.getPostByType(event.isFindJob);
+    //     // List<PostModel> postModel =
+    //     //     await repository.getPostByType(event.isFindJob);
+    //     emit(statusCheckSuccess(event.isFindJob, event.isTake));
+    //   } catch (e) {}
+    // });
     on<getPostByType>((event, emit) async {
       emit(PostLoading());
       try {
@@ -59,19 +73,6 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         emit(PostListLoaded(postModel));
       } catch (e) {}
     });
-    // on<getPostByType>((event, emit) async {
-    //   emit(PostLoading());
-    //   try {
-    //     print("inbloc post4");
-    //     // repository.getPosts();
-    //     print(
-    //         "------------------------------------------------------------------");
-    //     // repository.getPostByType(event.isFindJob);
-    //     List<PostModel> postModel =
-    //         await repository.getPostByType(event.isFindJob);
-    //     emit(PostListLoaded(postModel));
-    //   } catch (e) {}
-    // });
     on<selectBoxPostType>((event, emit) async {
       emit(PostLoading());
       try {
@@ -132,6 +133,23 @@ class PostBloc extends Bloc<PostEvent, PostState> {
             "------------------------------------------------------------------");
         // repository.getOwnDeal(event.uid);
         List<PostModel> postModel = await repository.getOwnDealDone(event.uid);
+        emit(PostListLoaded(postModel));
+      } catch (e) {}
+    });
+    on<getPostFilter>((event, emit) async {
+      emit(PostLoading());
+      try {
+        print("inbloc post10");
+        // repository.getPosts();
+        print(
+            "------------------------------------------------------------------");
+        // repository.getOwnDeal(event.uid);
+        List<PostModel> postModel =
+            await repository.getPostFilter(event.isFindJob, event.isFindJobAll,
+                event.inprogress, event.statusAll, event.ownPost, event.allPost);
+
+            print("after filter: $postModel ");
+
         emit(PostListLoaded(postModel));
       } catch (e) {}
     });

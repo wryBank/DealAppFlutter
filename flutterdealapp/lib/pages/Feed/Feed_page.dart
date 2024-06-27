@@ -17,6 +17,7 @@ import 'package:geolocator/geolocator.dart';
 import '../../CustomFABLocation.dart';
 import '../../model/postmodel.dart';
 import '../../values/color.dart';
+import '../Deal/filterPostDeal.dart';
 import '../Profile/bloc/profile_bloc.dart';
 import '../createpost/createPost_page.dart';
 import '../post/bloc/post_event.dart';
@@ -30,6 +31,8 @@ class FeedPage extends StatefulWidget {
 }
 
 class _FeedPageState extends State<FeedPage> {
+  
+ 
   Future<void> getLocation() async {
     Geolocator.checkPermission();
     Geolocator.requestPermission();
@@ -147,6 +150,8 @@ class _FeedPageState extends State<FeedPage> {
   void getcoin() {
     print("getcoin");
   }
+  
+  
 
   UserModel userModel = UserModel();
   @override
@@ -565,16 +570,17 @@ buildSelectBox(BuildContext context) {
           onTap: () {
             // BlocProvider.of<PostBloc>(context)
             //     .add(selectBoxPostType(true));
-            BlocProvider.of<PostBloc>(context).add(getPostByType(true));
+            
             if (FindJobClick == false) {
               FindJobClick = true;
             } else {
               FindJobClick = false;
             }
-            if (FindJobClick && HireJobClick ||
-                !FindJobClick && !HireJobClick) {
-              BlocProvider.of<PostBloc>(context).add(getPostData());
-            }
+            BlocProvider.of<PostBloc>(context).add(getPostByType(FindJobClick));
+            // if (FindJobClick && HireJobClick ||
+            //     !FindJobClick && !HireJobClick) {
+            //   BlocProvider.of<PostBloc>(context).add(getPostData());
+            // }
             print("FindJobClick: $FindJobClick HireJobClick: $HireJobClick");
           },
           child: Center(
@@ -627,7 +633,7 @@ buildSelectBox(BuildContext context) {
             // BlocProvider.of<PostBloc>(context)
             //     .add(selectBoxPostType(false));
 
-            BlocProvider.of<PostBloc>(context).add(getPostByType(false));
+            // BlocProvider.of<PostBloc>(context).add(getPostByType(false));
             if (HireJobClick == true) {
               HireJobClick = false;
             } else {

@@ -42,3 +42,14 @@ class takePostSuccess extends PostState {
   // final String uid;
   // takePostSuccess({required this.postId, required this.uid});
 }
+class statusCheckSuccess extends PostState {
+  final bool isFindJob;
+  final bool isTake;
+  
+  statusCheckSuccess(this.isFindJob, this.isTake);
+}
+class getPostFilterState extends PostState {
+  final bool isFindJob;
+  final bool isTake;
+  getPostFilterState(this.isFindJob, this.isTake);
+}
