@@ -111,21 +111,21 @@ class _DealPageState extends State<DealPage>
             //     ),
             //   ],
             // ),
-            Container(
-                height: 50,
-                // color: AppColors.primaryAppbar,
-                decoration: BoxDecoration(
-                  color: AppColors.primaryAppbar,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(26),
-                    bottomRight: Radius.circular(26),
-                  ),
-                ),
-                child: buildCommonButton3(
-                    context, "กำลังดำเนินการ", "สำเร็จแล้ว", "test3", uid)),
-            Container(
-              // child: buildSelectBox(context),
-            ),
+            // Container(
+            //     height: 50,
+            //     // color: AppColors.primaryAppbar,
+            //     decoration: BoxDecoration(
+            //       color: AppColors.primaryAppbar,
+            //       borderRadius: BorderRadius.only(
+            //         bottomLeft: Radius.circular(26),
+            //         bottomRight: Radius.circular(26),
+            //       ),
+            //     ),
+            //     child: buildCommonButton3(
+            //         context, "กำลังดำเนินการ", "สำเร็จแล้ว", "test3", uid)),
+            // Container(
+            //   // child: buildSelectBox(context),
+            // ),
             SizedBox(
               height: 10,
             ),

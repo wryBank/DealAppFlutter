@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutterdealapp/model/postmodel_indevice.dart';
+import 'package:flutterdealapp/pages/Deal/deal_page.dart';
 import 'package:flutterdealapp/pages/post/bloc/post_event.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -30,47 +31,175 @@ class PostProvider {
 
   Future<List<PostModel>> getPostFilter(bool isFindJob, bool isFindJobAll,
       bool inprogress, bool statusAll, bool ownPost, bool allPost) async {
-      final docpost = await FirebaseFirestore.instance
-          .collection('posts')
-          .get()
-          .then((querySnapshot) => querySnapshot.docs
-              .map((doc) =>
-                  PostModel.fromJson(doc.data() as Map<String, dynamic>))
-              .toList());
+    final docpost = await FirebaseFirestore.instance
+        .collection('posts')
+        .get()
+        .then((querySnapshot) => querySnapshot.docs
+            .map(
+                (doc) => PostModel.fromJson(doc.data() as Map<String, dynamic>))
+            .toList());
 
-      await getLocation();
-      List<PostModel> postsList = [];
-      List<PostModel> postsList2 = [];
-      if(isFindJobAll != true && statusAll != true && allPost != true){
-        postsList = docpost;
-        String status;
-        print("inbfi");
-        if(inprogress == true){
-          status = 'inprogress';
-          }else{
-            status = 'done';
-          }
-          print("status: $status");
-          print("isFindJob: $isFindJob");
-        postsList.where((element) => element.isFindJob == isFindJob && element.status == status);
-        print("------------------------------------${postsList.where((element) => element.isFindJob == isFindJob && element.status == status).toList()}");
-        postsList2 = postsList.where((element) => element.isFindJob == isFindJob && element.status == status).toList();
-        
+    await getLocation();
+    List<PostModel> postsList = [];
+    List<PostModel> postsList2 = [];
+    String status;
+
+    print("inbfi");
+    if (inprogress == true) {
+      status = 'inprogress';
+    } else {
+      status = 'done';
+    }
+
+    if (isFindJobAll != true && statusAll != true && allPost != true) {
+      postsList = docpost;
+
+      print("status: $status");
+      print("isFindJob: $isFindJob");
+      // postsList.where((element) => element.isFindJob == isFindJob && element.status == status);
+      // print("------------------------------------${postsList.where((element) => element.isFindJob == isFindJob && element.status == status).toList()}");
+      postsList2 = postsList.where((element) {
+        bool matchIsFindjob = element.isFindJob == isFindJob;
+        bool matchStatus = element.status == status;
+        bool matchIstake = element.isTake == true;
+        // String? takeby = "";
+
+        // if(ownPost == true){
+        //     element.uid = FirebaseAuth.instance.currentUser?.uid.toString();}
+        //   else{
+        //     element.takeby = FirebaseAuth.instance.currentUser?.uid.toString();
+        //   }
+
+        print("matchIsFindjob: $matchIsFindjob");
+        print("matchStatus: $matchStatus");
+        print("matchIstake: $matchIstake");
+        // print("takeby: $takeby");
+        print("ownPost: $ownPost");
+        return matchIsFindjob &&
+            matchStatus &&
+            matchIstake &&
+            (ownPost ? element.uid == uid : element.takeby == uid);
+      }).toList();
+
       print("postsListinif: $postsList2");
-      }
-      else{
-        postsList = [];
-        // postsList.where((element) => element.isFindJob == true);
+    } else if (isFindJobAll && statusAll && allPost) {
+      print("status: $status");
+      postsList = docpost;
+      postsList2 = postsList.where((element) {
+        bool matchIstake = element.isTake == true;
+        print("matchIstake: $matchIstake");
+        print("ownPost: $ownPost");
+        return matchIstake;
+      }).toList();
+      print("list: $postsList2");
+    } else if (isFindJobAll && allPost) {
+      print("in isFindJobAll && allPost");
+      print("status: $status");
+      postsList = docpost;
+      postsList2 = postsList.where((element) {
+        bool matchIstake = element.isTake == true;
+        print("matchIstake: $matchIstake");
+        print("ownPost: $ownPost");
+        return (inprogress
+                ? element.status == 'inprogress'
+                : element.status == 'done') &&
+            matchIstake;
+      }).toList();
+      print("list: $postsList2");
+    } else if (isFindJobAll && statusAll) {
+      print("in isFindJobAll && statusAll");
+      print("status: $status");
+      postsList = docpost;
+      postsList2 = postsList.where((element) {
+        bool matchIstake = element.isTake == true;
+        // String? takeby = "";
+        // if(ownPost == true){
+        //     element.uid = FirebaseAuth.instance.currentUser?.uid.toString();}
+        //   else{
+        //     element.takeby = FirebaseAuth.instance.currentUser?.uid.toString();
+        //   }
+        print("matchIstake: $matchIstake");
+        // print("takeby: $takeby");
+        print("ownPost: $ownPost");
+        return matchIstake &&
+            (ownPost ? element.uid == uid : element.takeby == uid);
+      }).toList();
+      print("list: $postsList2");
+    } else if (isFindJobAll == true) {
+      print("in isFindJobAll");
+      print("status: $status");
+      postsList = docpost;
+      postsList2 = postsList.where((element) {
+        bool matchStatus = element.status == status;
+        bool matchIstake = element.isTake == true;
+        // String? takeby = "";
+        // if(ownPost == true){
+        //     element.uid = FirebaseAuth.instance.currentUser?.uid.toString();}
+        //   else{
+        //     element.takeby = FirebaseAuth.instance.currentUser?.uid.toString();
+        //   }
+        print("matchStatus: $matchStatus");
+        print("matchIstake: $matchIstake");
+        // print("takeby: $takeby");
+        print("ownPost: $ownPost");
+        return matchStatus &&
+            matchIstake &&
+            (ownPost ? element.uid == uid : element.takeby == uid);
+      }).toList();
+      print("list: $postsList2");
+    } else if (statusAll == true) {
+      print("in statusAll");
+      print("status: $status");
+      postsList = docpost;
+      postsList2 = postsList.where((element) {
+        bool matchIsFindjob = element.isFindJob == isFindJob;
+        bool matchIstake = element.isTake == true;
+        // String? takeby = "";
+        // if(ownPost == true){
+        //     element.uid = FirebaseAuth.instance.currentUser?.uid.toString();}
+        //   else{
+        //     element.takeby = FirebaseAuth.instance.currentUser?.uid.toString();
+        //   }
+        print("matchIsFindjob: $matchIsFindjob");
+        print("matchIstake: $matchIstake");
+        // print("takeby: $takeby");
+        print("ownPost: $ownPost");
+        return matchIsFindjob &&
+            matchIstake &&
+            (ownPost ? element.uid == uid : element.takeby == uid);
+      }).toList();
+      print("list: $postsList2");
+    } else if (allPost == true) {
+      postsList = docpost;
+      postsList2 = postsList.where((element) {
+        bool matchIsFindjob = element.isFindJob == isFindJob;
+        bool matchStatus = element.status == status;
+        bool matchIstake = element.isTake == true;
+        // String? takeby = "";
+        // if(ownPost == true){
+        //     element.uid = FirebaseAuth.instance.currentUser?.uid.toString();}
+        //   else{
+        //     element.takeby = FirebaseAuth.instance.currentUser?.uid.toString();
+        //   }
+        print("matchIsFindjob: $matchIsFindjob");
+        print("matchStatus: $matchStatus");
+        print("matchIstake: $matchIstake");
+        // print("takeby: $takeby");
+        // print("ownPost: $ownPost");
+        return matchIsFindjob && matchStatus && matchIstake;
+      }).toList();
+
       // postsList.where((element) => element.isFindJob == true);
-      }
-      print("posts length: ${postsList.length}");
-      print("postsList: $postsList");
-      postsList.forEach((element) async {
-        element.distance = calculateDistances(currentLatitude,
-            currentLongtitude, element.latitude!, element.longitude!);
-      });
-      postsList.sort((a, b) => a.distance!.compareTo(b.distance!));
-      // return postsList;
+      // postsList.where((element) => element.isFindJob == true);
+    }
+    print("posts length: ${postsList.length}");
+    print("postsList: $postsList");
+    postsList.forEach((element) async {
+      element.distance = calculateDistances(currentLatitude, currentLongtitude,
+          element.latitude!, element.longitude!);
+    });
+    postsList.sort((a, b) => a.distance!.compareTo(b.distance!));
+    // return postsList;
 
     // final docpost = await FirebaseFirestore.instance
     //     .collection('posts')
