@@ -62,3 +62,8 @@ class getPostFilter extends PostEvent {
   
   getPostFilter(this.isFindJob, this.isFindJobAll, this.inprogress, this.statusAll, this.ownPost, this.allPost);
 }
+class updateStatusGave extends PostEvent {
+  final String postId;
+  final bool isGave;
+  updateStatusGave(this.postId, this.isGave);
+}

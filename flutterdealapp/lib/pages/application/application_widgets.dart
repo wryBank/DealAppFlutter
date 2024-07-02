@@ -16,8 +16,8 @@ Widget buildPage(int index){
     // postDetailPage(),
     // test(),
     ProfilePage(),
-    filterPosts(),
-    // WalletPage(),
+    // filterPosts(),
+    WalletPage(),
     Center(child: Text("home"),),
     
   ];

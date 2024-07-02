@@ -154,7 +154,7 @@ class _DealPageState extends State<DealPage>
                             post.postdate!,
                             post.distance??0.0,
                             post.profileImage ?? "",
-                            post.pricePay!);
+                            post.pricePay!,);
                       }),
                 ));
               } else {

@@ -153,5 +153,17 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         emit(PostListLoaded(postModel));
       } catch (e) {}
     });
+    on<updateStatusGave>((event, emit) async {
+      emit(PostLoading());
+      try {
+        print("inbloc post11");
+        // repository.getPosts();
+        print(
+            "------------------------------------------------------------------");
+        // repository.getOwnDeal(event.uid);
+        // var postModel = await repository.updateStatusGave(event.postId, event.isGave);
+        // emit(PostListLoaded(postModel));
+      } catch (e) {}
+    });
   }
 }

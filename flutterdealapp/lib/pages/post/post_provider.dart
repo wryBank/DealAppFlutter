@@ -613,6 +613,7 @@ class PostProvider {
   // }
 
   final _fireCloud = FirebaseFirestore.instance.collection("posts");
+  final _userCloud = FirebaseFirestore.instance.collection("users");
   Future<PostModel> getPostDetail(String postId) async {
     print("in getpostdetail");
     try {
@@ -625,5 +626,87 @@ class PostProvider {
       }
     }
     throw Exception("Failed to get user data."); // Added throw statement
+  }
+
+  Future<void> updateStatusGave(
+      String postId, bool isGave, String uidTakeby, bool isFindJob) async {
+    print("in updateStatus");
+    try {
+      DocumentSnapshot documentSnapshot = await _fireCloud.doc(postId).get();
+
+      if (documentSnapshot.exists) {
+        print("data: ${documentSnapshot.data()}");
+        final data = documentSnapshot.data() as Map<String, dynamic>;
+        if (data['isReceived'] == false && isGave == true) {
+          await _fireCloud
+              .doc(postId)
+              .update({'isGave': isGave, 'status': 'inprogress'});
+        }
+        if (isGave == true && data['isReceived'] == true) {
+          await _fireCloud
+              .doc(postId)
+              .update({'isGave': isGave, 'status': 'done'});
+          if (isFindJob == true) {
+            await _userCloud
+                .doc(data['uid'])
+                .update({'coin': FieldValue.increment(data['totalprice']  * 2)});
+          }
+          if (isFindJob == false) {
+            await _userCloud
+                .doc(uidTakeby)
+                // .update({'coin': FieldValue.increment(data['pricePay'])});
+                .update({'coin': FieldValue.increment(data['totalprice']  * 2)});
+          }
+        }
+
+        // print(documentSnapshot.data());
+      }
+      // print(documentSnapshot.data());
+    } on FirebaseException catch (e) {
+      if (kDebugMode) {
+        print("Failed with error '${e.code}': ${e.message}");
+      }
+    }
+  }
+
+  Future<void> updateStatusReceived(
+      String postId, bool isReceived, String uidPostby, bool isFindJob) async {
+    print("isReceived: $isReceived");
+    print("in updateStatus");
+    try {
+      DocumentSnapshot documentSnapshot = await _fireCloud.doc(postId).get();
+      if (documentSnapshot.exists) {
+        print("data: ${documentSnapshot.data()}");
+        final data = documentSnapshot.data() as Map<String, dynamic>;
+        if (data['isGave'] == false && isReceived == true) {
+          await _fireCloud
+              .doc(postId)
+              .update({'isReceived': isReceived, 'status': 'inprogress'});
+        }
+        if (isReceived == true && data['isGave'] == true) {
+          await _fireCloud
+              .doc(postId)
+              .update({'isReceived': isReceived, 'status': 'done'});
+
+          if (isFindJob == true) {
+            await _userCloud
+                .doc(uidPostby)
+                .update({'coin': FieldValue.increment(data['totalprice']  * 2)});
+          } 
+          else if (isFindJob == false) {
+            await _userCloud
+                .doc(data['takeby'])
+                .update({'coin': FieldValue.increment(data['totalprice']  * 2)});
+          }
+        }
+
+        // print(documentSnapshot.data());
+      }
+      // print(documentSnapshot.data());
+    } on FirebaseException catch (e) {
+      if (kDebugMode) {
+        print("Failed with error '${e.code}': ${e.message}");
+      }
+    }
   }
 }

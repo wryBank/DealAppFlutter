@@ -426,7 +426,9 @@ class _CreatePostPageState extends State<CreatePostPage> {
                       isFindJob: isSelectedReceive,
                       pricePay: pricePay,
                       priceBuy: priceBuy,
-                      totalPrice: priceBuy+pricePay
+                      totalPrice: priceBuy+pricePay,
+                      isGave: false,
+                      isReceived: false,
                       );
 
                   BlocProvider.of<CreatePostBloc>(context).add(

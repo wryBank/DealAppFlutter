@@ -14,6 +14,7 @@ import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_repo.dart';
 import 'package:flutterdealapp/pages/post/bloc/post_bloc.dart';
 import 'package:flutterdealapp/pages/post/post_provider.dart';
 import 'package:flutterdealapp/pages/post/post_repo.dart';
+import 'package:flutterdealapp/pages/postDetail/bloc/postDetail_bloc.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_blocs.dart';
 import 'package:flutterdealapp/pages/signIn/bloc/signin_blocs.dart';
 import 'package:flutterdealapp/pages/welcome/bloc/welcome_blocs.dart';
@@ -35,6 +36,7 @@ class AppBlocProviders{
         BlocProvider(create: (context) => PostBloc(PostRepository(postProvider: PostProvider()))),
         BlocProvider(create: (context) => CreatePostBloc(CreatePostRepository(createPostProvider: CreatePostProvider()))),
         BlocProvider(create: (context) => LandingPageBloc()),
+        BlocProvider(create: (context) => postDetailBloc(PostRepository(postProvider: PostProvider()))),
 
   ];
   
