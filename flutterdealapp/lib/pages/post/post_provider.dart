@@ -194,11 +194,12 @@ class PostProvider {
     }
     print("posts length: ${postsList.length}");
     print("postsList: $postsList");
-    postsList.forEach((element) async {
+    postsList2.forEach((element) async {
       element.distance = calculateDistances(currentLatitude, currentLongtitude,
           element.latitude!, element.longitude!);
     });
-    postsList.sort((a, b) => a.distance!.compareTo(b.distance!));
+    postsList2.sort((a, b) => b.postdate!.compareTo(a.postdate!));
+    
     // return postsList;
 
     // final docpost = await FirebaseFirestore.instance
@@ -259,7 +260,7 @@ class PostProvider {
       element.distance = calculateDistances(currentLatitude, currentLongtitude,
           element.latitude!, element.longitude!);
     });
-    postsList.sort((a, b) => a.distance!.compareTo(b.distance!));
+    postsList.sort((a, b) => b.postdate!.compareTo(a.postdate!));
     print("posts length: ${postsList.length}");
     return postsList;
   }
@@ -339,6 +340,25 @@ class PostProvider {
       return false;
     }
   }
+  Future<void>upDateDealCount(String userid,String userid2) async{
+      try {
+      DocumentSnapshot documentSnapshot1 = await _userCloud.doc(userid).get();
+      DocumentSnapshot documentSnapshot2 = await _userCloud.doc(userid2).get();
+
+      if(documentSnapshot1.exists && documentSnapshot2.exists){
+        final data1 = documentSnapshot1.data() as Map<String, dynamic>;
+        final data2 = documentSnapshot2.data() as Map<String, dynamic>;
+
+        await _userCloud.doc(userid).update({'dealcount': FieldValue.increment(1)});
+        await _userCloud.doc(userid2).update({'dealcount': FieldValue.increment(1)});
+      }
+      
+    } on FirebaseException catch (e) {
+      if (kDebugMode) {
+        print("Failed with error '${e.code}': ${e.message}");
+      }
+    }
+  } 
 
   Future<bool> checkPostStatus(String postId) async {
     final docRef = FirebaseFirestore.instance.collection('posts').doc(postId);
@@ -437,6 +457,8 @@ class PostProvider {
     final posts = FirebaseFirestore.instance
         .collection('posts')
         .where('uid', isEqualTo: userId)
+        // .orderBy('postdate', descending: false)
+        // .limit(10)
         .get();
 
     final querySnapshot = await posts;
@@ -448,7 +470,7 @@ class PostProvider {
       element.distance = calculateDistances(currentLatitude, currentLongtitude,
           element.latitude!, element.longitude!);
     });
-    postsList.sort((a, b) => a.distance!.compareTo(b.distance!));
+    postsList.sort((a, b) => b.postdate!.compareTo(a.postdate!));
     print("posts length: ${postsList.length}");
     return postsList;
   }
@@ -614,6 +636,26 @@ class PostProvider {
 
   final _fireCloud = FirebaseFirestore.instance.collection("posts");
   final _userCloud = FirebaseFirestore.instance.collection("users");
+  Future<void> recordDataDealDone(String userid, String userid2) async {
+    try {
+      DocumentSnapshot documentSnapshot1 = await _userCloud.doc(userid).get();
+      DocumentSnapshot documentSnapshot2 = await _userCloud.doc(userid2).get();
+
+      if(documentSnapshot1.exists && documentSnapshot2.exists){
+        final data1 = documentSnapshot1.data() as Map<String, dynamic>;
+        final data2 = documentSnapshot2.data() as Map<String, dynamic>;
+
+        await _userCloud.doc(userid).update({'dealsucced': FieldValue.increment(1)});
+        await _userCloud.doc(userid2).update({'dealsucced': FieldValue.increment(1)});
+      }
+      
+    } on FirebaseException catch (e) {
+      if (kDebugMode) {
+        print("Failed with error '${e.code}': ${e.message}");
+      }
+    }
+  }
+
   Future<PostModel> getPostDetail(String postId) async {
     print("in getpostdetail");
     try {
@@ -646,16 +688,18 @@ class PostProvider {
           await _fireCloud
               .doc(postId)
               .update({'isGave': isGave, 'status': 'done'});
+          await recordDataDealDone(data['uid'], data['takeby']);
+
           if (isFindJob == true) {
             await _userCloud
                 .doc(data['uid'])
-                .update({'coin': FieldValue.increment(data['totalprice']  * 2)});
+                .update({'coin': FieldValue.increment(data['totalprice'] * 2)});
           }
           if (isFindJob == false) {
             await _userCloud
                 .doc(uidTakeby)
                 // .update({'coin': FieldValue.increment(data['pricePay'])});
-                .update({'coin': FieldValue.increment(data['totalprice']  * 2)});
+                .update({'coin': FieldValue.increment(data['totalprice'] * 2)});
           }
         }
 
@@ -687,16 +731,16 @@ class PostProvider {
           await _fireCloud
               .doc(postId)
               .update({'isReceived': isReceived, 'status': 'done'});
+          await recordDataDealDone(data['uid'], data['takeby']);
 
           if (isFindJob == true) {
             await _userCloud
                 .doc(uidPostby)
-                .update({'coin': FieldValue.increment(data['totalprice']  * 2)});
-          } 
-          else if (isFindJob == false) {
+                .update({'coin': FieldValue.increment(data['totalprice'] * 2)});
+          } else if (isFindJob == false) {
             await _userCloud
                 .doc(data['takeby'])
-                .update({'coin': FieldValue.increment(data['totalprice']  * 2)});
+                .update({'coin': FieldValue.increment(data['totalprice'] * 2)});
           }
         }
 

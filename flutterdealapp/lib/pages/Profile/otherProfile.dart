@@ -24,24 +24,25 @@ import '../editProfile/bloc/editprofile_event.dart';
 import '../editProfile/editprofile_image.dart';
 import '../postDetail/postDetail_page.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+class OtherProfilePage extends StatefulWidget {
+  final String userid;
+  final String beforePostid;
+  const OtherProfilePage({super.key, required this.userid,
+  required this.beforePostid});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<OtherProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState extends State<OtherProfilePage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ProfileBloc>(context)
-        .add(getUserData(uid: FirebaseAuth.instance.currentUser!.uid));
+    BlocProvider.of<ProfileBloc>(context).add(getUserData(uid: widget.userid));
 
     getLocation();
 
-    BlocProvider.of<PostBloc>(context)
-        .add(getPostById(FirebaseAuth.instance.currentUser!.uid));
+    BlocProvider.of<PostBloc>(context).add(getPostById(widget.userid));
   }
 
   Future<void> getLocation() async {
@@ -58,8 +59,6 @@ class _ProfilePageState extends State<ProfilePage> {
   double currentLatitude = 0;
   double currentLongtitude = 0;
   final uid = FirebaseAuth.instance.currentUser;
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _phoneNumberController = TextEditingController();
   UserModel userModel = UserModel();
   @override
   Widget build(BuildContext context) {
@@ -67,7 +66,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return RefreshIndicator(
       onRefresh: () async {
         BlocProvider.of<ProfileBloc>(context)
-            .add(getUserData(uid: FirebaseAuth.instance.currentUser!.uid));
+            .add(getUserData(uid: widget.userid));
       },
       child: BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
         if (state is LoadingState) {
@@ -80,7 +79,16 @@ class _ProfilePageState extends State<ProfilePage> {
           return Scaffold(
             appBar: AppBar(
               // backgroundColor: Colors.blue,
-              automaticallyImplyLeading: false,
+              // automaticallyImplyLeading: true,
+              leading: 
+              IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  BlocProvider.of<PostBloc>(context).add(getPostDetail(widget.beforePostid));
+                  Navigator.pop(context);
+                },
+              )
+              ,
               backgroundColor: AppColors.primaryAppbar,
               bottom: PreferredSize(
                   preferredSize: const Size.fromHeight(1.0),
@@ -195,7 +203,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                       Column(
                                         children: [
                                           Text(
-                                            state.userModel!.dealcount.toString(),
+                                            state.userModel!.dealcount
+                                                .toString(),
                                             style: TextStyle(
                                                 fontSize: 20.sp,
                                                 color: Colors.blue),
@@ -299,21 +308,20 @@ class _ProfilePageState extends State<ProfilePage> {
                             itemCount: state.postModel.length,
                             itemBuilder: (context, index) {
                               // print("post distance: ${posts[index].distance}");
-                                final post = state.postModel[index];
-                                return buildPostBox(
-                                    context,
-                                    post.pid ?? "",
-                                    post.title!,
-                                    post.detail!,
-                                    post.location_item ?? "",
-                                    post.postimage ?? "",
-                                    "a",
-                                    post.postdate!,
-                                    post.distance!,
-                                    post.profileImage ?? "",
-                                    post.pricePay!
-                                    
-                                    );
+                              final post = state.postModel[index];
+                              return buildPostBox(
+                                  context,
+                                  post.uid!,
+                                  post.pid ?? "",
+                                  post.title!,
+                                  post.detail!,
+                                  post.location_item ?? "",
+                                  post.postimage ?? "",
+                                  "a",
+                                  post.postdate!,
+                                  post.distance!,
+                                  post.profileImage ?? "",
+                                  post.pricePay!);
                             })
                         // child: FirestoreListView(
                         //     query: state.postModel,
@@ -356,8 +364,10 @@ class _ProfilePageState extends State<ProfilePage> {
     // add gridview here
   }
 }
+
 Widget buildPostBox(
   context,
+  String uid,
   String pid,
   String title,
   String detail,
@@ -372,9 +382,13 @@ Widget buildPostBox(
   return GestureDetector(
     onTap: () {
       print("tap in post box {$pid}");
-      BlocProvider.of<PostBloc>(context).add(getPostDetail(pid));
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => postDetailPage()));
+      if (uid != FirebaseAuth.instance.currentUser!.uid) {
+        
+      } else {
+        BlocProvider.of<PostBloc>(context).add(getPostDetail(pid));
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => postDetailPage()));
+      }
     },
     child: Container(
       decoration: BoxDecoration(
@@ -502,7 +516,6 @@ Widget buildPostBox(
     ),
   );
 }
-
 
 calculateDistances(double curLa, double CurLong, double la, double long) {
   print("curla: $curLa");

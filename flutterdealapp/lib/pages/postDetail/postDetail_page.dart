@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdealapp/model/postmodel.dart';
 import 'package:flutterdealapp/pages/Deal/deal_page.dart';
+import 'package:flutterdealapp/pages/Profile/otherProfile.dart';
 import 'package:flutterdealapp/pages/application/application_page.dart';
 import 'package:flutterdealapp/pages/application/bloc/appBloc.dart';
 import 'package:flutterdealapp/pages/application/bloc/appEvent.dart';
@@ -227,11 +228,17 @@ Widget buildPostBoxDetail(
                 children: [
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Container(
-                      margin: EdgeInsets.only(left: 20),
-                      child: CircleAvatar(
-                        radius: 30,
-                        backgroundImage: NetworkImage(userImage),
+                    child: InkWell(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => OtherProfilePage(userid: uid,beforePostid: pid,)));
+                      },
+                      child: Container(
+                        
+                        margin: EdgeInsets.only(left: 20),
+                        child: CircleAvatar(
+                          radius: 30,
+                          backgroundImage: NetworkImage(userImage),
+                        ),
                       ),
                     ),
                   ),
