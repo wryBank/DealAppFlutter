@@ -10,6 +10,7 @@ import 'package:flutterdealapp/pages/Deal/deal_page.dart';
 import 'package:flutterdealapp/pages/application/application_page.dart';
 import 'package:flutterdealapp/pages/application/bloc/appBloc.dart';
 import 'package:flutterdealapp/pages/application/bloc/appEvent.dart';
+import 'package:flutterdealapp/pages/chat/chat_page.dart';
 import 'package:flutterdealapp/pages/common_widgets.dart';
 import 'package:flutterdealapp/pages/post/bloc/post_bloc.dart';
 import 'package:flutterdealapp/pages/post/bloc/post_event.dart';
@@ -140,6 +141,8 @@ class _postDetailPageState extends State<postDetailPage> {
                           state.postModel.isReceived),
                       buildPostBoxDetail(
                           context,
+                          state.postModel.uid.toString(),
+                          state.postModel.takeby.toString(),
                           state.postModel.isTake,
                           state.postModel.status.toString(),
                           state.postModel.pid.toString(),
@@ -180,6 +183,8 @@ class _postDetailPageState extends State<postDetailPage> {
 Widget buildPostBoxDetail(
     context,
     // String
+    String uid,
+    String takeby,
     bool? isTake,
     String? status,
     String pid,
@@ -397,6 +402,21 @@ Widget buildPostBoxDetail(
                 ),
               ),
 
+              ElevatedButton(
+                onPressed: (){
+
+                  if(isowner == true){
+                    print("pid: $pid");
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(receiverUserId: takeby,receiverUserEmail:takeby,pid:pid.toString())));
+                  }
+                  else if(isowner == false){
+                    print("pid: $pid");
+                   Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(receiverUserId: uid,receiverUserEmail:postby,pid: pid.toString(),)));
+                  }
+                },
+                child: Text("chat"),
+              ),
+
               if (isowner == true) buildCommonButton("This is you post", () {}),
               if (isowner == false)
                 buildCommonButton("Send Deal", () {
@@ -424,7 +444,7 @@ Widget buildPostBoxDetail(
                           actions: [
                             buildCommonButton("Yes", () {
                               BlocProvider.of<PostBloc>(context)
-                                  .add(takePostEvent(postId: pid, uid: uid));
+                                  .add(takePostEvent(postId: pid, uid: FirebaseAuth.instance.currentUser!.uid));
                             }),
                           ],
                         );
