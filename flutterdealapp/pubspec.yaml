@@ -51,6 +51,14 @@ dependencies:
   intl: ^0.17.0
   uuid: ^4.1.0
   timeline_tile: ^2.0.0
+  workmanager: ^0.5.1
+  permission_handler: ^11.0.1
+  firebase_messaging: ^14.7.10
+  http:
+  googleapis:
+  googleapis_auth:
+  firebase_analytics: ^10.8.0
+
 
 dev_dependencies:
   flutter_test:

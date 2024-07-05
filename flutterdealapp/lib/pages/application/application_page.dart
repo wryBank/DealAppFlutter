@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -13,6 +14,8 @@ import 'package:flutterdealapp/pages/application/bloc/appEvent.dart';
 import 'package:flutterdealapp/pages/application/bloc/appState.dart';
 import 'package:geolocator/geolocator.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+import '../UserBloc/user_provider.dart';
 import '../editProfile/bloc/editprofile_bloc.dart';
 import '../editProfile/bloc/editprofile_event.dart';
 import 'application_widgets.dart';
@@ -26,6 +29,11 @@ class ApplicationPage extends StatefulWidget {
 }
 
 class _ApplicationPageState extends State<ApplicationPage> {
+  Future multipleRegistration()async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+        FirebaseMessaging.instance.subscribeToTopic("myTopic1");
+  }
   void getLocation() async {
     await Geolocator.checkPermission();
     await Geolocator.requestPermission();
@@ -41,6 +49,7 @@ class _ApplicationPageState extends State<ApplicationPage> {
   @override
   void initState() {
     super.initState();
+     getLocation();
     // _index = widget.initialIndex;
     // getLocation()
     // _timer = Timer.periodic(Duration(seconds: 5), (timer) {

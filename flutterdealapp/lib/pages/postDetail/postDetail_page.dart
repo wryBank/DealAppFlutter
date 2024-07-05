@@ -451,7 +451,7 @@ Widget buildPostBoxDetail(
                           actions: [
                             buildCommonButton("Yes", () {
                               BlocProvider.of<PostBloc>(context)
-                                  .add(takePostEvent(postId: pid, uid: FirebaseAuth.instance.currentUser!.uid));
+                                  .add(takePostEvent(postId: pid, uid: FirebaseAuth.instance.currentUser!.uid,uidPostby: uid));
                             }),
                           ],
                         );

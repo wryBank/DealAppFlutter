@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutterdealapp/pages/UserBloc/bloc/user_bloc.dart';
 import 'package:flutterdealapp/pages/UserBloc/user_provider.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_provider.dart';
@@ -14,6 +15,9 @@ class user_repo{
   Future<void> editProfile(UserModel userModel) async{
       print("inrepo");
     await provider.editProfile(userModel);
+  }
+  Future<void> addUserToken() async{
+    await provider.addUserToken();
   }
   Future<void> addData(UserModel userModel) async{
     await provider.addData(userModel);

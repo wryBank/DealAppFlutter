@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutterdealapp/model/postmodel.dart';
 
 @immutable 
 abstract class PostEvent  {
@@ -38,9 +39,11 @@ class getPostDetail2 extends PostEvent {
 class getPostEvent extends PostEvent {
 }
 class takePostEvent extends PostEvent {
+  
   final String postId;
   final String uid;
-  takePostEvent({required this.postId, required this.uid});
+  final String uidPostby;
+  takePostEvent({required this.postId, required this.uid, required this.uidPostby});
 }
 class getOwnDeal extends PostEvent {
   // final String postId;

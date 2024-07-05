@@ -104,7 +104,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         // repository.getPosts();
         print(
             "------------------------------------------------------------------");
-        var takepost = await repository.takePost(event.postId, event.uid);
+        var takepost = await repository.takePost(event.postId, event.uid,event.uidPostby);
         if (takepost == true) {
           emit(takePostSuccess());
         } else {

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutterdealapp/firebase/PushNotificationService.dart';
 import 'package:flutterdealapp/model/postmodel_indevice.dart';
 import 'package:flutterdealapp/pages/Deal/deal_page.dart';
 import 'package:flutterdealapp/pages/post/bloc/post_event.dart';
@@ -308,7 +309,7 @@ class PostProvider {
     return postsList;
   }
 
-  Future takePost(String postId, String uid) async {
+  Future takePost(String postId, String uid, String uidPostby) async {
     print("in takePost");
     final docRef = FirebaseFirestore.instance.collection('posts').doc(postId);
     final snapshot = await docRef.get();
@@ -316,9 +317,13 @@ class PostProvider {
     final userRef = FirebaseFirestore.instance.collection('users').doc(uid);
     final usernapshot = await userRef.get();
 
+    final userPost = FirebaseFirestore.instance.collection('users').doc(uidPostby);
+    final userPostsnapshot = await userPost.get();
+
     if (snapshot.exists) {
       final data = snapshot.data() as Map<String, dynamic>;
       final userdata = usernapshot.data() as Map<String, dynamic>;
+      final userPostdata = userPostsnapshot.data() as Map<String, dynamic>;
       print("data: $data");
       if (userdata['coin'] < data['totalprice']) {
         return "not enough coin2";
@@ -328,6 +333,7 @@ class PostProvider {
           await userRef.update({'coin': userdata['coin'] - data['totalprice']});
           await docRef
               .update({'isTake': true, 'takeby': uid, 'status': 'inprogress'});
+          PushNotificationService.sendNotificationToUser(userPostdata['userToken'],);
           return true;
         } else {
           return "not enough coin";

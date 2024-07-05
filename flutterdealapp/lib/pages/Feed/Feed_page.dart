@@ -19,6 +19,7 @@ import '../../model/postmodel.dart';
 import '../../values/color.dart';
 import '../Deal/filterPostDeal.dart';
 import '../Profile/bloc/profile_bloc.dart';
+import '../UserBloc/user_provider.dart';
 import '../createpost/createPost_page.dart';
 import '../post/bloc/post_event.dart';
 import '../postDetail/postDetail_page.dart';
@@ -34,14 +35,15 @@ class _FeedPageState extends State<FeedPage> {
   
  
   Future<void> getLocation() async {
-    Geolocator.checkPermission();
-    Geolocator.requestPermission();
+    await Geolocator.checkPermission();
+    await Geolocator.requestPermission();
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
 
     print(position);
     currentLatitude = position.latitude;
     currentLongtitude = position.longitude;
+  await user_provider().updateLocation(position.latitude, position.longitude);
   }
 
   final uid = FirebaseAuth.instance.currentUser!.uid;

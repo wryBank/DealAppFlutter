@@ -52,8 +52,10 @@ class SignInController {
             // user verified from firebaske
             
             
-            if(await userRepository.checkUser(user.uid)){
+            if(await userRepository.checkUser(user.uid)) {
               print("user login");
+              // add deviceToken every time user login
+              await userRepository.addUserToken();
               Navigator.of(context).pushNamed("Application");
               // Navigator.of(context).pushNamed("editprofileImage");
             }

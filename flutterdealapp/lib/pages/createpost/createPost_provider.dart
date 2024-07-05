@@ -5,7 +5,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutterdealapp/firebase/PushNotificationService.dart';
 import 'package:flutterdealapp/model/postmodel.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../model/usermodel.dart';
 
@@ -18,6 +20,7 @@ class CreatePostProvider {
   PlatformFile? imageFile;
 
   Future<void> createPost(PostModel postModel) async {
+    List<String> userLessDistances = [];
     try {
       print("inprovicer");
       print("uid = " + _uid!);
@@ -39,7 +42,11 @@ class CreatePostProvider {
                 toFirestore: (post, _) => post.toJson(),
               )
               .add(postModel);
-          await docRef.update({'pid': docRef.id});
+          await docRef.update({'pid': docRef.id}
+          );
+          PushNotificationService.sendNotificationCreatePost(await countUsersWithin3KmOfPost(postModel));
+          await countUsersWithin3KmOfPost(postModel);
+          print(countUsersWithin3KmOfPost(postModel));
           // double coinleft = userData['coin'] - postModel.totalPrice;
           // return coinleft;
         }
@@ -55,6 +62,42 @@ class CreatePostProvider {
       throw Exception(e.toString());
     }
   }
+  calculateDistances(double curLa, double CurLong, double la, double long) {
+    // print("curla: $curLa");
+    // print("curlong: $CurLong");
+    double distanceInMeters =
+        Geolocator.distanceBetween(curLa, CurLong, la, long);
+    double distanceInKilometers = distanceInMeters / 1000;
+    // print( 'Distance from current location to post ${la}: post latitude is ${la}: post long is ${long} $distanceInKilometers km');
+    return distanceInKilometers;
+  }
+
+Future<List<String>> countUsersWithin3KmOfPost(PostModel postModel) async {
+  print("Counting users within 3 km of post");
+  List<String> usersWithin3Km = [];
+  final usersRef = FirebaseFirestore.instance.collection('users');
+  final postLat = postModel.latitude;
+  final postLon = postModel.longitude;
+
+  try {
+    final querySnapshot = await usersRef.get();
+    for (var doc in querySnapshot.docs) {
+      final userData = doc.data() as Map<String, dynamic>;
+      final userLat = userData['lastLatitude'];
+      final userLon = userData['lastLongitude'];
+      final distance = calculateDistances(postLat!, postLon!, userLat, userLon);
+
+      if (distance < 10 && userData['uid'] != FirebaseAuth.instance.currentUser!.uid) {
+        usersWithin3Km.add(userData['userToken']);
+      }
+    }
+    print("Users within 3 km of post: $usersWithin3Km");
+  } catch (e) {
+    print("Error fetching users: $e");
+  }
+
+  return usersWithin3Km;
+}
 
   Future<String> imageToFirebase(PlatformFile imageFile) async {
     UploadTask? uploadTask;

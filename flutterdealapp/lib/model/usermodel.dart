@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
   String? uid;
+  String? userToken;
   String? username;
   String? email;
   String? gender;
@@ -15,8 +16,11 @@ class UserModel {
   int? dealsucceed;
   int? ondeal;
   double? coin;
+  double? lastLatitude;
+  double? lastLongitude;
   UserModel({
     this.uid,
+    this.userToken,
     this.username,
     this.email,
     this.gender,
@@ -27,6 +31,8 @@ class UserModel {
     this.dealsucceed,
     this.ondeal,
     this.coin,
+    this.lastLatitude,
+    this.lastLongitude
   });
   
 
@@ -34,6 +40,7 @@ class UserModel {
 
   UserModel copyWith({
     String? uid,
+    String? userToken,
     String? username,
     String? email,
     String? gender,
@@ -43,10 +50,13 @@ class UserModel {
     int? dealcount,
     int? dealsucceed,
     int? ondeal,
-    double? coin
+    double? coin,
+    double? lastLatitude,
+    double? lastLongitude
   }) {
     return UserModel(
       uid: uid ?? this.uid,
+      userToken: userToken ?? this.userToken,
       username: username ?? this.username,
       email: email ?? this.email,
       gender: gender ?? this.gender,
@@ -57,12 +67,15 @@ class UserModel {
       dealsucceed: dealsucceed ?? this.dealsucceed,
       ondeal: ondeal ?? this.ondeal,
       coin: coin ?? this.coin,
+      lastLatitude: lastLatitude ?? this.lastLatitude,
+      lastLongitude: lastLongitude ?? this.lastLongitude
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'uid': uid,
+      'userToken': userToken,
       'username': username,
       'email': email,
       'gender': gender,
@@ -72,13 +85,16 @@ class UserModel {
       'dealcount': dealcount,
       'dealsucceed': dealsucceed,
       'ondeal': ondeal,
-      'coin': coin
+      'coin': coin,
+      'lastLatitude': lastLatitude,
+      'lastLongitude': lastLongitude
     };
   }
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
       uid: map['uid'] != null ? map['uid'] as String : null,
+      userToken: map['userToken'] != null ? map['userToken'] as String : null,
       username: map['username'] != null ? map['username'] as String : null,
       email: map['email'] != null ? map['email'] as String : null,
       gender: map['gender'] != null ? map['gender'] as String : null,
@@ -89,6 +105,8 @@ class UserModel {
       dealsucceed: map['dealsucceed'] != null ? map['dealsucceed'] as int : null,
       ondeal: map['ondeal'] != null ? map['ondeal'] as int : null,
       coin: map['coin'] != null ? map['coin'] as double : null,
+      lastLatitude: map['lastLatitude'] != null ? map['lastLatitude'] as double : null,
+      lastLongitude: map['lastLongitude'] != null ? map['lastLongitude'] as double : null
     );
   }
 
@@ -98,7 +116,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(uid: $uid, username: $username, email: $email, gender: $gender, phonenumber: $phonenumber, urlprofileimage: $urlprofileimage, bio: $bio, dealcount: $dealcount, dealsucceed: $dealsucceed, ondeal: $ondeal, coin: $coin)';
+    return 'UserModel(uid: $uid,userToken:$userToken, username: $username, email: $email, gender: $gender, phonenumber: $phonenumber, urlprofileimage: $urlprofileimage, bio: $bio, dealcount: $dealcount, dealsucceed: $dealsucceed, ondeal: $ondeal, coin: $coin, lastLatitude: $lastLatitude, lastLongitude: $lastLongitude)';
   }
 
   @override
@@ -107,6 +125,7 @@ class UserModel {
   
     return 
       other.uid == uid &&
+      other.userToken == userToken &&
       other.username == username &&
       other.email == email &&
       other.gender == gender &&
@@ -116,13 +135,16 @@ class UserModel {
       other.dealcount == dealcount &&
       other.dealsucceed == dealsucceed &&
       other.ondeal == ondeal &&
-      other.coin == coin;
+      other.coin == coin&&
+      other.lastLatitude == lastLatitude &&
+      other.lastLongitude == lastLongitude;
   }
 
   @override
   int get hashCode {
     return uid.hashCode ^
       username.hashCode ^
+      userToken.hashCode ^
       email.hashCode ^
       gender.hashCode ^
       phonenumber.hashCode ^
@@ -131,10 +153,14 @@ class UserModel {
       dealcount.hashCode ^
       dealsucceed.hashCode ^
       ondeal.hashCode ^
-      coin.hashCode;
+      coin.hashCode^
+      lastLatitude.hashCode^
+      lastLongitude.hashCode;
+      
   }
   UserModel.fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc):
   uid = doc.data()!["uid"],
+  userToken = doc.data()!["userToken"],
   username = doc.data()!["username"],
   gender = doc.data()!["gender"],
   email = doc.data()!["email"],
@@ -144,6 +170,9 @@ class UserModel {
   dealcount = doc.data()!["dealcount"],
   dealsucceed = doc.data()!["dealsucceed"],
   ondeal = doc.data()!["ondeal"],
-  coin = doc.data()!["coin"];
+  coin = doc.data()!["coin"],
+  lastLatitude = doc.data()!["lastLatitude"],
+  lastLongitude = doc.data()!["lastLongitude"];
+
 
 }
