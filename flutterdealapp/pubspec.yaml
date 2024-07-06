@@ -58,6 +58,7 @@ dependencies:
   googleapis:
   googleapis_auth:
   firebase_analytics: ^10.8.0
+  shared_preferences: ^2.2.2
 
 
 dev_dependencies:

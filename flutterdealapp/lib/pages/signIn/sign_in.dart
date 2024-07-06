@@ -5,6 +5,7 @@ import 'package:flutterdealapp/pages/signIn/bloc/signin_blocs.dart';
 import 'package:flutterdealapp/pages/signIn/bloc/signin_events.dart';
 import 'package:flutterdealapp/pages/signIn/bloc/signin_state.dart';
 import 'package:flutterdealapp/pages/signIn/sign_in_controller.dart';
+import '../../service/shared_preferences_service.dart';
 import '../common_widgets.dart';
 
 class SignIn extends StatefulWidget {

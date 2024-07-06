@@ -24,6 +24,7 @@ import 'package:flutterdealapp/pages/register/bloc/register_blocs.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_event.dart';
 import 'package:flutterdealapp/pages/register/bloc/register_state.dart';
 import 'package:flutterdealapp/pages/register/register_controller.dart';
+import 'package:flutterdealapp/service/shared_preferences_service.dart';
 import 'package:flutterdealapp/widgets/flutter_toast.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -232,7 +233,16 @@ Widget _showImageSelect(
                   ),
                 )
               ],
+              
             ),
+          ),
+          Container(
+            child: buildCommonButton("Logout", () {
+              // FirebaseAuth.instance.signOut();
+              ShardPreferencesService().removeCache(key: 'email');
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil("signIn", (route) => false);
+             }),
           )
           // Container(
 

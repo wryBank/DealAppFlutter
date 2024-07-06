@@ -8,6 +8,7 @@ import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_repo.dart';
 import 'package:flutterdealapp/pages/signIn/bloc/signin_blocs.dart';
 import 'package:flutterdealapp/widgets/flutter_toast.dart';
 
+import '../../service/shared_preferences_service.dart';
 import '../editProfile/bloc/editprofile_provider.dart';
 
 class SignInController {
@@ -17,6 +18,7 @@ class SignInController {
   editProfile_repo _ediitprofile_repo = editProfile_repo(provider: editProfile_provider());
   UserModel userModel = UserModel();
   SignInController({required this.context});
+  ShardPreferencesService shardPreferencesService = ShardPreferencesService();
 
   Future<void> handleSignIn(String type) async {
     try {
@@ -56,6 +58,7 @@ class SignInController {
               print("user login");
               // add deviceToken every time user login
               await userRepository.addUserToken();
+              shardPreferencesService.writeCacghe(key: "email", value: state.email);
               Navigator.of(context).pushNamed("Application");
               // Navigator.of(context).pushNamed("editprofileImage");
             }

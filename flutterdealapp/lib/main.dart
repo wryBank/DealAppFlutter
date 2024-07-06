@@ -18,6 +18,7 @@ import 'package:flutterdealapp/pages/signIn/sign_in.dart';
 import 'package:flutterdealapp/pages/welcome/bloc/welcome_blocs.dart';
 import 'package:flutterdealapp/pages/welcome/welcome.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutterdealapp/service/shared_preferences_service.dart';
 import 'package:flutterdealapp/values/color.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -61,10 +62,12 @@ void callbackDispatcher() {
     return Future.value(true);
   });
 }
+
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   print("Handling a background message: ${message.messageId}");
 }
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -74,6 +77,12 @@ Future<void> main() async {
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await FirebaseApi().initNotification();
 
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    print("message received");
+    print("message data ${message.data}");
+    print(message.notification!.title);
+    print(message.notification!.body);
+  });
   // String? token = await FirebaseMessaging.instance.getToken();
   // print("token: $token ");
   runApp(const MyApp());
@@ -94,10 +103,12 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+  
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    
     getPermission();
     return MultiBlocProvider(
       providers: AppBlocProviders.allBlocProviders,
@@ -106,19 +117,19 @@ class MyApp extends StatelessWidget {
                   debugShowCheckedModeBanner: false,
                   theme: ThemeData(
                       appBarTheme: const AppBarTheme(
-                          iconTheme: IconThemeData(
-                            color: AppColors.primaryText
-                          ),
-                          elevation: 0, backgroundColor: Colors.white)),
+                          iconTheme:
+                              IconThemeData(color: AppColors.primaryText),
+                          elevation: 0,
+                          backgroundColor: Colors.white)),
                   home: Welcome(),
                   routes: {
                     // "MyHomePage": (context) => const MyHomePage(),
                     "signIn": (context) => const SignIn(),
-                    "register":(context) => const Register(),
-                    "profile":(context) => const ProfilePage(),
-                    "Application":(context) => const ApplicationPage(),
-                    "editprofileImage":(context) => const EditProfileimage(),
-                    "Feed":(context) => const FeedPage(),
+                    "register": (context) => const Register(),
+                    "profile": (context) => const ProfilePage(),
+                    "Application": (context) => const ApplicationPage(),
+                    "editprofileImage": (context) => const EditProfileimage(),
+                    "Feed": (context) => const FeedPage(),
                   })),
     );
     // return MaterialApp(

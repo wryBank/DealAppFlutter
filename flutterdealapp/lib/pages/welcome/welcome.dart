@@ -5,9 +5,11 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdealapp/main.dart';
+import 'package:flutterdealapp/pages/application/application_page.dart';
 import 'package:flutterdealapp/pages/welcome/bloc/welcome_events.dart';
 import 'package:flutterdealapp/values/color.dart';
 
+import '../../service/shared_preferences_service.dart';
 import 'bloc/welcome_blocs.dart';
 import 'bloc/welcome_states.dart';
 
@@ -19,6 +21,31 @@ class Welcome extends StatefulWidget {
 }
 
 class _WelcomeState extends State<Welcome> {
+isLoggedin() async {
+  print("inlog");
+  ShardPreferencesService shardPreferencesService = ShardPreferencesService();
+  String? value = await shardPreferencesService.readCache(key: 'email');
+  
+  Future.delayed(Duration(seconds: 1), () {
+    if (value != null) {
+      print("valussse: $value");
+      
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ApplicationPage()));
+    } else{
+      print("valussse: $value");
+      
+      
+  }
+  }
+ 
+  );
+}
+@override
+  void initState() {
+    // TODO: implement initState
+    isLoggedin();
+    super.initState();
+  }
   PageController _pageController = PageController(initialPage: 0);
   @override
   Widget build(BuildContext context) {

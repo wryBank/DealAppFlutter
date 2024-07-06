@@ -11,6 +11,7 @@ import 'package:flutterdealapp/pages/createpost/bloc/createPost_bloc.dart';
 import 'package:flutterdealapp/pages/createpost/bloc/createPost_state.dart';
 import 'package:flutterdealapp/pages/post/bloc/post_bloc.dart';
 import 'package:flutterdealapp/pages/post/bloc/post_state.dart';
+import 'package:flutterdealapp/service/shared_preferences_service.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -149,17 +150,16 @@ class _FeedPageState extends State<FeedPage> {
   //   });
   // }
 
-  void getcoin() {
-    print("getcoin");
-  }
+ 
   
+    ShardPreferencesService shardPreferencesService = ShardPreferencesService();
   
 
   UserModel userModel = UserModel();
   @override
   Widget build(BuildContext context) {
+    // shardPreferencesService.readCache(key: "email");
     Size size = MediaQuery.of(context).size;
-    getcoin();
     return Scaffold(
       // appBar: AppBar(
       //   automaticallyImplyLeading: false,

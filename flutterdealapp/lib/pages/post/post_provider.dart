@@ -333,7 +333,7 @@ class PostProvider {
           await userRef.update({'coin': userdata['coin'] - data['totalprice']});
           await docRef
               .update({'isTake': true, 'takeby': uid, 'status': 'inprogress'});
-          PushNotificationService.sendNotificationToUser(userPostdata['userToken'],);
+          PushNotificationService.sendNotificationToUser(userPostdata['userToken'],"DealMatch","You have a new deal",data['title'],);
           return true;
         } else {
           return "not enough coin";
