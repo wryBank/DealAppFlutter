@@ -27,7 +27,11 @@ import 'package:timeline_tile/timeline_tile.dart';
 import '../../values/color.dart';
 
 class postDetailPage extends StatefulWidget {
-  const postDetailPage({super.key});
+  String? pid;
+   postDetailPage({
+    super.key,
+    this.pid,
+  });
 
   @override
   State<postDetailPage> createState() => _postDetailPageState();
@@ -69,7 +73,11 @@ class _postDetailPageState extends State<postDetailPage> {
     // double currentLatitude = 0;
     // double currentLongtitude = 0;
     getLocation();
- 
+    if(widget.pid != null){
+      print("pid: ${widget.pid}");
+    BlocProvider.of<PostBloc>(context)
+        .add(getPostDetail(widget.pid!));}
+
     // print(currentLatitude);
     // print(currentLongtitude);
   }
@@ -229,11 +237,16 @@ Widget buildPostBoxDetail(
                   Align(
                     alignment: Alignment.centerLeft,
                     child: InkWell(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => OtherProfilePage(userid: uid,beforePostid: pid,)));
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => OtherProfilePage(
+                                      userid: uid,
+                                      beforePostid: pid,
+                                    )));
                       },
                       child: Container(
-                        
                         margin: EdgeInsets.only(left: 20),
                         child: CircleAvatar(
                           radius: 30,
@@ -410,15 +423,26 @@ Widget buildPostBoxDetail(
               ),
 
               ElevatedButton(
-                onPressed: (){
-
-                  if(isowner == true){
+                onPressed: () {
+                  if (isowner == true) {
                     print("pid: $pid");
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(receiverUserId: takeby,receiverUserEmail:takeby,pid:pid.toString())));
-                  }
-                  else if(isowner == false){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ChatPage(
+                                receiverUserId: takeby,
+                                receiverUserEmail: takeby,
+                                pid: pid.toString())));
+                  } else if (isowner == false) {
                     print("pid: $pid");
-                   Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(receiverUserId: uid,receiverUserEmail:postby,pid: pid.toString(),)));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ChatPage(
+                                  receiverUserId: uid,
+                                  receiverUserEmail: postby,
+                                  pid: pid.toString(),
+                                )));
                   }
                 },
                 child: Text("chat"),
@@ -450,8 +474,12 @@ Widget buildPostBoxDetail(
                               Text("Do you want to send deal to this post?"),
                           actions: [
                             buildCommonButton("Yes", () {
-                              BlocProvider.of<PostBloc>(context)
-                                  .add(takePostEvent(postId: pid, uid: FirebaseAuth.instance.currentUser!.uid,uidPostby: uid));
+                              BlocProvider.of<PostBloc>(context).add(
+                                  takePostEvent(
+                                      postId: pid,
+                                      uid: FirebaseAuth
+                                          .instance.currentUser!.uid,
+                                      uidPostby: uid));
                             }),
                           ],
                         );
@@ -545,7 +573,7 @@ Widget buildProgress(
             children: [
               BlocBuilder<postDetailBloc, postDetailState>(
                   builder: (context, state) {
-                if (state is clickPostState && isReceived == true){
+                if (state is clickPostState && isReceived == true) {
                   // print("instate isClickReceived ${state.isClickReceived}");
                   return Container(
                     child: Text(
@@ -582,9 +610,8 @@ Widget buildProgress(
             status == "inprogress")
           BlocBuilder<postDetailBloc, postDetailState>(
               builder: (context, state) {
-                print("state = $state");
+            print("state = $state");
             if (state is clickPostState2 && isGave == true) {
-
               // print("instate isClickReceived ${state.isGrave}");
               return Container(
                 child: Text(

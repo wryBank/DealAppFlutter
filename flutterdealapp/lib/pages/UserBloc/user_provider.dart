@@ -19,18 +19,26 @@ class user_provider {
   PlatformFile? pickedFile;
 
   Future<void> addUserToken() async {
-  String? token = await FirebaseMessaging.instance.getToken();
-  print("token:--------------- $token ");
+    String? token = await FirebaseMessaging.instance.getToken();
+    print("token:--------------- $token ");
     try {
-      await _fireCloud.doc(_uid).update({"userToken": token});
+      DocumentSnapshot documentSnapshot = await _fireCloud.doc(_uid).get();
+      if (documentSnapshot.exists) {
+        await _fireCloud.doc(_uid).update({"userToken": token});
+      } else {
+        print("user not exist");
+      }
     } catch (e) {
       throw Exception(e.toString());
     }
   }
-  Future<void> updateLocation(double latitude,double longitude) async {
+
+  Future<void> updateLocation(double latitude, double longitude) async {
     print("inprovider updateLocation");
     try {
-      await _fireCloud.doc(_uid).update({"lastLatitude": latitude, "lastLongitude": longitude});
+      await _fireCloud
+          .doc(_uid)
+          .update({"lastLatitude": latitude, "lastLongitude": longitude});
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -97,6 +105,9 @@ class user_provider {
   Future<bool> checkUser(String id) async {
     try {
       DocumentSnapshot documentSnapshot = await _fireCloud.doc(id).get();
+
+      String? token = await FirebaseMessaging.instance.getToken();
+      await _fireCloud.doc(id).update({"userToken": token});
       return documentSnapshot.exists;
     } on FirebaseException catch (e) {
       if (kDebugMode) {

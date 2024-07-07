@@ -61,6 +61,7 @@ class CreatePostProvider {
               latitude, longitude, postModel.latitude!, postModel.longitude!);
           PushNotificationService.sendNotificationCreatePost(
               await countUsersWithin3KmOfPost(postModel),
+              docRef.id,
               "New Post",
               "คนสร้างดีลใหม่ใกล้ๆคุณ [$distance km]",
               postModel.title!);

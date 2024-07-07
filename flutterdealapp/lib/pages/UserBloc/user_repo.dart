@@ -16,8 +16,8 @@ class user_repo{
       print("inrepo");
     await provider.editProfile(userModel);
   }
-  Future<void> addUserToken() async{
-    await provider.addUserToken();
+  Future<void> addUserToken() async {
+     await provider.addUserToken();
   }
   Future<void> addData(UserModel userModel) async{
     await provider.addData(userModel);

@@ -57,7 +57,8 @@ class SignInController {
             if(await userRepository.checkUser(user.uid)) {
               print("user login");
               // add deviceToken every time user login
-              await userRepository.addUserToken();
+              // await userRepository.addUserToken();
+              
               shardPreferencesService.writeCacghe(key: "email", value: state.email);
               Navigator.of(context).pushNamed("Application");
               // Navigator.of(context).pushNamed("editprofileImage");

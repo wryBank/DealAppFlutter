@@ -1,10 +1,12 @@
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterdealapp/main.dart';
+import 'package:flutterdealapp/pages/Profile/profile.dart';
 import 'package:flutterdealapp/pages/application/application_page.dart';
 import 'package:flutterdealapp/pages/welcome/bloc/welcome_events.dart';
 import 'package:flutterdealapp/values/color.dart';
@@ -20,7 +22,9 @@ class Welcome extends StatefulWidget {
   State<Welcome> createState() => _WelcomeState();
 }
 
+
 class _WelcomeState extends State<Welcome> {
+
 isLoggedin() async {
   print("inlog");
   ShardPreferencesService shardPreferencesService = ShardPreferencesService();
@@ -40,10 +44,26 @@ isLoggedin() async {
  
   );
 }
+// Future test() async {
+//   print("test");
+//   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+//     print("message received");
+//     print("message data ${message.data}");
+//     print(message.notification!.title);
+//     print(message.notification!.body);
+//     if (message.data['click_action'] == 'test') {
+//       print("createPost-----------------------------------------------------------------------------------------------------------------------------------");
+//       // MyApp.navigatorKey.currentState?.pushNamed('profile');
+//       Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage()));
+//     }
+//   });
+// }
+
 @override
   void initState() {
     // TODO: implement initState
     isLoggedin();
+    // test();
     super.initState();
   }
   PageController _pageController = PageController(initialPage: 0);
