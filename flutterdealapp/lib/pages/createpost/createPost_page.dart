@@ -404,96 +404,108 @@ class _CreatePostPageState extends State<CreatePostPage> {
                 }),
               ),
             ),
-            ElevatedButton(
-              onPressed: () async {
-                if (pickedFile == null ||
-                        titleController.text.isEmpty ||
-                        detailController.text.isEmpty ||
-                        locationController.text.isEmpty ||
-                        pricePayController.text.isEmpty ||
-                        locationController.text.isEmpty ||
-                        priceBuyController.text.isEmpty
-
-                    // locationDetailController.text.isEmpty
-
-                    ) {
-                  return showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text('กรุณากรอกข้อมูลให้ครบถ้วน'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text('ตกลง'),
-                          ),
-                        ],
-                      );
-                    },
+            SizedBox(height: 15.h),
+            SizedBox(
+              height: 30.h,
+              width: 100.w,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Color.fromRGBO(83, 82, 125, 0.8),
+                  onPrimary: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onPressed: () async {
+                  if (pickedFile == null ||
+                          titleController.text.isEmpty ||
+                          detailController.text.isEmpty ||
+                          locationController.text.isEmpty ||
+                          pricePayController.text.isEmpty ||
+                          locationController.text.isEmpty ||
+                          priceBuyController.text.isEmpty
+            
+                      // locationDetailController.text.isEmpty
+            
+                      ) {
+                    return showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text('กรุณากรอกข้อมูลให้ครบถ้วน'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('ตกลง'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+            
+                  print("uid = $uid");
+                  var results = await Future.wait([
+                    createPostProvider.imageToFirebase(pickedFile!),
+                    createPostProvider.getUserData(uid.toString()),
+                  ]);
+                  imageUrl = results[0].toString();
+                  userModel = results[1] as UserModel;
+            
+                  // imageUrl =
+                  //     await createPostProvider.imageToFirebase(pickedFile!);
+                  // userModel =
+                  //     await createPostProvider.getUserData(uid.toString());
+            
+                  String priceText = pricePayController.text.replaceAll(',', "");
+                  double pricePay = double.parse(priceText); // Convert to double
+                  String priceBuyText =
+                      priceBuyController.text.replaceAll(',', "");
+                  double priceBuy =
+                      double.parse(priceBuyText); // Convert to double
+            
+                  // double price = double.parse(pricePayController.text);
+                  Timestamp now = Timestamp.now();
+                  final String pid = newPostRef.id;
+            
+                  postModel = PostModel(
+                    pid: pid,
+                    title: titleController.text,
+                    detail: detailController.text,
+                    location_item: locationController.text,
+                    // locationDetail: locationDetailController.text,
+                    // pricePay: price,
+                    postdate: Timestamp.now(),
+                    postimage: imageUrl,
+                    uid: uid,
+                    postby: userModel!.username,
+                    latitude: currentLatitude,
+                    longitude: currentLongtitude,
+                    isTake: false,
+                    takeby: 'none',
+                    profileImage: userModel!.urlprofileimage,
+                    isFindJob: isSelectedReceive,
+                    pricePay: pricePay,
+                    priceBuy: priceBuy,
+                    totalPrice: priceBuy + pricePay,
+                    isGave: false,
+                    isReceived: false,
                   );
-                }
-
-                print("uid = $uid");
-                var results = await Future.wait([
-                  createPostProvider.imageToFirebase(pickedFile!),
-                  createPostProvider.getUserData(uid.toString()),
-                ]);
-                imageUrl = results[0].toString();
-                userModel = results[1] as UserModel;
-
-                // imageUrl =
-                //     await createPostProvider.imageToFirebase(pickedFile!);
-                // userModel =
-                //     await createPostProvider.getUserData(uid.toString());
-
-                String priceText = pricePayController.text.replaceAll(',', "");
-                double pricePay = double.parse(priceText); // Convert to double
-                String priceBuyText =
-                    priceBuyController.text.replaceAll(',', "");
-                double priceBuy =
-                    double.parse(priceBuyText); // Convert to double
-
-                // double price = double.parse(pricePayController.text);
-                Timestamp now = Timestamp.now();
-                final String pid = newPostRef.id;
-
-                postModel = PostModel(
-                  pid: pid,
-                  title: titleController.text,
-                  detail: detailController.text,
-                  location_item: locationController.text,
-                  // locationDetail: locationDetailController.text,
-                  // pricePay: price,
-                  postdate: Timestamp.now(),
-                  postimage: imageUrl,
-                  uid: uid,
-                  postby: userModel!.username,
-                  latitude: currentLatitude,
-                  longitude: currentLongtitude,
-                  isTake: false,
-                  takeby: 'none',
-                  profileImage: userModel!.urlprofileimage,
-                  isFindJob: isSelectedReceive,
-                  pricePay: pricePay,
-                  priceBuy: priceBuy,
-                  totalPrice: priceBuy + pricePay,
-                  isGave: false,
-                  isReceived: false,
-                );
-
-                // BlocProvider.of<CreatePostBloc>(context).add(
-                //   SubmitPost(postModel),
-                // );
-                if (isClick == false) {
-                  context.read<CreatePostBloc>().add(SubmitPost(postModel));
-                  isClick = true;
-                }
-
-                // Implement create post functionality
-              },
-              child: Text('สร้างดีล'),
+            
+                  // BlocProvider.of<CreatePostBloc>(context).add(
+                  //   SubmitPost(postModel),
+                  // );
+                  if (isClick == false) {
+                    context.read<CreatePostBloc>().add(SubmitPost(postModel));
+                    isClick = true;
+                  }
+            
+                  // Implement create post functionality
+                },
+                child: Text('สร้างดีล'),
+              ),
             ),
             SizedBox(
               height: 230.h,
@@ -540,18 +552,18 @@ buildSelectBox(BuildContext context) {
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
                     color: isSelectedReceive
-                    ?Color.fromRGBO(224, 195, 252, 0.918)
-                    : Colors.white,
+                  ? Color.fromRGBO(83, 82, 125, 0.8)
+                        // ? Color.fromRGBO(224, 195, 252, 0.918)
+                        : Colors.white,
                     strokeAlign: BorderSide.strokeAlignInside,
                     width: 2.0),
                 boxShadow: [
                   BoxShadow(
-                    spreadRadius: 1,
-                    blurRadius: 5,
-                    color: isSelectedReceive
-                        ? Color.fromRGBO(224, 195, 252, 100)
-                        :Colors.transparent
-                  )
+                      spreadRadius: 1,
+                      blurRadius: 5,
+                      color: isSelectedReceive
+                          ? Color.fromRGBO(224, 195, 252, 100)
+                          : Colors.transparent)
                 ]),
             child: Text(
               'รับจ้าง',
@@ -572,33 +584,31 @@ buildSelectBox(BuildContext context) {
           },
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-           decoration: BoxDecoration(
+            decoration: BoxDecoration(
                 color: isSelectedReceive ? Colors.transparent : Colors.white,
                 // border: Border.all(color: Colors.grey),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
                     color: isSelectedReceive
-                    ? Colors.white
-                    :Color.fromRGBO(224, 195, 252, 0.918),
+                        ? Colors.white
+                  : Color.fromRGBO(83, 82, 125, 0.8),
+                        // : Color.fromRGBO(224, 195, 252, 0.918),
                     strokeAlign: BorderSide.strokeAlignInside,
                     width: 2.0),
                 boxShadow: [
                   BoxShadow(
-                    spreadRadius: 1,
-                    blurRadius: 5,
-                    color: isSelectedReceive
-                        ?Colors.transparent
-                        : Color.fromRGBO(224, 195, 252, 100)
-                  )
+                      spreadRadius: 1,
+                      blurRadius: 5,
+                      color: isSelectedReceive
+                          ? Colors.transparent
+                          : Color.fromRGBO(224, 195, 252, 100))
                 ]),
- 
             child: Text(
               'จ้างงาน',
               style: TextStyle(
-                color: isSelectedReceive
-                    ? Colors.black.withOpacity(0.5)
-                    : Colors.black
-              ),
+                  color: isSelectedReceive
+                      ? Colors.black.withOpacity(0.5)
+                      : Colors.black),
             ),
           ),
         ),

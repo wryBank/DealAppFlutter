@@ -91,31 +91,31 @@ Future<void> main() async {
     //   // Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage()));
     // }
   });
-  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    print("A new onMessageOpenedApp event was published!");
-    print("message data ${message.data}");
-    print(message.notification!.title);
-    print(message.notification!.body);
-    if (message.data['click_action'] == 'test') {
-      print(
-          "createPost-----------------------------------------------------------------------------------------------------------------------------------");
-      print("postId: ${message.data['postId']}");
-      MyApp.navigatorKey.currentState?.push(MaterialPageRoute(
-          builder: (context) => postDetailPage(pid: message.data['postId'])));
-    }
-    if(message.data['click_action'] == 'message'){
-      print("messageId: ${message.data['messageId']}");
+  // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+  //   print("A new onMessageOpenedApp event was published!");
+  //   print("message data ${message.data}");
+  //   print(message.notification!.title);
+  //   print(message.notification!.body);
+  //   if (message.data['click_action'] == 'test') {
+  //     print(
+  //         "createPost-----------------------------------------------------------------------------------------------------------------------------------");
+  //     print("postId: ${message.data['postId']}");
+  //     MyApp.navigatorKey.currentState?.push(MaterialPageRoute(
+  //         builder: (context) => postDetailPage(pid: message.data['postId'])));
+  //   }
+  //   if(message.data['click_action'] == 'message'){
+  //     print("messageId: ${message.data['messageId']}");
       
-      MyApp.navigatorKey.currentState?.push(MaterialPageRoute(
-          builder: (context) => ChatPage(receiverUserId: message.data['receiverId'],receiverUsername: message.data['receiverUsername'],pid: message.data['messageId'])));
-    }
-    if(message.data['click_action'] == 'clickSend'){
-      print("postId: ${message.data['postId']}");
+  //     MyApp.navigatorKey.currentState?.push(MaterialPageRoute(
+  //         builder: (context) => ChatPage(receiverUserId: message.data['receiverId'],receiverUsername: message.data['receiverUsername'],pid: message.data['messageId'])));
+  //   }
+  //   if(message.data['click_action'] == 'clickSend'){
+  //     print("postId: ${message.data['postId']}");
       
-      MyApp.navigatorKey.currentState?.push(MaterialPageRoute(
-          builder: (context) => postDetailPage(pid: message.data['postId'])));
-    }
-  });
+  //     MyApp.navigatorKey.currentState?.push(MaterialPageRoute(
+  //         builder: (context) => postDetailPage(pid: message.data['postId'])));
+  //   }
+  // });
 
   await FirebaseApi().initNotification();
 

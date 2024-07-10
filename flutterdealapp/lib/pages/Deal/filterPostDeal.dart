@@ -161,7 +161,7 @@
 //       if (selectionList == _typeSelected) {
 //         ownPost = _typeSelected[0] && !_typeSelected[1];
 //         typeAll = _typeSelected[2];
-        
+
 //       }
 //     });
 //   }
@@ -282,8 +282,7 @@
 //   bool isFindJob,bool postTypeAll,bool inprogress, bool statusAll,bool ownPost,bool typeAll)
 // {
 //   BlocProvider.of<PostBloc>(context).add(getPostFilter(isFindJob, postTypeAll, inprogress, statusAll, ownPost, typeAll));
-  
-  
+
 // }
 
 import 'package:flutter/material.dart';
@@ -364,14 +363,29 @@ class filterPostsState extends State<filterPosts> {
             padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
             margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
-              color: selectionList[index] ? Colors.blueAccent : Colors.white,
-              border: Border.all(color: Colors.blueAccent),
-              borderRadius: BorderRadius.circular(20),
-            ),
+                color: selectionList[index]
+                    ? Colors.white
+                    : Color.fromRGBO(224, 195, 252, 0.918),
+                border: Border.all(
+                    color: selectionList[index]
+                        ? Colors.white
+                        : Color.fromRGBO(224, 195, 252, 0.918),
+                    strokeAlign: BorderSide.strokeAlignInside,
+                    width: 2.0),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      color:
+                          Color.fromARGB(255, 255, 255, 255).withOpacity(0.5))
+                ]),
             child: Text(
               text,
               style: TextStyle(
-                color: selectionList[index] ? Colors.white : Colors.blueAccent,
+                color: selectionList[index]
+                    ? Colors.black
+                    : Colors.black.withOpacity(0.5),
               ),
             ),
           ),
@@ -385,19 +399,19 @@ class filterPostsState extends State<filterPosts> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            // Color.fromRGBO(161, 196, 253, 100),
-                            // Color.fromRGBO(194, 233, 251, 100),
-                            Color.fromRGBO(224, 195, 252, 100),
-                            Color.fromRGBO(142, 197, 252, 100),
-                            // Colors.white,
-                          ],
-                        ),
-                      ),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomRight,
+              colors: [
+                // Color.fromRGBO(161, 196, 253, 100),
+                // Color.fromRGBO(194, 233, 251, 100),
+                Color.fromRGBO(224, 195, 252, 100),
+                Color.fromRGBO(142, 197, 252, 100),
+                // Colors.white,
+              ],
+            ),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -439,7 +453,8 @@ class filterPostsState extends State<filterPosts> {
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    getPostFilter2(context, isFindJob, postTypeAll, inprogress, statusAll, ownPost, typeAll);
+                    getPostFilter2(context, isFindJob, postTypeAll, inprogress,
+                        statusAll, ownPost, typeAll);
                   },
                   child: Text('Print Values'),
                 ),
@@ -452,6 +467,8 @@ class filterPostsState extends State<filterPosts> {
   }
 }
 
-void getPostFilter2(BuildContext context, bool isFindJob, bool postTypeAll, bool inprogress, bool statusAll, bool ownPost, bool typeAll) {
-  BlocProvider.of<PostBloc>(context).add(getPostFilter(isFindJob, postTypeAll, inprogress, statusAll, ownPost, typeAll));
+void getPostFilter2(BuildContext context, bool isFindJob, bool postTypeAll,
+    bool inprogress, bool statusAll, bool ownPost, bool typeAll) {
+  BlocProvider.of<PostBloc>(context).add(getPostFilter(
+      isFindJob, postTypeAll, inprogress, statusAll, ownPost, typeAll));
 }

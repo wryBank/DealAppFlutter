@@ -12,6 +12,8 @@ import 'package:flutterdealapp/pages/welcome/bloc/welcome_events.dart';
 import 'package:flutterdealapp/values/color.dart';
 
 import '../../service/shared_preferences_service.dart';
+import '../chat/chat_page.dart';
+import '../postDetail/postDetail_page.dart';
 import 'bloc/welcome_blocs.dart';
 import 'bloc/welcome_states.dart';
 
@@ -24,6 +26,7 @@ class Welcome extends StatefulWidget {
 
 
 class _WelcomeState extends State<Welcome> {
+
 
 isLoggedin() async {
   print("inlog");
@@ -63,6 +66,31 @@ isLoggedin() async {
   void initState() {
     // TODO: implement initState
     isLoggedin();
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    print("A new onMessageOpenedApp event was published!");
+    print("message data ${message.data}");
+    print(message.notification!.title);
+    print(message.notification!.body);
+    if (message.data['click_action'] == 'test') {
+      print(
+          "createPost-----------------------------------------------------------------------------------------------------------------------------------");
+      print("postId: ${message.data['postId']}");
+      MyApp.navigatorKey.currentState?.push(MaterialPageRoute(
+          builder: (context) => postDetailPage(pid: message.data['postId'])));
+    }
+    if(message.data['click_action'] == 'message'){
+      print("messageId: ${message.data['messageId']}");
+      
+      MyApp.navigatorKey.currentState?.push(MaterialPageRoute(
+          builder: (context) => ChatPage(receiverUserId: message.data['receiverId'],receiverUsername: message.data['receiverUsername'],pid: message.data['messageId'])));
+    }
+    if(message.data['click_action'] == 'clickSend'){
+      print("postId: ${message.data['postId']}");
+      
+      MyApp.navigatorKey.currentState?.push(MaterialPageRoute(
+          builder: (context) => postDetailPage(pid: message.data['postId'])));
+    }
+  });
     // test();
     super.initState();
   }

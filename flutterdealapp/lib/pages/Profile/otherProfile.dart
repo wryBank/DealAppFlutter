@@ -79,7 +79,15 @@ class _ProfilePageState extends State<OtherProfilePage> {
           return Scaffold(
             appBar: AppBar(
               // backgroundColor: Colors.blue,
-              automaticallyImplyLeading: true,
+              automaticallyImplyLeading: false,
+              leading: 
+              IconButton(
+                icon: Icon(Icons.arrow_back_ios),
+                onPressed: () {
+                  BlocProvider.of<PostBloc>(context).add(getPostDetail(widget.beforePostid));
+                  Navigator.pop(context);
+                },
+              ),
               backgroundColor: Colors.transparent,
               flexibleSpace: Container(
                 decoration: BoxDecoration(

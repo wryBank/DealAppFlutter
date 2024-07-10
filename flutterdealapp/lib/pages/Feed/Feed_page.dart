@@ -689,12 +689,15 @@ buildSelectBox(BuildContext context) {
           onTap: () {
             // BlocProvider.of<PostBloc>(context)
             //     .add(selectBoxPostType(true));
-            BlocProvider.of<PostBloc>(context).add(getPostByType(FindJobClick));
+            // BlocProvider.of<PostBloc>(context).add(getPostByType(FindJobClick));
+            FindJobClick = !FindJobClick;
 
-            if (FindJobClick == false) {
-              FindJobClick = true;
+            if (FindJobClick) {
+              print("1");
+              BlocProvider.of<PostBloc>(context).add(getPostByType(true));
             } else {
-              FindJobClick = false;
+              print("2");
+              BlocProvider.of<PostBloc>(context).add(getPostByType(false));
             }
             if (FindJobClick && HireJobClick ||
                 !FindJobClick && !HireJobClick) {
@@ -711,7 +714,11 @@ buildSelectBox(BuildContext context) {
               decoration: BoxDecoration(
                   color: FindJobClick ? Colors.white : Colors.transparent,
                   border: Border.all(
-                      color: FindJobClick? Colors.white :Color.fromRGBO(224, 195, 252, 0.918),
+                      color: FindJobClick
+                          ? Colors.white
+                          // : Color.fromRGBO(224, 195, 252, 0.918),
+
+                          : Color.fromRGBO(83, 82, 125, 0.3),
                       strokeAlign: BorderSide.strokeAlignInside,
                       width: 2.0),
                   borderRadius: BorderRadius.circular(30),
@@ -721,8 +728,7 @@ buildSelectBox(BuildContext context) {
                         blurRadius: 5,
                         color:
                             Color.fromARGB(255, 255, 255, 255).withOpacity(0.5))
-                  ]
-                  ),
+                  ]),
               child: Center(
                 child: Text(
                   'รับจ้าง',
@@ -745,11 +751,12 @@ buildSelectBox(BuildContext context) {
             //     .add(selectBoxPostType(false));
 
             // BlocProvider.of<PostBloc>(context).add(getPostByType(false));
-            BlocProvider.of<PostBloc>(context).add(getPostByType(HireJobClick));
-            if (HireJobClick == true) {
-              HireJobClick = false;
+            HireJobClick = !HireJobClick;
+            if (HireJobClick) {
+              print("HireJobClick = true iff: $HireJobClick");
+              BlocProvider.of<PostBloc>(context).add(getPostByType(false));
             } else {
-              HireJobClick = true;
+              BlocProvider.of<PostBloc>(context).add(getPostByType(true));
             }
             if (FindJobClick && HireJobClick ||
                 !FindJobClick && !HireJobClick) {
@@ -761,37 +768,13 @@ buildSelectBox(BuildContext context) {
             child: Container(
               width: 140.w,
               height: 30.h,
-              // padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              // decoration: BoxDecoration(
-              //     color: HireJobClick ? Colors.white : AppColors.primaryAppbar,
-              //     // color: AppColors.primaryAppbar,
-              //     // border: HireJobClick
-              //     //     ? Border.all(
-              //     //         color: AppColors.primaryAppbar,
-              //     //         width: 1.0,
-              //     //       )
-              //     //     : Border.all(color: Colors.white),
-              //     borderRadius: BorderRadius.circular(50),
-              //     boxShadow: [
-              //       BoxShadow(
-              //           spreadRadius: 1,
-              //           blurRadius: 3,
-              //           offset: Offset(0, 3),
-              //           color: Colors.grey.withOpacity(0.5))
-              //     ]
-              //     // boxShadow: [
-              //     //   BoxShadow(
-              //     //     color: Colors.white,
-              //     //     spreadRadius: 3,
-              //     //     blurRadius: 1,
-              //     //     offset: Offset(0, 1), // changes position of shadow
-              //     //   )
-              //     // ]
-              //     ),
               decoration: BoxDecoration(
                   color: HireJobClick ? Colors.white : Colors.transparent,
                   border: Border.all(
-                      color: HireJobClick? Colors.white :Color.fromRGBO(224, 195, 252, 0.918),
+                      color: HireJobClick
+                          ? Colors.white
+                          : Color.fromRGBO(83, 82, 125, 0.3),
+                          // : Color.fromRGBO(224, 195, 252, 0.918),
                       strokeAlign: BorderSide.strokeAlignInside,
                       width: 2.0),
                   borderRadius: BorderRadius.circular(30),
@@ -801,8 +784,7 @@ buildSelectBox(BuildContext context) {
                         blurRadius: 3,
                         color:
                             Color.fromARGB(255, 255, 255, 255).withOpacity(0.5))
-                  ]
-                  ),
+                  ]),
               child: Center(
                 child: Text(
                   'จ้างงาน',

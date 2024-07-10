@@ -66,7 +66,21 @@ class _editbioPageState extends State<editbioPage> {
             appBar: buildAppBarEditProfile(
               context,
             ),
-            body: _showBio(context, userModel),
+            body: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      // Color.fromRGBO(207, 162, 250,100),
+                      // Color.fromRGBO(194, 233, 251, 100),
+
+                      Color.fromRGBO(224, 195, 252, 100),
+                      Color.fromRGBO(142, 197, 252, 100),
+                    ],
+                  ),
+                ),
+                child: _showBio(context, userModel)),
             // body: Container(
             //   child: TextField(
             //     controller: _bioController,
@@ -138,7 +152,7 @@ Widget _showBio(BuildContext context, UserModel? userModel) {
             ),
           ),
         ),
-        
+
         // GestureDetector(
         //   onTap: () async {
         //     BlocProvider.of<EditProfileBloc>(context)
@@ -150,23 +164,22 @@ Widget _showBio(BuildContext context, UserModel? userModel) {
         SizedBox(
           height: 35.h,
         ),
-          buildCommonButton("SaveData", ()async {
-            BlocProvider.of<EditProfileBloc>(context)
-                .add(updateProfileBioEvent(_bioController.text));
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => EditProfilePage()));
-
-           }),
-          // child: Container(
-          //   child: Center(
-          //       child: Text(
-          //     userModel?.bio ?? 'bio',
-          //     style: TextStyle(
-          //         color: Color.fromARGB(255, 0, 128, 255),
-          //         fontSize: 24.sp,
-          //         fontWeight: FontWeight.normal),
-          //   )),
-          // ),
+        buildCommonButton("SaveData", () async {
+          BlocProvider.of<EditProfileBloc>(context)
+              .add(updateProfileBioEvent(_bioController.text));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => EditProfilePage()));
+        }),
+        // child: Container(
+        //   child: Center(
+        //       child: Text(
+        //     userModel?.bio ?? 'bio',
+        //     style: TextStyle(
+        //         color: Color.fromARGB(255, 0, 128, 255),
+        //         fontSize: 24.sp,
+        //         fontWeight: FontWeight.normal),
+        //   )),
+        // ),
         // ),
       ],
     ),
@@ -177,6 +190,21 @@ Widget _showBio(BuildContext context, UserModel? userModel) {
 AppBar buildAppBarEditProfile(context, [String? bio]) {
   return AppBar(
     automaticallyImplyLeading: true,
+    flexibleSpace: Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            // Color.fromRGBO(207, 162, 250,100),
+            // Color.fromRGBO(194, 233, 251, 100),
+
+            Color.fromRGBO(224, 195, 252, 90),
+            Color.fromRGBO(142, 197, 252, 90),
+          ],
+        ),
+      ),
+    ),
     // leading: IconButton(
     //   icon: Icon(Icons.cancel_sharp),
     //   onPressed: () {},
@@ -190,12 +218,6 @@ AppBar buildAppBarEditProfile(context, [String? bio]) {
     //     },
     //   )
     // ],
-    bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(1.0),
-        child: Container(
-          color: Colors.grey.withOpacity(0.5),
-          height: 1.0,
-        )),
     title: Text(
       "bio",
       style: TextStyle(

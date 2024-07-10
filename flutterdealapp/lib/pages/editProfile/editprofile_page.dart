@@ -66,25 +66,40 @@ class _EditProfilePageState extends State<EditProfilePage> {
         print("in getdatastate");
         return Scaffold(
           appBar: buildAppBarEditProfile(context, "showprofile"),
-          body: Container(
-            color: Colors.white,
-            child: SafeArea(
-                child: Scaffold(
-              backgroundColor: Colors.white,
-              // appBar: buildAppBarEditProfile(
-              //     context, "test", state.userModel!.urlprofileimage!),
-              body: SingleChildScrollView(
+          body: SafeArea(
+              child: Scaffold(
+            // backgroundColor: Colors.white,
+            // appBar: buildAppBarEditProfile(
+            //     context, "test", state.userModel!.urlprofileimage!),
+            body: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    // Color.fromRGBO(207, 162, 250,100),
+                    // Color.fromRGBO(194, 233, 251, 100),
+
+                    Color.fromRGBO(224, 195, 252, 90),
+                    Color.fromRGBO(142, 197, 252, 90),
+                  ],
+                ),
+              ),
+              child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _showImageSelect(
                       context,
-                    )
+                    ),
+                    SizedBox(
+                      height: 250.h,
+                    ),
                   ],
                 ),
               ),
-            )),
-          ),
+            ),
+          )),
         );
         // else {
         // print("url state =  ${state.imageFile.toString()}");
@@ -233,7 +248,6 @@ Widget _showImageSelect(
                   ),
                 )
               ],
-              
             ),
           ),
           Container(
@@ -242,7 +256,7 @@ Widget _showImageSelect(
               ShardPreferencesService().removeCache(key: 'email');
               Navigator.of(context)
                   .pushNamedAndRemoveUntil("signIn", (route) => false);
-             }),
+            }),
           )
           // Container(
 
@@ -279,42 +293,22 @@ Widget _showImageSelect(
 }
 
 AppBar buildAppBarEditProfile(context, String type, [PlatformFile? imagePath]) {
-  if (type == "showprofile2") {
     return AppBar(
-      // automaticallyImplyLeading: true,
-      leading: IconButton(
-        icon: Icon(Icons.arrow_back),
-        onPressed: () {
-          // Navigator.of(context).pushAndRemoveUntil("Application",(route)=>false);
-          Navigator.of(context)
-              .pushNamedAndRemoveUntil("Application", (route) => false);
-        },
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              // Color.fromRGBO(207, 162, 250,100),
+              // Color.fromRGBO(194, 233, 251, 100),
+
+              Color.fromRGBO(224, 195, 252, 90),
+              Color.fromRGBO(142, 197, 252, 90),
+            ],
+          ),
+        ),
       ),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.check),
-          onPressed: () {
-            // BlocProvider.of<ProfileBloc>(context)
-            //     .add(uploadingImageEvent(imageFile: imagePath));
-          },
-        )
-      ],
-      bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1.0),
-          child: Container(
-            color: Colors.grey.withOpacity(0.5),
-            height: 1.0,
-          )),
-      title: Text(
-        type,
-        style: TextStyle(
-            color: Colors.black,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.normal),
-      ),
-    );
-  } else {
-    return AppBar(
       automaticallyImplyLeading: false,
       leading: IconButton(
         icon: Icon(Icons.arrow_back),
@@ -323,12 +317,13 @@ AppBar buildAppBarEditProfile(context, String type, [PlatformFile? imagePath]) {
               .pushNamedAndRemoveUntil("Application", (route) => false);
         },
       ),
-      bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1.0),
-          child: Container(
-            color: Colors.grey.withOpacity(0.5),
-            height: 1.0,
-          )),
+      // bottom: PreferredSize(
+      //     preferredSize: const Size.fromHeight(1.0),
+      //     child: Container(
+      //       color: Colors.grey.withOpacity(0.5),
+      //       height: 1.0,
+      //     )
+      //     ),
       title: Text(
         type,
         style: TextStyle(
@@ -338,4 +333,3 @@ AppBar buildAppBarEditProfile(context, String type, [PlatformFile? imagePath]) {
       ),
     );
   }
-}

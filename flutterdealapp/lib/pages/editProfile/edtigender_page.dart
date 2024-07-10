@@ -44,6 +44,7 @@ class _editgenderPageState extends State<editgenderPage> {
 
   UserModel? userModel = UserModel();
 
+  String? dropdownValue = 'None';
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
@@ -62,6 +63,8 @@ class _editgenderPageState extends State<editgenderPage> {
       if (state is getDataState) {
         // userModel = state.userModelProfile;
         userModel = state.userModel;
+        dropdownValue = state.userModel?.gender;
+
         // print("state bio2 = ${state.userModelProfile?.bio ?? 'a'}");
         return Container(
           color: Colors.white,
@@ -69,7 +72,27 @@ class _editgenderPageState extends State<editgenderPage> {
             appBar: buildAppBarEditProfile(
               context,
             ),
-            body: _showBio(context, userModel),
+            body: Container(
+                decoration: const BoxDecoration(
+                  // color: Colors.white,
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      // Color.fromRGBO(207, 162, 250,100),
+                      // Color.fromRGBO(194, 233, 251, 100),
+
+                      Color.fromRGBO(224, 195, 252, 100),
+                      Color.fromRGBO(142, 197, 252, 100),
+                    ],
+                  ),
+                  // border: Border.all(
+                  //   width: 0.2,
+                  //   color: Colors.black,
+                  // ),
+                  // borderRadius: BorderRadius.circular(25),
+                ),
+                child: _showBio(context, userModel, dropdownValue)),
             // body: Container(
             //   child: TextField(
             //     controller: _bioController,
@@ -104,11 +127,11 @@ class _editgenderPageState extends State<editgenderPage> {
   }
 }
 
-Widget _showBio(BuildContext context, UserModel? userModel) {
+Widget _showBio(
+    BuildContext context, UserModel? userModel, String? dropdownValue) {
   print(userModel);
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _GenderController = TextEditingController();
-  String? dropdownValue = 'None';
   // return BlocBuilder<EditProfileBloc, EditProfileState>(
   //     builder: (context, state) {
   // _bioController.text = state.userModelProfile?.bio ?? '';
@@ -158,7 +181,7 @@ Widget _showBio(BuildContext context, UserModel? userModel) {
 
         BlocBuilder<EditProfileGenderBloc, GenderState>(
             builder: (context, state) {
-          // dropdownValue = state.Gender;
+          // dropdownValue = dropdownValue;
           // state.userModelProfile = userModel;
           return DropdownButton<String>(
               value: dropdownValue,
@@ -221,6 +244,27 @@ Widget _showBio(BuildContext context, UserModel? userModel) {
 AppBar buildAppBarEditProfile(context, [String? bio]) {
   return AppBar(
     automaticallyImplyLeading: true,
+    flexibleSpace: Container(
+      decoration: const BoxDecoration(
+        // color: Colors.white,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            // Color.fromRGBO(207, 162, 250,100),
+            // Color.fromRGBO(194, 233, 251, 100),
+
+            Color.fromRGBO(224, 195, 252, 100),
+            Color.fromRGBO(142, 197, 252, 100),
+          ],
+        ),
+        // border: Border.all(
+        //   width: 0.2,
+        //   color: Colors.black,
+        // ),
+        // borderRadius: BorderRadius.circular(25),
+      ),
+    ),
     // leading: IconButton(
     //   icon: Icon(Icons.cancel_sharp),
     //   onPressed: () {},
@@ -234,12 +278,7 @@ AppBar buildAppBarEditProfile(context, [String? bio]) {
     //     },
     //   )
     // ],
-    bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(1.0),
-        child: Container(
-          color: Colors.grey.withOpacity(0.5),
-          height: 1.0,
-        )),
+ 
     title: Text(
       "bio",
       style: TextStyle(

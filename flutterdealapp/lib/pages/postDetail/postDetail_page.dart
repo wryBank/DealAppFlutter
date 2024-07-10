@@ -33,7 +33,7 @@ import '../../values/color.dart';
 class postDetailPage extends StatefulWidget {
   String? comeFrom;
   String? pid;
-   postDetailPage({
+  postDetailPage({
     super.key,
     this.comeFrom,
     this.pid,
@@ -79,10 +79,10 @@ class _postDetailPageState extends State<postDetailPage> {
     // double currentLatitude = 0;
     // double currentLongtitude = 0;
     getLocation();
-    if(widget.pid != null){
+    if (widget.pid != null) {
       print("pid: ${widget.pid}");
-    BlocProvider.of<PostBloc>(context)
-        .add(getPostDetail(widget.pid!));}
+      BlocProvider.of<PostBloc>(context).add(getPostDetail(widget.pid!));
+    }
 
     // print(currentLatitude);
     // print(currentLongtitude);
@@ -131,61 +131,102 @@ class _postDetailPageState extends State<postDetailPage> {
           child: Scaffold(
               appBar: AppBar(
                 // automaticallyImplyLeading: true,
+                flexibleSpace: Container(
+                  decoration: const BoxDecoration(
+                    // color: Colors.white,
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        // Color.fromRGBO(207, 162, 250,100),
+                        // Color.fromRGBO(194, 233, 251, 100),
+
+                        Color.fromRGBO(224, 195, 252, 100),
+                        Color.fromRGBO(142, 197, 252, 100),
+                      ],
+                    ),
+                    // border: Border.all(
+                    //   width: 0.2,
+                    //   color: Colors.black,
+                    // ),
+                    // borderRadius: BorderRadius.circular(25),
+                  ),
+                ),
                 leading: IconButton(
                   icon: Icon(Icons.arrow_back),
                   onPressed: () {
-                    if(widget.comeFrom == 'ownDeal'){
-                      BlocProvider.of<PostBloc>(context).add(getOwnDeal(uid: FirebaseAuth.instance.currentUser!.uid));
+                    if (widget.comeFrom == 'ownDeal') {
+                      BlocProvider.of<PostBloc>(context).add(getOwnDeal(
+                          uid: FirebaseAuth.instance.currentUser!.uid));
                     }
-                    if(widget.comeFrom == 'profile'){
-                      BlocProvider.of<PostBloc>(context).add(getPostById(FirebaseAuth.instance.currentUser!.uid));
-
-                    }
-                    else{
-                    BlocProvider.of<PostBloc>(context).add(getPostData());
+                    if (widget.comeFrom == 'profile') {
+                      BlocProvider.of<PostBloc>(context).add(
+                          getPostById(FirebaseAuth.instance.currentUser!.uid));
+                    } else {
+                      BlocProvider.of<PostBloc>(context).add(getPostData());
                     }
                     Navigator.of(context).pop();
                   },
                 ),
                 title: Text("Post Detail"),
               ),
-              body: Center(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      buildProgress(
-                          context,
-                          state.postModel.pid.toString(),
-                          state.postModel.uid.toString(),
-                          state.postModel.title.toString(),
-                          state.postModel.isFindJob!,
-                          state.postModel.takeby.toString(),
-                          state.postModel.isTake,
-                          state.postModel.status,
-                          state.postModel.isGave,
-                          state.postModel.isReceived),
-                      buildPostBoxDetail(
-                          context,
-                          state.postModel.uid.toString(),
-                          state.postModel.takeby.toString(),
-                          state.postModel.isTake,
-                          state.postModel.status.toString(),
-                          state.postModel.pid.toString(),
-                          // state.postModel.takeby.toString(),
-                          state.postModel.title.toString(),
-                          state.postModel.detail.toString(),
-                          state.postModel.location_item.toString(),
-                          state.postModel.postimage.toString(),
-                          state.postModel.postby.toString(),
-                          state.postModel.postdate as Timestamp,
-                          distance,
-                          state.postModel.profileImage.toString(),
-                          isowner,
-                          state.postModel.priceBuy,
-                          state.postModel.pricePay,
-                          state.postModel.isGave,
-                          state.postModel.isReceived),
+              body: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      // Color.fromRGBO(161, 196, 253, 100),
+                      // Color.fromRGBO(194, 233, 251, 100),
+                      Color.fromRGBO(224, 195, 252, 100),
+                      Color.fromRGBO(142, 197, 252, 100),
+                      // Colors.white,
                     ],
+                  ),
+                ),
+                child: Center(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        buildProgress(
+                            context,
+                            state.postModel.pid.toString(),
+                            state.postModel.uid.toString(),
+                            state.postModel.title.toString(),
+                            state.postModel.isFindJob!,
+                            state.postModel.takeby.toString(),
+                            state.postModel.isTake,
+                            state.postModel.status,
+                            state.postModel.isGave,
+                            state.postModel.isReceived),
+                        if (state.postModel.isTake == true)
+                          whoTakePost(
+                              state.postModel.pid!,
+                              state.postModel.takeby!,
+                              state.postModel.profileImage!),
+                        buildPostBoxDetail(
+                            context,
+                            state.postModel.uid.toString(),
+                            state.postModel.takeby.toString(),
+                            state.postModel.isTake,
+                            state.postModel.status.toString(),
+                            state.postModel.pid.toString(),
+                            // state.postModel.takeby.toString(),
+                            state.postModel.title.toString(),
+                            state.postModel.detail.toString(),
+                            state.postModel.location_item.toString(),
+                            state.postModel.postimage.toString(),
+                            state.postModel.postby.toString(),
+                            state.postModel.postdate as Timestamp,
+                            distance,
+                            state.postModel.profileImage.toString(),
+                            isowner,
+                            state.postModel.priceBuy,
+                            state.postModel.pricePay,
+                            state.postModel.isGave,
+                            state.postModel.isReceived),
+                      ],
+                    ),
                   ),
                 ),
               )),
@@ -203,6 +244,74 @@ class _postDetailPageState extends State<postDetailPage> {
 
     // );
   }
+}
+
+Widget whoTakePost(
+  String pid,
+  String takeby,
+  String urlImage,
+) {
+  return StreamBuilder(
+      stream: FirebaseFirestore.instance
+          .collection("users")
+          .doc(takeby)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        }
+        if (snapshot.hasData && snapshot.data!.data() != null) {}
+        return Container(
+          margin: EdgeInsets.all(20),
+          child: Row(
+            children: [
+              Column(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => OtherProfilePage(
+                                    userid: takeby,
+                                    beforePostid: pid,
+                                  )));
+                    },
+                    child: CircleAvatar(
+                      radius: 30,
+                      backgroundImage: NetworkImage(
+                        snapshot.data!.data()!['urlprofileimage'],
+                      ),
+                    ),
+                  ),
+                  // Text("ewsweeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"),
+                  Text(snapshot.data!.data()!['username'].length > 10
+                      ? '${snapshot.data!.data()!['username'].substring(0, 10)}...'
+                      : snapshot.data!.data()!['username']),
+                ],
+              ),
+              Container(
+                width: 150.w,
+                height: 20.h,
+                margin: EdgeInsets.only(left: 10),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.6),
+                  border: Border.all(
+                    width: 0.1,
+                    // color: Colors.black,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  children: [
+                    Text("ฉันรับข้อเสนอนี้!"),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      });
 }
 
 Widget buildPostBoxDetail(
@@ -235,18 +344,19 @@ Widget buildPostBoxDetail(
         Container(
           // height: 500.h,
           decoration: BoxDecoration(
-            color: AppColors.primaryPostBox,
+            color: Colors.white.withOpacity(0.6),
             border: Border.all(
-              width: 0.2,
-              color: Colors.black,
+              width: 0.1,
+              // color: Colors.black,
             ),
             borderRadius: BorderRadius.circular(10),
           ),
+
           margin: EdgeInsets.all(20),
           child: Column(
             children: [
               SizedBox(
-                height: 20.h,
+                height: 10.h,
               ),
               Row(
                 children: [
@@ -301,27 +411,7 @@ Widget buildPostBoxDetail(
                       "${postdate.toDate().day}/${postdate.toDate().month}/${postdate.toDate().year}"),
                 ),
               ),
-              Row(
-                children: [
-                  // Align(
-                  //   alignment: Alignment.centerLeft,
-                  //   child: Container(
-                  //     margin: EdgeInsets.only(left: 20),
-                  //     child: CircleAvatar(
-                  //       radius: 30,
-                  //       backgroundImage: NetworkImage(userImage),
-                  //     ),
-                  //   ),
-                  // ),
-                  // Container(
-                  //   margin: EdgeInsets.only(left: 10),
-                  //   child: Text(
-                  //     "Warayut Saisi",
-                  //     style: TextStyle(fontSize: 20),
-                  //   ),
-                  // ),
-                ],
-              ),
+
               Row(
                 children: [
                   Align(
@@ -330,7 +420,9 @@ Widget buildPostBoxDetail(
                       child: Container(
                         width: 20.w,
                         height: 20.h,
-                        child: Image.asset("assets/icons/location.png"),
+                        child: Image.asset(
+                          "assets/icons/location.png",
+                        ),
                       ),
                     ),
                   ),
@@ -433,39 +525,52 @@ Widget buildPostBoxDetail(
                 width: 330.w,
                 margin: EdgeInsets.all(20),
                 child: Text(
-                  "wadcxzcjxxjxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+                  detail,
                   style: TextStyle(fontSize: 20),
                 ),
               ),
+              if (isTake == true)
+                SizedBox(
+                  height: 50.h,
+                  width: 150.w,
+                  child: ElevatedButton.icon(
+                    icon: Icon(Icons.chat, size: 30),
+                    label: Text("Chat", style: TextStyle(fontSize: 20)),
+                    style: ElevatedButton.styleFrom(
+                      primary: Color.fromRGBO(83, 82, 125, 0.8),
+                      onPrimary: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    onPressed: () {
+                      if (isowner == true) {
+                        print("pid: $pid");
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ChatPage(
+                                    receiverUserId: takeby,
+                                    receiverUsername: takeby,
+                                    pid: pid.toString())));
+                      } else if (isowner == false) {
+                        print("pid: $pid");
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ChatPage(
+                                      receiverUserId: uid,
+                                      receiverUsername: postby,
+                                      pid: pid.toString(),
+                                    )));
+                      }
+                    },
+                    // child: Text("chat"),
+                  ),
+                ),
 
-              ElevatedButton(
-                onPressed: () {
-                  if (isowner == true) {
-                    print("pid: $pid");
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ChatPage(
-                                receiverUserId: takeby,
-                                receiverUsername: takeby,
-                                pid: pid.toString())));
-                  } else if (isowner == false) {
-                    print("pid: $pid");
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ChatPage(
-                                  receiverUserId: uid,
-                                  receiverUsername: postby,
-                                  pid: pid.toString(),
-                                )));
-                  }
-                },
-                child: Text("chat"),
-              ),
-
-              if (isowner == true) buildCommonButton("This is you post", () {}),
-              if (isowner == false)
+              // if (isowner == true) buildCommonButton("This is you post", () {}),
+              if (isowner == false && isTake == false)
                 buildCommonButton("Send Deal", () {
                   // print("awa");
                   showDialog(
@@ -524,7 +629,6 @@ Widget buildProgress(
     bool? isGave,
     bool? isReceived) {
   if (isTake == true) {
- 
     print("takeby: $takeby  ");
     print("isFindJob = $isFindJob");
     print("pid: $pid");
@@ -532,70 +636,80 @@ Widget buildProgress(
     print("status: $status");
     return Column(
       children: [
-        StreamBuilder<DocumentSnapshot>(
-          stream: FirebaseFirestore.instance.collection("posts").doc(pid).snapshots(),
-          builder: (context,snapshot) {
-            print("snapshot: ${snapshot.data}");
-            if(snapshot.hasData && snapshot.data!.exists){
-              var data = snapshot.data!.data() as Map<String,dynamic>;
-            status = data['status'] as String?;
-            return SizedBox(
-              height: 100,
-              child: Container(
-                color: Colors.black,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.all(10),
-                  children: [
-                    const SizedBox(
-                      width: 120,
-                      child: timelineDeal(
-                        // isProgress: status == "inprogress" ? true : false,
-                        isProgress: true,
-                        // isCompleted: status == "inprogress" ? false : true,
-                        isCompleted: false,
-                        isPast: true,
-                        eventCard: Text("inProgress",
-                            style: TextStyle(fontSize: 15, color: Colors.white)),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 120,
-                      child: timelineDeal(
-                        isProgress: false,
-                        // isCompleted: status == "done" ? true : false,
-                        isCompleted: false,
-                        // isPast:false,
-                        isPast: status == "inprogress" || status == "done"
-                            ? true
-                            : false,
-                        eventCard: const Text("Delivering",
-                            style: TextStyle(fontSize: 15, color: Colors.white)),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 120,
-                      child: 
-                      timelineDeal(
-                        // isProgress: status == "inprogress" ? true : false,
-                        // isCompleted: status == "done" ? true : false,
-                        isProgress: false,
-                        isCompleted: true,
-                        isPast:  status == "done" ? true : false,
-                        // isPast: status == "done" ? true : false,
-                        eventCard: const Text("Complete",
-                            style: TextStyle(fontSize: 15, color: Colors.white)),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }
-          else{
-            return Container();
-          }}
+        SizedBox(
+          height: 10.h,
         ),
+        StreamBuilder<DocumentSnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection("posts")
+                .doc(pid)
+                .snapshots(),
+            builder: (context, snapshot) {
+              print("snapshot: ${snapshot.data}");
+              if (snapshot.hasData && snapshot.data!.exists) {
+                var data = snapshot.data!.data() as Map<String, dynamic>;
+                status = data['status'] as String?;
+                return SizedBox(
+                  height: 100,
+                  child: Container(
+                    color: Colors.transparent,
+                    child: Center(
+                      child: Row(
+                        // scrollDirection: Axis.horizontal,
+                        // padding: EdgeInsets.all(10),
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(
+                            width: 120,
+                            child: timelineDeal(
+                              // isProgress: status == "inprogress" ? true : false,
+                              isProgress: true,
+                              // isCompleted: status == "inprogress" ? false : true,
+                              isCompleted: false,
+                              isPast: true,
+                              eventCard: Text("inProgress",
+                                  style: TextStyle(
+                                      fontSize: 15, color: Colors.white)),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 120,
+                            child: timelineDeal(
+                              isProgress: false,
+                              // isCompleted: status == "done" ? true : false,
+                              isCompleted: false,
+                              // isPast:false,
+                              isPast: status == "inprogress" || status == "done"
+                                  ? true
+                                  : false,
+                              eventCard: const Text("Delivering",
+                                  style: TextStyle(
+                                      fontSize: 15, color: Colors.white)),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 120,
+                            child: timelineDeal(
+                              // isProgress: status == "inprogress" ? true : false,
+                              // isCompleted: status == "done" ? true : false,
+                              isProgress: false,
+                              isCompleted: true,
+                              isPast: status == "done" ? true : false,
+                              // isPast: status == "done" ? true : false,
+                              eventCard: const Text("Complete",
+                                  style: TextStyle(
+                                      fontSize: 15, color: Colors.white)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              } else {
+                return Container();
+              }
+            }),
         // Text(
         //     "This post is not given yet have u Give an items yet ? ")),
         if (uid == FirebaseAuth.instance.currentUser!.uid &&
@@ -616,37 +730,52 @@ Widget buildProgress(
                   );
                 } else {
                   return Container(
-                    child: ElevatedButton(
-                      child: Text("รับของเรียบร้อย23"),
-                      onPressed: () async{
-                        isReceived = true;
-                        // postProvider.updateStatusReceived(pid, isReceived!,uid,isFindJob);
-                        BlocProvider.of<postDetailBloc>(context).add(
-                            clickButton(
-                                postId: pid,
-                                isReceived: isReceived!,
-                                uidPostby: uid,
-                                isFindJob: isFindJob));
-                                
-                                user_provider userProvider = user_provider();
-                      
-                      PushNotificationService.sendClickNotificationToUser(await userProvider.getToken(takeby), pid, title , "อีกฝ่ายได้กดยืนยันแล้ว!" );
-                                print("token = ${userProvider.getToken(uid).toString()}");
-                      
-                      
-                      // context.read<postDetailBloc>().add(
-                      //   clickButton(
-                      //     postId: pid,
-                      //     isReceived: isReceived!,
-                      //     uidPostby: uid,
-                      //     isFindJob: isFindJob
-                      //   )
-                      // );
-                        // BlocProvider.of<PostBloc>(context).add(updateStatusReceived(pid, isReceived!));
-                        // isReceived = true;
-                        // status = "inprogress";
-                        
-                      },
+                    child: SizedBox(
+                      width: 150.w,
+                      height: 35.h,
+                      child: ElevatedButton.icon(
+                        icon: Icon(Icons.check, size: 30),
+                        label: Text("รับของเรียบร้อย"),
+                        style: ElevatedButton.styleFrom(
+                          primary: Color.fromRGBO(83, 82, 125, 0.8),
+                          onPrimary: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: () async {
+                          isReceived = true;
+                          // postProvider.updateStatusReceived(pid, isReceived!,uid,isFindJob);
+                          BlocProvider.of<postDetailBloc>(context).add(
+                              clickButton(
+                                  postId: pid,
+                                  isReceived: isReceived!,
+                                  uidPostby: uid,
+                                  isFindJob: isFindJob));
+
+                          user_provider userProvider = user_provider();
+
+                          PushNotificationService.sendClickNotificationToUser(
+                              await userProvider.getToken(takeby),
+                              pid,
+                              title,
+                              "อีกฝ่ายได้กดยืนยันแล้ว!");
+                          print(
+                              "token = ${userProvider.getToken(uid).toString()}");
+
+                          // context.read<postDetailBloc>().add(
+                          //   clickButton(
+                          //     postId: pid,
+                          //     isReceived: isReceived!,
+                          //     uidPostby: uid,
+                          //     isFindJob: isFindJob
+                          //   )
+                          // );
+                          // BlocProvider.of<PostBloc>(context).add(updateStatusReceived(pid, isReceived!));
+                          // isReceived = true;
+                          // status = "inprogress";
+                        },
+                      ),
                     ),
                   );
                 }
@@ -665,10 +794,10 @@ Widget buildProgress(
             print("state = $state");
             if (state is clickPostState2 && isGave == true) {
               // print("instate isClickReceived ${state.isGrave}");
-                  // status = state.isGraveClicked == true ? "done" : "inprogress";
+              // status = state.isGraveClicked == true ? "done" : "inprogress";
               return Container(
                 child: Text(
-                      "รับของเรียบร้อย",
+                  "รับของเรียบร้อย",
                   style: TextStyle(color: Colors.green),
                 ),
               );
@@ -676,38 +805,55 @@ Widget buildProgress(
               return Column(
                 children: [
                   Container(
-                    child: ElevatedButton(
-                      child: Text("ร2ับของเรียบร้อย23  "),
-                      onPressed: () async{
-                        if (isGave == false) {
-                          isGave = true;
-                          print("isGave: $isGave");
-                          print("pid: $pid  ");
-                          // postProvider.updateStatusGave(
-                          //     pid, isGave!, takeby, isFindJob);
-                          BlocProvider.of<postDetailBloc>(context).add(
-                              clickButton2(
-                                  postId: pid,
-                                  isGave: isGave!,
-                                  uidtakeby: takeby,
-                                  isFindJob: isFindJob));
-                                user_provider userProvider = user_provider();
-                                print("token = ${userProvider.getToken(uid).toString()}");
-                      
-                      PushNotificationService.sendClickNotificationToUser(await userProvider.getToken(uid), pid, title , "อีกฝ่ายได้กดยืนยันแล้ว!" );
-                      // context.read<postDetailBloc>().add(
-                      //   clickButton(
-                      //     postId: pid,
-                      //     isReceived: isReceived!,
-                      //     uidPostby: uid,
-                      //     isFindJob: isFindJob
-                      //   )
-                      // );
-                          // isGave = true;
-                          // status = "done" ;
-                        }
+                    child: SizedBox(
+                      height: 35.h,
+                      width: 150.w,
+                      child: ElevatedButton.icon(
+                        icon: Icon(Icons.check, size: 30),
+                        label: Text("รับของเรียบร้อย"),
+                        style: ElevatedButton.styleFrom(
+                          primary: Color.fromRGBO(83, 82, 125, 0.8),
+                          onPrimary: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        // child: Text("ร2ับของเรียบร้อย23  "),
+                        onPressed: () async {
+                          if (isGave == false) {
+                            isGave = true;
+                            print("isGave: $isGave");
+                            print("pid: $pid  ");
+                            // postProvider.updateStatusGave(
+                            //     pid, isGave!, takeby, isFindJob);
+                            BlocProvider.of<postDetailBloc>(context).add(
+                                clickButton2(
+                                    postId: pid,
+                                    isGave: isGave!,
+                                    uidtakeby: takeby,
+                                    isFindJob: isFindJob));
+                            user_provider userProvider = user_provider();
+                            print(
+                                "token = ${userProvider.getToken(uid).toString()}");
 
-                      },
+                            PushNotificationService.sendClickNotificationToUser(
+                                await userProvider.getToken(uid),
+                                pid,
+                                title,
+                                "อีกฝ่ายได้กดยืนยันแล้ว!");
+                            // context.read<postDetailBloc>().add(
+                            //   clickButton(
+                            //     postId: pid,
+                            //     isReceived: isReceived!,
+                            //     uidPostby: uid,
+                            //     isFindJob: isFindJob
+                            //   )
+                            // );
+                            // isGave = true;
+                            // status = "done" ;
+                          }
+                        },
+                      ),
                     ),
                   )
                 ],
