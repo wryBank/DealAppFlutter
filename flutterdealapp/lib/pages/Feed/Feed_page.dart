@@ -33,8 +33,6 @@ class FeedPage extends StatefulWidget {
 }
 
 class _FeedPageState extends State<FeedPage> {
-  
- 
   Future<void> getLocation() async {
     await Geolocator.checkPermission();
     await Geolocator.requestPermission();
@@ -44,7 +42,7 @@ class _FeedPageState extends State<FeedPage> {
     print(position);
     currentLatitude = position.latitude;
     currentLongtitude = position.longitude;
-  await user_provider().updateLocation(position.latitude, position.longitude);
+    await user_provider().updateLocation(position.latitude, position.longitude);
   }
 
   final uid = FirebaseAuth.instance.currentUser!.uid;
@@ -150,250 +148,369 @@ class _FeedPageState extends State<FeedPage> {
   //   });
   // }
 
- 
-  
-    ShardPreferencesService shardPreferencesService = ShardPreferencesService();
-  
+  ShardPreferencesService shardPreferencesService = ShardPreferencesService();
 
   UserModel userModel = UserModel();
   @override
   Widget build(BuildContext context) {
     // shardPreferencesService.readCache(key: "email");
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      // appBar: AppBar(
-      //   automaticallyImplyLeading: false,
-      //   backgroundColor: AppColors.primaryAppbar,
-      //   bottom: PreferredSize(
-      //     preferredSize: const Size.fromHeight(1.0),
-      //     child: Container(
-      //       // color: AppColors.primaryAppbar,
-      //       height: 0.5,
-      //     ),
-      //   ),
-      //   title: Row(
-      //     mainAxisAlignment: MainAxisAlignment.end,
-      //     children: [
-      //     Image.asset(
-      //       "assets/icons/coin.png",
-      //       width: 50.w,
-      //       height: 50.h,
-      //     ),
-      //   ]),
-      // ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          getLocation();
-          BlocProvider.of<PostBloc>(context).add(getPostData());
-          // setState(() {
-          // });
-          HireJobClick = false;
-          FindJobClick = false;
-        },
-        child:
-            BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
-          if (state is getDataState) {
-            userModel = state.userModel!;
-            double coin = state.userModel!.coin!;
-            return Column(
-              children: [
-                AppBar(
-                  backgroundColor: AppColors.primaryAppbar,
-                  automaticallyImplyLeading: false,
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Column(
-                        children: [
-                          Image.asset(
-                            "assets/icons/coin.png",
-                            width: 25.w,
-                            height: 25.h,
-                          ),
-                          Text(state.userModel!.coin.toString(),
-                              style: TextStyle(
-                                fontSize: 15.sp,
-                                color: Colors.white,
-                              ))
-                        ],
-                      ),
+    return Container(
+      child: Scaffold(
+        // backgroundColor: Colors.transparent,
+        // appBar: AppBar(
+        //   automaticallyImplyLeading: false,
+        //   backgroundColor: AppColors.primaryAppbar,
+        //   bottom: PreferredSize(
+        //     preferredSize: const Size.fromHeight(1.0),
+        //     child: Container(
+        //       // color: AppColors.primaryAppbar,
+        //       height: 0.5,
+        //     ),
+        //   ),
+        //   title: Row(
+        //     mainAxisAlignment: MainAxisAlignment.end,
+        //     children: [
+        //     Image.asset(
+        //       "assets/icons/coin.png",
+        //       width: 50.w,
+        //       height: 50.h,
+        //     ),
+        //   ]),
+        // ),
+        body: RefreshIndicator(
+          onRefresh: () async {
+            getLocation();
+            BlocProvider.of<PostBloc>(context).add(getPostData());
+            // setState(() {
+            // });
+            HireJobClick = false;
+            FindJobClick = false;
+          },
+          child:
+              BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
+            if (state is getDataState) {
+              userModel = state.userModel!;
+              double coin = state.userModel!.coin!;
+              return Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      // Color.fromRGBO(161, 196, 253, 100),
+                      // Color.fromRGBO(194, 233, 251, 100),
+                      Color.fromRGBO(224, 195, 252, 100),
+                      Color.fromRGBO(142, 197, 252, 100),
+                      // Colors.white,
                     ],
                   ),
                 ),
+                child: Column(
+                  children: [
+                    AppBar(
+                      // backgroundColor: Colors.red,
+                      automaticallyImplyLeading: false,
+                      // title:
+                      flexibleSpace: Container(
+                        color: Color.fromRGBO(224, 195, 252, 100),
+                        // color: Colors.transparent,
+                        height: 60.h,
+                        // decoration: const BoxDecoration(
+                        //   // color: Colors.white,
+                        //   gradient: LinearGradient(
+                        //     begin: Alignment.topLeft,
+                        //     end: Alignment.bottomRight,
+                        //     colors: [
+                        //       // Color.fromRGBO(207, 162, 250,100),
+                        //       // Color.fromRGBO(194, 233, 251, 100),
 
-                // return AppBar(
-                //   backgroundColor: AppColors.primaryAppbar,
-                //   automaticallyImplyLeading: false,
-                //   title: Row(
-                //     mainAxisAlignment: MainAxisAlignment.end,
-                //     children: [
-                //       Column(
-                //         children: [
-                //           Image.asset(
-                //             "assets/icons/coin.png",
-                //             width: 25.w,
-                //             height: 25.h,
-                //           ),
-                //           BlocBuilder<UserBloc, UserState>(
-                //               builder: (context, state) {
-                //             if (state is getUserByUidState) {
-                //               return Text(state.userModel.coin.toString(),
-                //                   style: TextStyle(
-                //                     fontSize: 15.sp,
-                //                     color: Colors.white,
-                //                   ));
-                //             } else {
-                //               return Text("100",
-                //                   style: TextStyle(
-                //                     fontSize: 15.sp,
-                //                     color: Colors.white,
-                //                   ));
-                //             }
-                //           })
-                //         ],
-                //       ),
-                //     ],
-                //   ),
-                // );
-                Container(
-                  height: 50,
-                  // color: AppColors.primaryAppbar,
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryAppbar,
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(26),
-                      bottomRight: Radius.circular(26),
-                    ),
-                  ),
-                  child: buildSelectBox(context),
-                ),
-                BlocBuilder<PostBloc, PostState>(builder: (context, state) {
-                  if (state is PostListLoaded) {
-                    return Expanded(
-                        // child: FirestoreListView<List<PostModel>>(
-                        //     query: state.postModel,
-                        //     pageSize: 2,
-                        //     itemBuilder: (context, snapshot) {
-                        //       final post = snapshot.data();
-
-                        //       // posts
-                        //       //     .sort((a, b) => a.distance!.compareTo(b.distance!));
-
-                        //       final distance = calculateDistances(
-                        //           currentLatitude,
-                        //           currentLongtitude,
-                        //           post.latitude!,
-                        //           post.longitude!);
-                        //       // post.distance = calculateDistances(currentLatitude,
-                        //       //     currentLongtitude, post.latitude!, post.longitude!);
-
-                        //       //sort post.distance
-
-                        //       // getAndSortPosts(state.postModel);
-
-                        //       // if (distance < 6) {
-                        //       return buildPostBox(
-                        //           context,
-                        //           post.pid ?? "",
-                        //           post.title!,
-                        //           post.detail!,
-                        //           post.location_item ?? "",
-                        //           post.postimage ?? "",
-                        //           "a",
-                        //           post.postdate!,
-                        //           distance ,
-                        //           post.profileImage ?? "");
-                        //       // } else {
-                        //       //   return Container();
-                        //       // }
-                        //     }),
-
-                        // child: FutureBuilder(
-                        // future: state.postModel,
-                        // builder: (context, snapshot) {
-                        // if (snapshot.connectionState == ConnectionState.done &&
-                        //     snapshot.hasData) {
-                        // final posts = snapshot.data!;
-                        child: Container(
-                      color: AppColors.primaryPostBox,
-                      child: ListView.builder(
-                          // controller: _scrollController,
-                          itemCount: state.postModel.length,
-                          itemBuilder: (context, index) {
-                            // print("post distance: ${posts[index].distance}");
-                            if (state.postModel[index].uid! != uid) {
-                              final post = state.postModel[index];
-                              return buildPostBox(
-                                  context,
-                                  post.pid ?? "",
-                                  post.title!,
-                                  post.detail!,
-                                  post.location_item ?? "",
-                                  post.postimage ?? "",
-                                  "a",
-                                  post.postdate!,
-                                  post.distance!,
-                                  post.profileImage ?? "",
-                                  post.pricePay!);
-                            } else {
-                              return Container();
-                            }
-                          }),
-                    )
-                        // } else {
-                        //   return Container(
-                        //     child: Center(
-                        //       child: CircularProgressIndicator(),
-                        //     ),
-                        //   );
-                        // }
-                        // },
+                        //       Color.fromRGBO(224, 195, 252, 100),
+                        //       Color.fromRGBO(142, 197, 252, 100),
+                        //     ],
+                        //   ),
                         // ),
-                        );
-                  } else {
-                    return Container(
-                      child: Center(
-                        child: CircularProgressIndicator(),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                    child: Text(
+                                  "Discovery Deal",
+                                  style: TextStyle(
+                                    fontSize: 25.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black54,
+                                  ),
+                                )),
+                                Container(
+                                  child: Text(
+                                    state.userModel!.username ?? "",
+                                  ),
+                                ),
+                              ],
+                            ),
+                            // Container(
+                            //   child: Text(
+                            //     state.userModel!.username ?? "",
+                            //   ),
+                            // ),
+                            Padding(
+                              padding: EdgeInsets.only(right: 15),
+                              child: Column(
+                                children: [
+                                  Image.asset(
+                                    "assets/icons/coin.png",
+                                    width: 25.w,
+                                    height: 25.h,
+                                  ),
+                                  Text(state.userModel!.coin.toString(),
+                                      style: TextStyle(
+                                        fontSize: 15.sp,
+                                        color: Colors.black54,
+                                      ))
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    );
-                  }
-                })
-              ],
-            );
-          } else {
-            return Container(
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-        }),
-      ),
-      floatingActionButton: Container(
-        width: 120,
-        height: 30,
-        child: FloatingActionButton.extended(
-          onPressed: () {
-            // Navigate to the CreatePostPage when the FAB is pressed
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => CreatePostPage(
-                          key: UniqueKey(),
-                        )));
-          },
-          // icon:Icon(Icons.add),
-          label: Text('Create Post'),
-          tooltip: 'Create Post',
-          shape: RoundedRectangleBorder(
-              borderRadius:
-                  BorderRadius.all(Radius.circular(8))), // Make the FAB square
+                    ),
+
+                    // return AppBar(
+                    //   backgroundColor: AppColors.primaryAppbar,
+                    //   automaticallyImplyLeading: false,
+                    //   title: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.end,
+                    //     children: [
+                    //       Column(
+                    //         children: [
+                    //           Image.asset(
+                    //             "assets/icons/coin.png",
+                    //             width: 25.w,
+                    //             height: 25.h,
+                    //           ),
+                    //           BlocBuilder<UserBloc, UserState>(
+                    //               builder: (context, state) {
+                    //             if (state is getUserByUidState) {
+                    //               return Text(state.userModel.coin.toString(),
+                    //                   style: TextStyle(
+                    //                     fontSize: 15.sp,
+                    //                     color: Colors.white,
+                    //                   ));
+                    //             } else {
+                    //               return Text("100",
+                    //                   style: TextStyle(
+                    //                     fontSize: 15.sp,
+                    //                     color: Colors.white,
+                    //                   ));
+                    //             }
+                    //           })
+                    //         ],
+                    //       ),
+                    //     ],
+                    //   ),
+                    // );
+                    // Container(
+                    //   height: 50,
+                    //   // color: AppColors.primaryAppbar,
+                    //   decoration: BoxDecoration(
+                    //     color: AppColors.primaryAppbar,
+                    //     borderRadius: BorderRadius.only(
+                    //       bottomLeft: Radius.circular(26),
+                    //       bottomRight: Radius.circular(26),
+                    //     ),
+                    //   ),
+                    // ),
+                    // SizedBox(
+                    //   child: Container(
+                    //     height: 15.h,
+                    //     decoration: const BoxDecoration(
+                    //       // color: Colors.white,
+                    //       gradient: LinearGradient(
+                    //         begin: Alignment.topLeft,
+                    //         end: Alignment.bottomRight,
+                    //         colors: [
+                    //           // Color.fromRGBO(207, 162, 250,100),
+                    //           // Color.fromRGBO(194, 233, 251, 100),
+                    //           Color.fromRGBO(224, 195, 252, 100),
+                    //           Color.fromRGBO(142, 197, 252, 100),
+                    //           // Color.fromRGBO(224, 195, 252, 100),
+                    //           // Color.fromRGBO(142, 197, 252, 100),
+                    //           // Color.fromRGBO(224, 195, 252, 100),
+                    //           // Color.fromRGBO(142, 197, 252, 100),
+                    //         ],
+                    //       ),
+                    //       // border: Border.all(
+                    //       //   width: 0.2,
+                    //       //   color: Colors.black,
+                    //       // ),
+                    //       // borderRadius: BorderRadius.circular(25),
+                    //     ),
+                    //   ),
+                    // ),
+                    SizedBox(
+                      height: 15.h,
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(1),
+                                spreadRadius: 0.6,
+                                blurRadius: 2,
+                                offset:
+                                    Offset(0, 60), // changes position of shadow
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          height: 50.h,
+                          child: buildSelectBox(context),
+                        ),
+                      ],
+                    ),
+                    // SizedBox(
+                    //   height: 5.h,
+                    // ),
+                    BlocBuilder<PostBloc, PostState>(builder: (context, state) {
+                      if (state is PostListLoaded) {
+                        return Expanded(
+                            // child: FirestoreListView<List<PostModel>>(
+                            //     query: state.postModel,
+                            //     pageSize: 2,
+                            //     itemBuilder: (context, snapshot) {
+                            //       final post = snapshot.data();
+
+                            //       // posts
+                            //       //     .sort((a, b) => a.distance!.compareTo(b.distance!));
+
+                            //       final distance = calculateDistances(
+                            //           currentLatitude,
+                            //           currentLongtitude,
+                            //           post.latitude!,
+                            //           post.longitude!);
+                            //       // post.distance = calculateDistances(currentLatitude,
+                            //       //     currentLongtitude, post.latitude!, post.longitude!);
+
+                            //       //sort post.distance
+
+                            //       // getAndSortPosts(state.postModel);
+
+                            //       // if (distance < 6) {
+                            //       return buildPostBox(
+                            //           context,
+                            //           post.pid ?? "",
+                            //           post.title!,
+                            //           post.detail!,
+                            //           post.location_item ?? "",
+                            //           post.postimage ?? "",
+                            //           "a",
+                            //           post.postdate!,
+                            //           distance ,
+                            //           post.profileImage ?? "");
+                            //       // } else {
+                            //       //   return Container();
+                            //       // }
+                            //     }),
+
+                            // child: FutureBuilder(
+                            // future: state.postModel,
+                            // builder: (context, snapshot) {
+                            // if (snapshot.connectionState == ConnectionState.done &&
+                            //     snapshot.hasData) {
+                            // final posts = snapshot.data!;
+                            child: ListView.builder(
+                                // controller: _scrollController,
+                                itemCount: state.postModel.length,
+                                itemBuilder: (context, index) {
+                                  // print("post distance: ${posts[index].distance}");
+                                  if (state.postModel[index].uid! != uid) {
+                                    final post = state.postModel[index];
+                                    return buildPostBox(
+                                        context,
+                                        post.pid ?? "",
+                                        post.title!,
+                                        post.detail!,
+                                        post.location_item ?? "",
+                                        post.postimage ?? "",
+                                        "a",
+                                        post.postdate!,
+                                        post.distance!,
+                                        post.profileImage ?? "",
+                                        post.pricePay!);
+                                  } else {
+                                    return Container();
+                                  }
+                                })
+                            // } else {
+                            //   return Container(
+                            //     child: Center(
+                            //       child: CircularProgressIndicator(),
+                            //     ),
+                            //   );
+                            // }
+                            // },
+                            // ),
+                            );
+                      } else {
+                        return Container(
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      }
+                    })
+                  ],
+                ),
+              );
+            } else {
+              return Container(
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+          }),
         ),
-      ),
-      floatingActionButtonLocation: CustomFABLocation(
-        FloatingActionButtonLocation.centerFloat,
-        offsetX: 0,
-        offsetY: 0,
+        floatingActionButton: Container(
+          width: 120,
+          height: 30,
+          child: FloatingActionButton.extended(
+            backgroundColor: Colors.white,
+            onPressed: () {
+              // Navigate to the CreatePostPage when the FAB is pressed
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CreatePostPage(
+                            key: UniqueKey(),
+                          )));
+            },
+            // icon:Icon(Icons.add),
+            label: Text(
+              'Create Post',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 15.sp,
+              ),
+            ),
+            tooltip: 'Create Post',
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                    Radius.circular(8))), // Make the FAB square
+          ),
+        ),
+        floatingActionButtonLocation: CustomFABLocation(
+          FloatingActionButtonLocation.centerFloat,
+          offsetX: 0,
+          offsetY: 0,
+        ),
       ),
     );
   }
@@ -421,10 +538,10 @@ Widget buildPostBox(
     },
     child: Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.white.withOpacity(0.6),
         border: Border.all(
-          width: 0.2,
-          color: Colors.black,
+          width: 0.1,
+          // color: Colors.black,
         ),
         borderRadius: BorderRadius.circular(10),
       ),
@@ -572,55 +689,47 @@ buildSelectBox(BuildContext context) {
           onTap: () {
             // BlocProvider.of<PostBloc>(context)
             //     .add(selectBoxPostType(true));
-            
+            BlocProvider.of<PostBloc>(context).add(getPostByType(FindJobClick));
+
             if (FindJobClick == false) {
               FindJobClick = true;
             } else {
               FindJobClick = false;
             }
-            BlocProvider.of<PostBloc>(context).add(getPostByType(FindJobClick));
-            // if (FindJobClick && HireJobClick ||
-            //     !FindJobClick && !HireJobClick) {
-            //   BlocProvider.of<PostBloc>(context).add(getPostData());
-            // }
+            if (FindJobClick && HireJobClick ||
+                !FindJobClick && !HireJobClick) {
+              BlocProvider.of<PostBloc>(context).add(getPostData());
+            }
             print("FindJobClick: $FindJobClick HireJobClick: $HireJobClick");
           },
           child: Center(
             child: Container(
-              width: 80.w,
+              width: 140.w,
               height: 30.h,
+              // color: Colors.white,
               // padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               decoration: BoxDecoration(
-                  color: FindJobClick ? Colors.white : AppColors.primaryAppbar,
-                  // border: Border.all(color: Colors.grey),
-                  // border: FindJobClick
-                  //     ? Border.all(
-                  //         color: AppColors.primaryAppbar,
-                  //         width: 1.0,
-                  //       )
-                  //     : Border.all(color: Colors.white),
+                  color: FindJobClick ? Colors.white : Colors.transparent,
+                  border: Border.all(
+                      color: FindJobClick? Colors.white :Color.fromRGBO(224, 195, 252, 0.918),
+                      strokeAlign: BorderSide.strokeAlignInside,
+                      width: 2.0),
                   borderRadius: BorderRadius.circular(30),
                   boxShadow: [
                     BoxShadow(
                         spreadRadius: 1,
-                        blurRadius: 3,
-                        offset: Offset(0, 3),
-                        color: Colors.grey.withOpacity(0.5))
+                        blurRadius: 5,
+                        color:
+                            Color.fromARGB(255, 255, 255, 255).withOpacity(0.5))
                   ]
-                  // border: FindJobClick ? Border.all( color: AppColors.primaryAppbar,
-                  // width: 1.0,
-                  //       )
-                  //     : Border.all(color: Colors.white , width: 1.0),
-                  // borderRadius: BorderRadius.circular(50),
-                  // borderRadius: BorderRadius.circular(50),
                   ),
               child: Center(
                 child: Text(
                   'รับจ้าง',
                   style: TextStyle(
                     color: FindJobClick
-                        ? Colors.black.withOpacity(0.5)
-                        : Colors.white,
+                        ? Colors.black
+                        : Colors.black.withOpacity(0.5),
                     fontWeight: FontWeight.normal,
                     fontSize: 16.sp,
                   ),
@@ -636,6 +745,7 @@ buildSelectBox(BuildContext context) {
             //     .add(selectBoxPostType(false));
 
             // BlocProvider.of<PostBloc>(context).add(getPostByType(false));
+            BlocProvider.of<PostBloc>(context).add(getPostByType(HireJobClick));
             if (HireJobClick == true) {
               HireJobClick = false;
             } else {
@@ -649,34 +759,49 @@ buildSelectBox(BuildContext context) {
           },
           child: Center(
             child: Container(
-              width: 80.w,
+              width: 140.w,
               height: 30.h,
               // padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              // decoration: BoxDecoration(
+              //     color: HireJobClick ? Colors.white : AppColors.primaryAppbar,
+              //     // color: AppColors.primaryAppbar,
+              //     // border: HireJobClick
+              //     //     ? Border.all(
+              //     //         color: AppColors.primaryAppbar,
+              //     //         width: 1.0,
+              //     //       )
+              //     //     : Border.all(color: Colors.white),
+              //     borderRadius: BorderRadius.circular(50),
+              //     boxShadow: [
+              //       BoxShadow(
+              //           spreadRadius: 1,
+              //           blurRadius: 3,
+              //           offset: Offset(0, 3),
+              //           color: Colors.grey.withOpacity(0.5))
+              //     ]
+              //     // boxShadow: [
+              //     //   BoxShadow(
+              //     //     color: Colors.white,
+              //     //     spreadRadius: 3,
+              //     //     blurRadius: 1,
+              //     //     offset: Offset(0, 1), // changes position of shadow
+              //     //   )
+              //     // ]
+              //     ),
               decoration: BoxDecoration(
-                  color: HireJobClick ? Colors.white : AppColors.primaryAppbar,
-                  // color: AppColors.primaryAppbar,
-                  // border: HireJobClick
-                  //     ? Border.all(
-                  //         color: AppColors.primaryAppbar,
-                  //         width: 1.0,
-                  //       )
-                  //     : Border.all(color: Colors.white),
-                  borderRadius: BorderRadius.circular(50),
+                  color: HireJobClick ? Colors.white : Colors.transparent,
+                  border: Border.all(
+                      color: HireJobClick? Colors.white :Color.fromRGBO(224, 195, 252, 0.918),
+                      strokeAlign: BorderSide.strokeAlignInside,
+                      width: 2.0),
+                  borderRadius: BorderRadius.circular(30),
                   boxShadow: [
                     BoxShadow(
                         spreadRadius: 1,
                         blurRadius: 3,
-                        offset: Offset(0, 3),
-                        color: Colors.grey.withOpacity(0.5))
+                        color:
+                            Color.fromARGB(255, 255, 255, 255).withOpacity(0.5))
                   ]
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //     color: Colors.white,
-                  //     spreadRadius: 3,
-                  //     blurRadius: 1,
-                  //     offset: Offset(0, 1), // changes position of shadow
-                  //   )
-                  // ]
                   ),
               child: Center(
                 child: Text(
@@ -685,8 +810,8 @@ buildSelectBox(BuildContext context) {
                     // color: HireJobClick ? Colors.white : Colors.black,
 
                     color: HireJobClick
-                        ? Colors.black.withOpacity(0.5)
-                        : Colors.white,
+                        ? Colors.black
+                        : Colors.black.withOpacity(0.5),
                     // : Color.fromARGB(255, 207, 207, 207),
                     fontSize: 16.sp,
                   ),

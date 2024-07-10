@@ -100,6 +100,14 @@ class user_provider {
     }
     return [];
   }
+  
+  Future<String> getToken (String uid)async{
+    String token = "";
+      DocumentSnapshot documentSnapshot = await _fireCloud.doc(uid).get();
+      token = documentSnapshot.get("userToken").toString();
+ 
+    return token;
+  }
 
   // check user is exit or not
   Future<bool> checkUser(String id) async {

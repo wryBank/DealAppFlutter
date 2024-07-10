@@ -12,6 +12,9 @@ class user_repo{
   final user_provider provider;
   user_repo({required this.provider});
 
+  Future<String> getUserToken(String uid) async {
+    return await provider.getToken(uid);
+  }
   Future<void> editProfile(UserModel userModel) async{
       print("inrepo");
     await provider.editProfile(userModel);

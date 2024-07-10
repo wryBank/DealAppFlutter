@@ -35,7 +35,8 @@ class ChatService extends ChangeNotifier{
     String chatId = ids.join('_');
 
     await _firestore.collection('chat_rooms').doc(chatIDbyPostId).collection('messages').add(newMessage.toMap());
-          PushNotificationService.sendNotificationToUser(userdata['userToken'],"Message","You have a new message ","from ${currentEmail}");
+          PushNotificationService.sendMessageNotificationToUser(userdata['userToken'],
+              chatIDbyPostId,"messagge","message",receiverId,"users");
   }
 
   Stream<QuerySnapshot> getMessages(String pid,String uid,String otherUid){

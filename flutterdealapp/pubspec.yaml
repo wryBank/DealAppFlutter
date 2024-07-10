@@ -87,7 +87,9 @@ flutter:
   assets:
   - assets/
   - assets/images/icon.png
+  - assets/images/newFeed.png
   - assets/images/defaultProfile.png
+  - assets/images/wallet.png
   - assets/icons/
   - assets/icons/coinpay.png
   - assets/icons/onDeal.png

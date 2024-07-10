@@ -676,9 +676,10 @@ class PostProvider {
     throw Exception("Failed to get user data."); // Added throw statement
   }
 
-  Future<void> updateStatusGave(
+  Future<bool> updateStatusGave(
       String postId, bool isGave, String uidTakeby, bool isFindJob) async {
     print("in updateStatus");
+    bool isDone = false;
     try {
       DocumentSnapshot documentSnapshot = await _fireCloud.doc(postId).get();
 
@@ -695,6 +696,7 @@ class PostProvider {
               .doc(postId)
               .update({'isGave': isGave, 'status': 'done'});
           await recordDataDealDone(data['uid'], data['takeby']);
+          isDone = true;
 
           if (isFindJob == true) {
             await _userCloud
@@ -717,12 +719,14 @@ class PostProvider {
         print("Failed with error '${e.code}': ${e.message}");
       }
     }
+    return isDone;
   }
 
-  Future<void> updateStatusReceived(
+  Future<bool> updateStatusReceived(
       String postId, bool isReceived, String uidPostby, bool isFindJob) async {
     print("isReceived: $isReceived");
     print("in updateStatus");
+    bool isDone = false;
     try {
       DocumentSnapshot documentSnapshot = await _fireCloud.doc(postId).get();
       if (documentSnapshot.exists) {
@@ -738,6 +742,7 @@ class PostProvider {
               .doc(postId)
               .update({'isReceived': isReceived, 'status': 'done'});
           await recordDataDealDone(data['uid'], data['takeby']);
+          isDone = true;
 
           if (isFindJob == true) {
             await _userCloud
@@ -753,10 +758,12 @@ class PostProvider {
         // print(documentSnapshot.data());
       }
       // print(documentSnapshot.data());
-    } on FirebaseException catch (e) {
+    } 
+    on FirebaseException catch (e) {
       if (kDebugMode) {
         print("Failed with error '${e.code}': ${e.message}");
       }
     }
+      return isDone;
   }
 }

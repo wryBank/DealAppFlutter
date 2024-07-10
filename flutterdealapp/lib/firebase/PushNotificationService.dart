@@ -45,6 +45,7 @@ class PushNotificationService {
     return credentials.accessToken.data;
   }
 
+
   static sendNotificationToUser(
     String deviceToken,
     String messageType,
@@ -79,35 +80,76 @@ class PushNotificationService {
       print("Failed to send notification ${response.statusCode} ");
     }
   }
+   static sendClickNotificationToUser(
+    String deviceToken,
+    String postId,
+    String messageTitle,
+    String messageBody,
+ 
+    
+    // BuildContext context,
+  ) async {
+    final String serverKey = await getAccessToken();
+    String endpointFirebaseCloudMessaging =
+        'https://fcm.googleapis.com/v1/projects/dealapp-363e7/messages:send';
 
-  // static sendMessageNotificationToUser(
-  //   String deviceToken,
-  //   // BuildContext context,
-  // ) async {
-  //   final String serverKey = await getAccessToken();
-  //   String endpointFirebaseCloudMessaging =
-  //       'https://fcm.googleapis.com/v1/projects/dealapp-363e7/messages:send';
+    final Map<String, dynamic> message = {
+      'message': {
+        'token': deviceToken,
+        'notification': {'title': messageTitle, 'body': messageBody},
+        'data': {'click_action': 'clickSend', 'postId': postId, 'status': 'done', }
+      }
+    };
+    final http.Response response = await http.post(
+      Uri.parse(endpointFirebaseCloudMessaging),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $serverKey'
+      },
+      body: jsonEncode(message),
+    );
+    if (response.statusCode == 200) {
+      print("Notification sent successfully");
+    } else {
+      print("Failed to send notification ${response.statusCode} ");
+    }
+  }
 
-  //   final Map<String, dynamic> message = {
-  //     'message': {
-  //       'token': deviceToken,
-  //       'notification': {'title': "MessageNoti", 'body': "teste"}
-  //     }
-  //   };
-  //   final http.Response response = await http.post(
-  //     Uri.parse(endpointFirebaseCloudMessaging),
-  //     headers: <String, String>{
-  //       'Content-Type': 'application/json',
-  //       'Authorization': 'Bearer $serverKey'
-  //     },
-  //     body: jsonEncode(message),
-  //   );
-  //   if (response.statusCode == 200) {
-  //     print("Notification sent successfully");
-  //   } else {
-  //     print("Failed to send notification ${response.statusCode} ");
-  //   }
-  // }
+  static sendMessageNotificationToUser(
+    String deviceToken,
+    String messageId,
+    String messageTitle,
+    String messageBody,
+    String receiverId,
+    String receiverUsername,
+    
+    // BuildContext context,
+  ) async {
+    final String serverKey = await getAccessToken();
+    String endpointFirebaseCloudMessaging =
+        'https://fcm.googleapis.com/v1/projects/dealapp-363e7/messages:send';
+
+    final Map<String, dynamic> message = {
+      'message': {
+        'token': deviceToken,
+        'notification': {'title': messageTitle, 'body': messageBody},
+        'data': {'click_action': 'message', 'messageId': messageId, 'status': 'done', 'receiverId': receiverId, 'receiverUsername': receiverUsername}
+      }
+    };
+    final http.Response response = await http.post(
+      Uri.parse(endpointFirebaseCloudMessaging),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $serverKey'
+      },
+      body: jsonEncode(message),
+    );
+    if (response.statusCode == 200) {
+      print("Notification sent successfully");
+    } else {
+      print("Failed to send notification ${response.statusCode} ");
+    }
+  }
 
   static sendNotificationCreatePost(
     List<String> deviceToken,

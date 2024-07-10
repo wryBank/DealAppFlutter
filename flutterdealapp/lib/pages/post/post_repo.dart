@@ -1,6 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutterdealapp/model/postmodel.dart';
+import 'package:flutterdealapp/pages/post/bloc/post_event.dart';
 import 'package:flutterdealapp/pages/post/post_provider.dart';
 
 class PostRepository {
@@ -41,7 +42,10 @@ class PostRepository {
   Future getPostFilter(bool isFindJob, bool isFindJobAll, bool inprogress,bool statusAll, bool ownPost, bool allPost  ) async {
     return await postProvider.getPostFilter(isFindJob, isFindJobAll, inprogress, statusAll, ownPost, allPost);
   }
-  Future updateStatusReceived(String postid , bool isGave,uidPostby,bool isFindJob) async {
+  Future<bool> updateStatusReceived(String postid , bool isGave,uidPostby,bool isFindJob) async {
     return await postProvider.updateStatusReceived(postid, isGave,uidPostby,isFindJob);
+  }
+  Future<bool> updateStatusGave(String postid , bool isGave,uidPostby,bool isFindJob) async {
+    return await postProvider.updateStatusGave(postid, isGave,uidPostby,isFindJob);
   }
 }

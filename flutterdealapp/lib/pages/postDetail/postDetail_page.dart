@@ -5,9 +5,12 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdealapp/firebase/PushNotificationService.dart';
 import 'package:flutterdealapp/model/postmodel.dart';
 import 'package:flutterdealapp/pages/Deal/deal_page.dart';
 import 'package:flutterdealapp/pages/Profile/otherProfile.dart';
+import 'package:flutterdealapp/pages/UserBloc/user_provider.dart';
+import 'package:flutterdealapp/pages/UserBloc/user_repo.dart';
 import 'package:flutterdealapp/pages/application/application_page.dart';
 import 'package:flutterdealapp/pages/application/bloc/appBloc.dart';
 import 'package:flutterdealapp/pages/application/bloc/appEvent.dart';
@@ -22,14 +25,17 @@ import 'package:flutterdealapp/pages/postDetail/bloc/postDetail_bloc.dart';
 import 'package:flutterdealapp/pages/postDetail/bloc/postDetail_event.dart';
 import 'package:flutterdealapp/pages/postDetail/timeline.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:googleapis/blogger/v3.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 import '../../values/color.dart';
 
 class postDetailPage extends StatefulWidget {
+  String? comeFrom;
   String? pid;
    postDetailPage({
     super.key,
+    this.comeFrom,
     this.pid,
   });
 
@@ -124,11 +130,20 @@ class _postDetailPageState extends State<postDetailPage> {
           },
           child: Scaffold(
               appBar: AppBar(
-                automaticallyImplyLeading: true,
+                // automaticallyImplyLeading: true,
                 leading: IconButton(
                   icon: Icon(Icons.arrow_back),
                   onPressed: () {
+                    if(widget.comeFrom == 'ownDeal'){
+                      BlocProvider.of<PostBloc>(context).add(getOwnDeal(uid: FirebaseAuth.instance.currentUser!.uid));
+                    }
+                    if(widget.comeFrom == 'profile'){
+                      BlocProvider.of<PostBloc>(context).add(getPostById(FirebaseAuth.instance.currentUser!.uid));
+
+                    }
+                    else{
                     BlocProvider.of<PostBloc>(context).add(getPostData());
+                    }
                     Navigator.of(context).pop();
                   },
                 ),
@@ -142,6 +157,7 @@ class _postDetailPageState extends State<postDetailPage> {
                           context,
                           state.postModel.pid.toString(),
                           state.postModel.uid.toString(),
+                          state.postModel.title.toString(),
                           state.postModel.isFindJob!,
                           state.postModel.takeby.toString(),
                           state.postModel.isTake,
@@ -431,7 +447,7 @@ Widget buildPostBoxDetail(
                         MaterialPageRoute(
                             builder: (context) => ChatPage(
                                 receiverUserId: takeby,
-                                receiverUserEmail: takeby,
+                                receiverUsername: takeby,
                                 pid: pid.toString())));
                   } else if (isowner == false) {
                     print("pid: $pid");
@@ -440,7 +456,7 @@ Widget buildPostBoxDetail(
                         MaterialPageRoute(
                             builder: (context) => ChatPage(
                                   receiverUserId: uid,
-                                  receiverUserEmail: postby,
+                                  receiverUsername: postby,
                                   pid: pid.toString(),
                                 )));
                   }
@@ -500,6 +516,7 @@ Widget buildProgress(
     BuildContext context,
     String pid,
     String uid,
+    String title,
     bool isFindJob,
     String takeby,
     bool? isTake,
@@ -507,6 +524,7 @@ Widget buildProgress(
     bool? isGave,
     bool? isReceived) {
   if (isTake == true) {
+ 
     print("takeby: $takeby  ");
     print("isFindJob = $isFindJob");
     print("pid: $pid");
@@ -514,55 +532,69 @@ Widget buildProgress(
     print("status: $status");
     return Column(
       children: [
-        SizedBox(
-          height: 100,
-          child: BlocBuilder<postDetailBloc, postDetailState>(
-              builder: (context, state) {
-            return ListView(
-              scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.all(10),
-              children: [
-                const SizedBox(
-                  width: 120,
-                  child: timelineDeal(
-                    // isProgress: status == "inprogress" ? true : false,
-                    isProgress: true,
-                    // isCompleted: status == "inprogress" ? false : true,
-                    isCompleted: false,
-                    isPast: true,
-                    eventCard: Text("inProgress",
-                        style: TextStyle(fontSize: 15, color: Colors.white)),
-                  ),
+        StreamBuilder<DocumentSnapshot>(
+          stream: FirebaseFirestore.instance.collection("posts").doc(pid).snapshots(),
+          builder: (context,snapshot) {
+            print("snapshot: ${snapshot.data}");
+            if(snapshot.hasData && snapshot.data!.exists){
+              var data = snapshot.data!.data() as Map<String,dynamic>;
+            status = data['status'] as String?;
+            return SizedBox(
+              height: 100,
+              child: Container(
+                color: Colors.black,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.all(10),
+                  children: [
+                    const SizedBox(
+                      width: 120,
+                      child: timelineDeal(
+                        // isProgress: status == "inprogress" ? true : false,
+                        isProgress: true,
+                        // isCompleted: status == "inprogress" ? false : true,
+                        isCompleted: false,
+                        isPast: true,
+                        eventCard: Text("inProgress",
+                            style: TextStyle(fontSize: 15, color: Colors.white)),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 120,
+                      child: timelineDeal(
+                        isProgress: false,
+                        // isCompleted: status == "done" ? true : false,
+                        isCompleted: false,
+                        // isPast:false,
+                        isPast: status == "inprogress" || status == "done"
+                            ? true
+                            : false,
+                        eventCard: const Text("Delivering",
+                            style: TextStyle(fontSize: 15, color: Colors.white)),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 120,
+                      child: 
+                      timelineDeal(
+                        // isProgress: status == "inprogress" ? true : false,
+                        // isCompleted: status == "done" ? true : false,
+                        isProgress: false,
+                        isCompleted: true,
+                        isPast:  status == "done" ? true : false,
+                        // isPast: status == "done" ? true : false,
+                        eventCard: const Text("Complete",
+                            style: TextStyle(fontSize: 15, color: Colors.white)),
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  width: 120,
-                  child: timelineDeal(
-                    isProgress: false,
-                    // isCompleted: status == "done" ? true : false,
-                    isCompleted: false,
-                    // isPast:false,
-                    isPast: status == "inprogress" || status == "done"
-                        ? true
-                        : false,
-                    eventCard: const Text("Delivering",
-                        style: TextStyle(fontSize: 15, color: Colors.white)),
-                  ),
-                ),
-                SizedBox(
-                  width: 120,
-                  child: timelineDeal(
-                    // isProgress: status == "inprogress" ? true : false,
-                    // isCompleted: status == "done" ? true : false,
-                    isProgress: false,
-                    isCompleted: true,
-                    isPast: status == "done" ? true : false,
-                    eventCard: const Text("Complete",
-                        style: TextStyle(fontSize: 15, color: Colors.white)),
-                  ),
-                ),
-              ],
+              ),
             );
-          }),
+          }
+          else{
+            return Container();
+          }}
         ),
         // Text(
         //     "This post is not given yet have u Give an items yet ? ")),
@@ -575,9 +607,10 @@ Widget buildProgress(
                   builder: (context, state) {
                 if (state is clickPostState && isReceived == true) {
                   // print("instate isClickReceived ${state.isClickReceived}");
+                  // status = state.isClickReceived == true ? "done" : "inprogress";
                   return Container(
                     child: Text(
-                      "รับของเรียบร้อย2",
+                      "รับของเรียบร้อย",
                       style: TextStyle(color: Colors.green),
                     ),
                   );
@@ -585,7 +618,7 @@ Widget buildProgress(
                   return Container(
                     child: ElevatedButton(
                       child: Text("รับของเรียบร้อย23"),
-                      onPressed: () {
+                      onPressed: () async{
                         isReceived = true;
                         // postProvider.updateStatusReceived(pid, isReceived!,uid,isFindJob);
                         BlocProvider.of<postDetailBloc>(context).add(
@@ -594,6 +627,25 @@ Widget buildProgress(
                                 isReceived: isReceived!,
                                 uidPostby: uid,
                                 isFindJob: isFindJob));
+                                
+                                user_provider userProvider = user_provider();
+                      
+                      PushNotificationService.sendClickNotificationToUser(await userProvider.getToken(takeby), pid, title , "อีกฝ่ายได้กดยืนยันแล้ว!" );
+                                print("token = ${userProvider.getToken(uid).toString()}");
+                      
+                      
+                      // context.read<postDetailBloc>().add(
+                      //   clickButton(
+                      //     postId: pid,
+                      //     isReceived: isReceived!,
+                      //     uidPostby: uid,
+                      //     isFindJob: isFindJob
+                      //   )
+                      // );
+                        // BlocProvider.of<PostBloc>(context).add(updateStatusReceived(pid, isReceived!));
+                        // isReceived = true;
+                        // status = "inprogress";
+                        
                       },
                     ),
                   );
@@ -613,9 +665,10 @@ Widget buildProgress(
             print("state = $state");
             if (state is clickPostState2 && isGave == true) {
               // print("instate isClickReceived ${state.isGrave}");
+                  // status = state.isGraveClicked == true ? "done" : "inprogress";
               return Container(
                 child: Text(
-                  "รับของเรียบร้อย2",
+                      "รับของเรียบร้อย",
                   style: TextStyle(color: Colors.green),
                 ),
               );
@@ -624,8 +677,8 @@ Widget buildProgress(
                 children: [
                   Container(
                     child: ElevatedButton(
-                      child: Text("ร2ับของเรียบร้อย23"),
-                      onPressed: () {
+                      child: Text("ร2ับของเรียบร้อย23  "),
+                      onPressed: () async{
                         if (isGave == false) {
                           isGave = true;
                           print("isGave: $isGave");
@@ -638,9 +691,22 @@ Widget buildProgress(
                                   isGave: isGave!,
                                   uidtakeby: takeby,
                                   isFindJob: isFindJob));
+                                user_provider userProvider = user_provider();
+                                print("token = ${userProvider.getToken(uid).toString()}");
+                      
+                      PushNotificationService.sendClickNotificationToUser(await userProvider.getToken(uid), pid, title , "อีกฝ่ายได้กดยืนยันแล้ว!" );
+                      // context.read<postDetailBloc>().add(
+                      //   clickButton(
+                      //     postId: pid,
+                      //     isReceived: isReceived!,
+                      //     uidPostby: uid,
+                      //     isFindJob: isFindJob
+                      //   )
+                      // );
                           // isGave = true;
                           // status = "done" ;
                         }
+
                       },
                     ),
                   )

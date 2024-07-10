@@ -1,19 +1,19 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutterdealapp/pages/chat/chat_service.dart';
+import 'package:flutterdealapp/pages/postDetail/postDetail_page.dart';
 
 class ChatPage extends StatefulWidget {
   final String receiverUserId;
-  final String receiverUserEmail;
+  final String receiverUsername;
   final String pid;
   const ChatPage(
       {super.key,
       required this.receiverUserId,
-      required this.receiverUserEmail,
+      required this.receiverUsername,
       required this.pid});
 
   @override
@@ -28,8 +28,7 @@ class _ChatPageState extends State<ChatPage> {
   void sendMessage() async {
     if (_messageController.text.isNotEmpty) {
       await _chatService.sendMessage(
-        widget.pid,
-          widget.receiverUserId, _messageController.text);
+          widget.pid, widget.receiverUserId, _messageController.text);
       _messageController.clear();
     }
   }
@@ -38,9 +37,26 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.blue,
-          title: Text(widget.receiverUserEmail),
+          // automaticallyImplyLeading: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              // BlocProvider.of<PostBloc>(context).add(getPostData());
+              // Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: (context) => postDetailPage(
+              //               pid: widget.pid,
+              //             )));
+              Navigator.of(context).pop();
+            },
+          ),
+          title: Text(widget.receiverUsername),
         ),
+        // appBar: AppBar(
+        //   backgroundColor: Colors.blue,
+        //   title: Text(widget.receiverUsername),
+        // ),
         body: Column(
           children: [
             Expanded(
@@ -53,8 +69,8 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget _buildmessageList() {
     return StreamBuilder(
-        stream: _chatService.getMessages(widget.pid,
-            widget.receiverUserId, _firebaseAuth.currentUser!.uid),
+        stream: _chatService.getMessages(
+            widget.pid, widget.receiverUserId, _firebaseAuth.currentUser!.uid),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
@@ -90,16 +106,21 @@ class _ChatPageState extends State<ChatPage> {
 
     return Container(
       alignment: alignment,
-      
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          crossAxisAlignment: (data['senderId'] == _firebaseAuth.currentUser!.uid)?CrossAxisAlignment.end:CrossAxisAlignment.start,
-          mainAxisAlignment: (data['setnderId']==_firebaseAuth.currentUser!.uid)?MainAxisAlignment.end:MainAxisAlignment.start,
-          children: [
-          Text(data['senderEmail']),
-          Text(data['message']),
-        ]),
+            crossAxisAlignment:
+                (data['senderId'] == _firebaseAuth.currentUser!.uid)
+                    ? CrossAxisAlignment.end
+                    : CrossAxisAlignment.start,
+            mainAxisAlignment:
+                (data['setnderId'] == _firebaseAuth.currentUser!.uid)
+                    ? MainAxisAlignment.end
+                    : MainAxisAlignment.start,
+            children: [
+              Text(data['senderEmail']),
+              Text(data['message']),
+            ]),
       ),
     );
   }

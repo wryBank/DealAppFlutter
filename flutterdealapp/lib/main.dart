@@ -12,6 +12,7 @@ import 'package:flutterdealapp/pages/UserBloc/user_provider.dart';
 import 'package:flutterdealapp/pages/application/application_page.dart';
 import 'package:flutterdealapp/pages/bloc_providers.dart';
 import 'package:flutterdealapp/pages/Profile/profile.dart';
+import 'package:flutterdealapp/pages/chat/chat_page.dart';
 import 'package:flutterdealapp/pages/postDetail/postDetail_page.dart';
 import 'package:flutterdealapp/pages/register/register.dart';
 import 'package:flutterdealapp/pages/signIn/bloc/signin_blocs.dart';
@@ -99,13 +100,20 @@ Future<void> main() async {
       print(
           "createPost-----------------------------------------------------------------------------------------------------------------------------------");
       print("postId: ${message.data['postId']}");
-      // BlocProvider.of<PostBloc>(context).add(getPostDetail(pid));
-      // Navigator.of(context)
-      //     .push(MaterialPageRoute(builder: (context) => postDetailPage()));
+      MyApp.navigatorKey.currentState?.push(MaterialPageRoute(
+          builder: (context) => postDetailPage(pid: message.data['postId'])));
+    }
+    if(message.data['click_action'] == 'message'){
+      print("messageId: ${message.data['messageId']}");
+      
+      MyApp.navigatorKey.currentState?.push(MaterialPageRoute(
+          builder: (context) => ChatPage(receiverUserId: message.data['receiverId'],receiverUsername: message.data['receiverUsername'],pid: message.data['messageId'])));
+    }
+    if(message.data['click_action'] == 'clickSend'){
+      print("postId: ${message.data['postId']}");
       
       MyApp.navigatorKey.currentState?.push(MaterialPageRoute(
           builder: (context) => postDetailPage(pid: message.data['postId'])));
-      // Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage()));
     }
   });
 

@@ -9,12 +9,19 @@ class postDetailBloc extends Bloc<PostDetailEvent, postDetailState> {
   postDetailBloc(this.repository) : super(postDetailState()) {
     
     on<clickButton>((event, emit) async {
-      repository.postProvider.updateStatusReceived(event.postId, event.isReceived, event.uidPostby, event.isFindJob);
-      emit(clickPostState(isClickReceived: true));
+       repository.postProvider.updateStatusReceived(event.postId, event.isReceived, event.uidPostby, event.isFindJob);
+      // print("isDoneRece: $isDone");
+      emit(clickPostState(
+        isClickReceived:(true)));
     });
    on<clickButton2>((event, emit) async {
-      repository.postProvider.updateStatusGave(event.postId, event.isGave, event.uidtakeby, event.isFindJob);
-      emit(clickPostState2(isGraveClicked: true));
+
+      // repository.postProvider.updateStatusGave(event.postId, event.isGave, event.uidtakeby, event.isFindJob);
+       repository.postProvider.updateStatusGave(event.postId, event.isGave, event.uidtakeby, event.isFindJob);
+      // print("isDoneGave: $isDone");
+      emit(clickPostState2(
+        isGraveClicked:(true)
+      ));
     });
   }
 }

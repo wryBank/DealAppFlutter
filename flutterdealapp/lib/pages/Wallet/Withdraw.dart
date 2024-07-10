@@ -10,14 +10,14 @@ import 'package:flutterdealapp/pages/application/application_page.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_bloc.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_event.dart';
 
-class DepositPage extends StatefulWidget {
-  const DepositPage({super.key});
+class WithdrawPage extends StatefulWidget {
+  const WithdrawPage({super.key});
 
   @override
-  State<DepositPage> createState() => _DepositPageState();
+  State<WithdrawPage> createState() => _DepositPageState();
 }
 
-class _DepositPageState extends State<DepositPage> {
+class _DepositPageState extends State<WithdrawPage> {
   final uid = FirebaseAuth.instance.currentUser!.uid;
   TextEditingController cardNumberController = TextEditingController();
   TextEditingController expiryDateController = TextEditingController();
@@ -143,7 +143,7 @@ class _DepositPageState extends State<DepositPage> {
                                 amountController.text.replaceAll(',', ''));
 
                             BlocProvider.of<EditProfileBloc>(context)
-                                .add(updateCoinEvent(uid, amount!));
+                                .add(updateCoinEvent(uid, -amount!));
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -161,7 +161,7 @@ class _DepositPageState extends State<DepositPage> {
                             padding: EdgeInsets.symmetric(
                                 horizontal: 50, vertical: 15),
                           ),
-                          child: Text('deposit',
+                          child: Text('Withdraw',
                               style: TextStyle(
                                   fontSize: 18,
                                   color: Colors.black.withOpacity(0.5))),

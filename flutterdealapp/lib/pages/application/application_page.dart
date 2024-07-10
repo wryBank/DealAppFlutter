@@ -29,17 +29,18 @@ class ApplicationPage extends StatefulWidget {
 }
 
 class _ApplicationPageState extends State<ApplicationPage> {
-  Future multipleRegistration()async {
+  Future multipleRegistration() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
-        FirebaseMessaging.instance.subscribeToTopic("myTopic1");
+    FirebaseMessaging.instance.subscribeToTopic("myTopic1");
   }
+
   void getLocation() async {
     await Geolocator.checkPermission();
     await Geolocator.requestPermission();
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.low);
-        print(position);
+    print(position);
   }
   // ...
 
@@ -49,7 +50,7 @@ class _ApplicationPageState extends State<ApplicationPage> {
   @override
   void initState() {
     super.initState();
-     getLocation();
+    getLocation();
     // _index = widget.initialIndex;
     // getLocation()
     // _timer = Timer.periodic(Duration(seconds: 5), (timer) {
@@ -59,64 +60,124 @@ class _ApplicationPageState extends State<ApplicationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<LandingPageBloc,LandingPageState>(
-      listener: (context,state){},
-      builder: (context,state) {
-        return Container(
-          color: Colors.white,
-          child: SafeArea(
+    return BlocConsumer<LandingPageBloc, LandingPageState>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          return SafeArea(
               child: Scaffold(
+                  // backgroundColor: Colors.red,
                   body: buildPage(state.tabIndex),
-                  bottomNavigationBar: BottomNavigationBar(
-                    // onTap: (value) {
-                    //   setState(() {
-                    //     _index = value;
-                    //   });
-                    //   if (value == 2) {
-                    //     // BlocProvider.of<EditProfileBloc>(context)
-                    //     //     .add(EditImageEvent(userModel: UserModel()));
-                    //   }
-                    // },
+                  bottomNavigationBar: NavigationBar(
+                    backgroundColor: Color.fromRGBO(161, 196, 253, 50),
+                    height: 65,
                     elevation: 0,
-                    items: [
-                      BottomNavigationBarItem(
-                          label: "home",
-                          icon: SizedBox(
-                            width: 15.w,
-                            height: 15.h,
-                            child: Image.asset("assets/images/icon.png"),
-                          )),
-                      BottomNavigationBarItem(
-                          label: "home2",
-                          icon: SizedBox(
-                            width: 15.w,
-                            height: 15.h,
-                            child: Image.asset("assets/images/icon.png"),
-                          )),
-                      BottomNavigationBarItem(
-                          label: "home3",
-                          icon: SizedBox(
-                            width: 15.w,
-                            height: 15.h,
-                            child: Image.asset("assets/images/icon.png"),
-                          )),
-                      BottomNavigationBarItem(
-                          label: "home3",
-                          icon: SizedBox(
-                            width: 15.w,
-                            height: 15.h,
-                            child: Image.asset("assets/images/icon.png"),
-                          )),
+                    destinations: [
+                      NavigationDestination(
+                        icon: SizedBox(
+                          width: 25.w,
+                          height: 25.h,
+                          child: Image.asset(
+                            "assets/images/newFeed.png",
+                          ),
+                        ),
+                        label: "Home",
+                      ),
+                      NavigationDestination(
+                        // icon: Icon(Icons.search),
+                        icon: SizedBox(
+                          width: 25.w,
+                          height: 25.h,
+                          child: Image.asset(
+                            "assets/images/icon.png",
+                          ),
+                        ),
+                        label: "Search",
+                      ),
+                      NavigationDestination(
+                        icon: SizedBox(
+                          width: 25.w,
+                          height: 25.h,
+                          child: Image.asset(
+                            "assets/images/wallet.png",
+                          ),
+                        ),
+                        label: "Wallet",
+                      ),
+                      NavigationDestination(
+                        // icon: Icon(Icons.person),
+                        icon: SizedBox(
+                          width: 25.w,
+                          height: 25.h,
+                          child: Image.asset(
+                            "assets/images/defaultProfile.png",
+                          ),
+                        ),
+                        label: "Profile",
+                      ),
                     ],
-                    currentIndex: state.tabIndex,
-                    selectedItemColor: Colors.black,
-                    onTap: (value) {
+                    selectedIndex: state.tabIndex,
+                    onDestinationSelected: (index) {
                       BlocProvider.of<LandingPageBloc>(context)
-                          .add(TapChange(tabIndex: value));
+                          .add(TapChange(tabIndex: index));
                     },
-                  ))),
-        );
-      }
-    );
+                  )
+                  // bottomNavigationBar: Container(
+                  //   child: BottomNavigationBar(
+                  //     // backgroundColor: Colors.red,
+                  //     // onTap: (value) {
+                  //     //   setState(() {
+                  //     //     _index = value;
+                  //     //   });
+                  //     //   if (value == 2) {
+                  //     //     // BlocProvider.of<EditProfileBloc>(context)
+                  //     //     //     .add(EditImageEvent(userModel: UserModel()));
+                  //     //   }
+                  //     // },
+                  //     elevation: 0,
+                  //     items: [
+                  //       BottomNavigationBarItem(
+
+                  //           label: "a",
+                  //           icon: SizedBox(
+                  //             width: 35.w,
+                  //             height: 35.h,
+                  //             child: Image.asset("assets/images/newFeed.png"),
+                  //           )),
+                  //       BottomNavigationBarItem(
+                  //           label: "a",
+                  //           icon: SizedBox(
+                  //             width: 35.w,
+                  //             height: 35.h,
+                  //             child: Image.asset("assets/images/icon.png"),
+                  //           )),
+                  //       BottomNavigationBarItem(
+                  //           label: "a",
+                  //           icon: SizedBox(
+                  //             width: 35.w,
+                  //             height: 35.h,
+                  //             child: Image.asset("assets/images/wallet.png"),
+                  //           )),
+                  //       BottomNavigationBarItem(
+                  //           label: "a",
+                  //           icon: Container(
+                  //             child: SizedBox(
+                  //               width: 35.w,
+                  //               height: 35.h,
+                  //               child: Image.asset(
+                  //                   "assets/images/defaultProfile.png"),
+                  //             ),
+                  //           )),
+                  //     ],
+                  //     // backgroundColor: Colors.black,
+                  //     currentIndex: state.tabIndex,
+                  //     // selectedItemColor: Colors.blue.shade800,
+                  //     onTap: (value) {
+                  //       BlocProvider.of<LandingPageBloc>(context)
+                  //           .add(TapChange(tabIndex: value));
+                  //     },
+                  //   ),
+                  // )
+                  ));
+        });
   }
 }

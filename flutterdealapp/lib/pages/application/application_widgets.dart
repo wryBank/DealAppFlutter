@@ -15,9 +15,9 @@ Widget buildPage(int index){
     DealPage(),
     // postDetailPage(),
     // test(),
+    WalletPage(),
     ProfilePage(),
     // filterPosts(),
-    WalletPage(),
     // Center(child: Text("home"),),
     
   ];

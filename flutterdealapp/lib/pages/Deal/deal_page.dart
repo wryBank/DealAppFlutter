@@ -24,15 +24,16 @@ class DealPage extends StatefulWidget {
 
 final uid = FirebaseAuth.instance.currentUser!.uid;
 
-class _DealPageState extends State<DealPage> 
-{ void _openFilterPostDeal() {
-    showModalBottomSheet(context: context, builder: (ctx) => Container(
-      height: 250,
-      child: filterPosts()));
-    
+class _DealPageState extends State<DealPage> {
+  void _openFilterPostDeal() {
+    showModalBottomSheet(
+        context: context,
+        builder: (ctx) => Container(height: 250, child: filterPosts()));
   }
+
   @override
   void initState() {
+    super.initState();
     BlocProvider.of<PostBloc>(context).add(getOwnDeal(uid: uid));
   }
 
@@ -43,17 +44,42 @@ class _DealPageState extends State<DealPage>
     bool bt2Click = false;
     bool bt3Click = false;
     return Scaffold(
-        // appBar: AppBar(
-        //   backgroundColor: AppColors.primaryAppbar,
-        //   bottom: PreferredSize(
-        //     preferredSize: const Size.fromHeight(1.0),
-        //     child: Container(
-        //       // color: AppColors.primaryAppbar,
-        //       height: 0.5,
-        //     ),
-        //   ),
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.white,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              // color: Colors.white,
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  // Color.fromRGBO(207, 162, 250,100),
+                  // Color.fromRGBO(194, 233, 251, 100),
 
-        // ),
+                  Color.fromRGBO(224, 195, 252, 100),
+                  Color.fromRGBO(142, 197, 252, 100),
+                ],
+              ),
+              // border: Border.all(
+              //   width: 0.2,
+              //   color: Colors.black,
+              // ),
+              // borderRadius: BorderRadius.circular(25),
+            ),
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                _openFilterPostDeal();
+              },
+              icon: Icon(
+                Icons.filter_list,
+                color: Colors.blue.shade800,
+              ),
+            ),
+          ],
+        ),
         body: RefreshIndicator(
           onRefresh: () async {
             bool bt1Click = false;
@@ -61,28 +87,62 @@ class _DealPageState extends State<DealPage>
             BlocProvider.of<PostBloc>(context).add(getOwnDeal(uid: uid));
           },
           child: Column(children: [
-                AppBar(
-                  backgroundColor: AppColors.primaryAppbar,
-                  automaticallyImplyLeading: false,
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Column(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              _openFilterPostDeal();
-                            },
-                            icon: Icon(
-                              Icons.filter_list,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+            // AppBar(
+            //   // backgroundColor: AppColors.primaryAppbar,
+            //   automaticallyImplyLeading: false,
+            //   flexibleSpace: Container(
+            //     decoration: BoxDecoration(
+            //       // color: Colors.white,
+            //       gradient: LinearGradient(
+            //         begin: Alignment.topLeft,
+            //         end: Alignment.bottomRight,
+            //         colors: [
+            //           // Color.fromRGBO(207, 162, 250,100),
+            //           // Color.fromRGBO(194, 233, 251, 100),
+            //           Color.fromARGB(255, 207, 162,
+            //               250), // Corrected method and opacity value
+            //           Color.fromARGB(255, 194, 233,
+            //               251), // Corrected method and opacity value
+            //           // Colors.white,
+            //         ],
+            //       ),
+            //       // border: Border.all(
+            //       //   width: 0.2,
+            //       //   color: Colors.black,
+            //       // ),
+            //       // borderRadius: BorderRadius.circular(25),
+            //     ),
+            //   ),
+            //   actions: [
+            //     IconButton(
+            //       onPressed: () {
+            //         _openFilterPostDeal();
+            //       },
+            //       icon: Icon(
+            //         Icons.filter_list,
+            //         color: Colors.white,
+            //       ),
+            //     ),
+            //   ],
+            //   // child: Row(
+            //   //   mainAxisAlignment: MainAxisAlignment.end,
+            //   //   children: [
+            //   //     Column(
+            //   //       children: [
+            //   //         IconButton(
+            //   //           onPressed: () {
+            //   //             _openFilterPostDeal();
+            //   //           },
+            //   //           icon: Icon(
+            //   //             Icons.filter_list,
+            //   //             color: Colors.white,
+            //   //           ),
+            //   //         ),
+            //   //       ],
+            //   //     ),
+            //   //   ],
+            //   // ),
+            // ),
             // Stack(
             //   children: <Widget>[
             //     Container(
@@ -126,9 +186,9 @@ class _DealPageState extends State<DealPage>
             // Container(
             //   // child: buildSelectBox(context),
             // ),
-            SizedBox(
-              height: 10,
-            ),
+            // SizedBox(
+            //   height: 10,
+            // ),
             BlocBuilder<PostBloc, PostState>(builder: (context, state) {
               print("state in feed is $state");
               if (state is PostListLoaded) {
@@ -136,7 +196,20 @@ class _DealPageState extends State<DealPage>
                 print("postModel: $postModel");
                 return Expanded(
                     child: Container(
-                  color: AppColors.primaryPostBox,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        // Color.fromRGBO(161, 196, 253, 100),
+                        // Color.fromRGBO(194, 233, 251, 100),
+                        Color.fromRGBO(224, 195, 252, 100),
+                        Color.fromRGBO(142, 197, 252, 100),
+                        // Colors.white,
+                      ],
+                    ),
+                  ),
+                  // color: AppColors.primaryPostBox,
                   child: ListView.builder(
                       // controller: _scrollController,
                       itemCount: postModel.length,
@@ -144,17 +217,18 @@ class _DealPageState extends State<DealPage>
                         // print("post distance: ${posts[index].distance}");
                         final post = postModel[index];
                         return buildPostBox(
-                            context,
-                            post.pid ?? "",
-                            post.title!,
-                            post.detail!,
-                            post.location_item ?? "",
-                            post.postimage ?? "",
-                            "a",
-                            post.postdate!,
-                            post.distance??0.0,
-                            post.profileImage ?? "",
-                            post.pricePay!,);
+                          context,
+                          post.pid ?? "",
+                          post.title!,
+                          post.detail!,
+                          post.location_item ?? "",
+                          post.postimage ?? "",
+                          "a",
+                          post.postdate!,
+                          post.distance ?? 0.0,
+                          post.profileImage ?? "",
+                          post.pricePay!,
+                        );
                       }),
                 ));
               } else {
@@ -187,19 +261,21 @@ Widget buildPostBox(
   return GestureDetector(
     onTap: () {
       print("tap in post box {$pid}");
-      BlocProvider.of<PostBloc>(context).add(getPostDetail(pid));
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => postDetailPage()));
+      // BlocProvider.of<PostBloc>(context).add(getPostDetail(pid));
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => postDetailPage(comeFrom: 'ownDeal', pid: pid)));
     },
-    child: Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
+    child: Container( 
+          decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.6),
         border: Border.all(
-          width: 0.2,
-          color: Colors.black,
+          width: 0.1,
+          // color: Colors.black,
         ),
         borderRadius: BorderRadius.circular(10),
       ),
+ 
+ 
       margin: EdgeInsets.all(20),
       child: Column(
         children: [

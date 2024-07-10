@@ -81,14 +81,44 @@ class _ProfilePageState extends State<ProfilePage> {
             appBar: AppBar(
               // backgroundColor: Colors.blue,
               automaticallyImplyLeading: false,
-              backgroundColor: AppColors.primaryAppbar,
-              bottom: PreferredSize(
-                  preferredSize: const Size.fromHeight(1.0),
-                  child: Container(
-                    // color: Colors.grey.withOpacity(0.5),
-                    // color: const Color.fromARGB(255, 0, 128, 255),
-                    height: 0.5,
-                  )),
+              backgroundColor: Colors.transparent,
+              flexibleSpace: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      // Color.fromRGBO(207, 162, 250,100),
+                      // Color.fromRGBO(194, 233, 251, 100),
+
+                      Color.fromRGBO(224, 195, 252, 100),
+                      Color.fromRGBO(142, 197, 252, 100),
+                    ],
+                  ),
+                ),
+              ),
+              // bottom: PreferredSize(
+              //     preferredSize: const Size.fromHeight(1.0),
+              //     child: Container(
+              //      // decoration: const BoxDecoration(
+              //       //   // color: Colors.white,
+              //       //   gradient: LinearGradient(
+              //       //     begin: Alignment.topLeft,
+              //       //     end: Alignment.bottomRight,
+              //       //     colors: [
+              //       //       // Color.fromRGBO(207, 162, 250,100),
+              //       //       // Color.fromRGBO(194, 233, 251, 100),
+
+              //       //       Color.fromRGBO(224, 195, 252, 100),
+              //       //       Color.fromRGBO(142, 197, 252, 100),
+              //       //     ],
+              //       //   ),
+              //       // ),
+
+              //       // color: Colors.grey.withOpacity(0.5),
+              //       // color: const Color.fromARGB(255, 0, 128, 255),
+              //       height: 0.5,
+              //     )),
               // title: Text(
               //   type,
               //   style: TextStyle(
@@ -112,193 +142,231 @@ class _ProfilePageState extends State<ProfilePage> {
                 )
               ],
             ),
-            body: Column(
-              children: <Widget>[
-                Container(
-                  height: size.height * 0.4,
-                  child: Stack(
-                    children: <Widget>[
-                      Container(
-                        height: size.height * 0.4 - 47,
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 88, 172, 255),
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(26),
-                            bottomRight: Radius.circular(26),
+            body: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    // Color.fromRGBO(207, 162, 250,100),
+                    // Color.fromRGBO(194, 233, 251, 100),
+
+                    Color.fromRGBO(224, 195, 252, 100),
+                    Color.fromRGBO(142, 197, 252, 100),
+                  ],
+                ),
+              ),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    height: size.height * 0.4,
+                    child: Stack(
+                      children: <Widget>[
+                        Container(
+                          height: size.height * 0.4 - 47,
+                          // decoration: BoxDecoration(
+                          //   color: Color.fromARGB(255, 88, 172, 255),
+                          //   borderRadius: BorderRadius.only(
+                          //     bottomLeft: Radius.circular(26),
+                          //     bottomRight: Radius.circular(26),
+                          //   ),
+                          // ),
+                          decoration: BoxDecoration(
+                            // color: Colors.white,
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                // Color.fromRGBO(207, 162, 250,100),
+                                // Color.fromRGBO(194, 233, 251, 100),
+
+                                Color.fromRGBO(224, 195, 252, 100),
+                                Color.fromRGBO(142, 197, 252, 100),
+                              ],
+                            ),
+                            // border: Border.all(
+                            //   width: 0.0001,
+                            //   // color: Colors.black,
+                            // ),
+                            borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(26),
+                                bottomRight: Radius.circular(26)),
                           ),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Center(
-                              child: Transform.scale(
-                                scale: 1.2,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                        color: Colors.white, width: 2),
-                                  ),
-                                  child: CircleAvatar(
-                                    radius: 50,
-                                    backgroundImage: NetworkImage(
-                                        // state.userModel!.urlprofileimage!),
-                                        state.userModel!.urlprofileimage!),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Center(
+                                child: Transform.scale(
+                                  scale: 1.2,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                          color: Color.fromARGB(
+                                              255, 255, 255, 255),
+                                          width: 2),
+                                    ),
+                                    child: CircleAvatar(
+                                      radius: 50,
+                                      backgroundImage: NetworkImage(
+                                          // state.userModel!.urlprofileimage!),
+                                          state.userModel!.urlprofileimage!),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 15.h,
-                            ),
-                            Text("${state.userModel!.username}",
-                                style: TextStyle(
-                                    fontSize: 20.sp,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.normal)),
-                            Text("${state.userModel!.bio}",
-                                style: TextStyle(
-                                    fontSize: 15.sp,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.normal)),
-                          ],
+                              SizedBox(
+                                height: 15.h,
+                              ),
+                              Text("${state.userModel!.username}",
+                                  style: TextStyle(
+                                      fontSize: 20.sp,
+                                      color: Color.fromARGB(255, 0, 0, 0),
+                                      fontWeight: FontWeight.normal)),
+                              Text("${state.userModel!.bio}",
+                                  style: TextStyle(
+                                      fontSize: 15.sp,
+                                      color: Color.fromARGB(255, 0, 0, 0),
+                                      fontWeight: FontWeight.normal)),
+                            ],
+                          ),
                         ),
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              Container(
-                                  margin: EdgeInsets.symmetric(
-                                    vertical: 1,
-                                  ),
-                                  height: 70.h,
-                                  width: 100.w,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.5),
-                                          spreadRadius: 1,
-                                          blurRadius: 7,
-                                          offset: Offset(0,
-                                              3), // changes position of shadow
-                                        )
-                                      ]),
-                                  child: Stack(
-                                    alignment: Alignment.center,
-                                    children: <Widget>[
-                                      Column(
-                                        children: [
-                                          Text(
-                                            state.userModel!.dealcount.toString(),
-                                            style: TextStyle(
-                                                fontSize: 20.sp,
-                                                color: Colors.blue),
-                                          ),
-                                          Expanded(
-                                              child: Image.asset(
-                                            "assets/icons/onDeal.png",
-                                            fit: BoxFit.cover,
-                                          ))
-                                        ],
-                                      ),
-                                    ],
-                                  )),
-                              Container(
-                                  margin: EdgeInsets.symmetric(
-                                    vertical: 1,
-                                  ),
-                                  height: 70.h,
-                                  width: 100.w,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.5),
-                                          spreadRadius: 1,
-                                          blurRadius: 7,
-                                          offset: Offset(0,
-                                              3), // changes position of shadow
-                                        )
-                                      ]),
-                                  child: Stack(
-                                    alignment: Alignment.center,
-                                    children: <Widget>[
-                                      Column(
-                                        children: [
-                                          Text(
-                                            state.userModel!.dealcount
-                                                .toString(),
-                                            style: TextStyle(
-                                                fontSize: 20.sp,
-                                                color: Colors.blue),
-                                          ),
-                                          Expanded(
-                                              child: Image.asset(
-                                            "assets/images/icon.png",
-                                            fit: BoxFit.cover,
-                                          ))
-                                        ],
-                                      ),
-                                    ],
-                                  )),
-                              Container(
-                                  margin: EdgeInsets.symmetric(
-                                    vertical: 1,
-                                  ),
-                                  height: 70.h,
-                                  width: 100.w,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.5),
-                                          spreadRadius: 1,
-                                          blurRadius: 7,
-                                          offset: Offset(0,
-                                              3), // changes position of shadow
-                                        )
-                                      ]),
-                                  child: Stack(
-                                    alignment: Alignment.center,
-                                    children: <Widget>[
-                                      Column(
-                                        children: [
-                                          Text(
-                                            "0",
-                                            style: TextStyle(
-                                                fontSize: 20.sp,
-                                                color: Colors.blue),
-                                          ),
-                                          Expanded(
-                                              child: Image.asset(
-                                            "assets/images/icon.png",
-                                            fit: BoxFit.cover,
-                                          ))
-                                        ],
-                                      ),
-                                    ],
-                                  )),
-                            ]),
-                      )
-                    ],
+                        Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Container(
+                                    margin: EdgeInsets.symmetric(
+                                      vertical: 1,
+                                    ),
+                                    height: 70.h,
+                                    width: 100.w,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(20),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.5),
+                                            spreadRadius: 1,
+                                            blurRadius: 7,
+                                            offset: Offset(0,
+                                                3), // changes position of shadow
+                                          )
+                                        ]),
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      children: <Widget>[
+                                        Column(
+                                          children: [
+                                            Text(
+                                              state.userModel!.dealcount
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontSize: 20.sp,
+                                                  color: Colors.blue),
+                                            ),
+                                            Expanded(
+                                                child: Image.asset(
+                                              "assets/icons/onDeal.png",
+                                              fit: BoxFit.cover,
+                                            ))
+                                          ],
+                                        ),
+                                      ],
+                                    )),
+                                Container(
+                                    margin: EdgeInsets.symmetric(
+                                      vertical: 1,
+                                    ),
+                                    height: 70.h,
+                                    width: 100.w,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(20),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.5),
+                                            spreadRadius: 1,
+                                            blurRadius: 7,
+                                            offset: Offset(0,
+                                                3), // changes position of shadow
+                                          )
+                                        ]),
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      children: <Widget>[
+                                        Column(
+                                          children: [
+                                            Text(
+                                              state.userModel!.dealcount
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontSize: 20.sp,
+                                                  color: Colors.blue),
+                                            ),
+                                            Expanded(
+                                                child: Image.asset(
+                                              "assets/images/icon.png",
+                                              fit: BoxFit.cover,
+                                            ))
+                                          ],
+                                        ),
+                                      ],
+                                    )),
+                                Container(
+                                    margin: EdgeInsets.symmetric(
+                                      vertical: 1,
+                                    ),
+                                    height: 70.h,
+                                    width: 100.w,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(20),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.5),
+                                            spreadRadius: 1,
+                                            blurRadius: 7,
+                                            offset: Offset(0,
+                                                3), // changes position of shadow
+                                          )
+                                        ]),
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      children: <Widget>[
+                                        Column(
+                                          children: [
+                                            Text(
+                                              "0",
+                                              style: TextStyle(
+                                                  fontSize: 20.sp,
+                                                  color: Colors.blue),
+                                            ),
+                                            Expanded(
+                                                child: Image.asset(
+                                              "assets/images/icon.png",
+                                              fit: BoxFit.cover,
+                                            ))
+                                          ],
+                                        ),
+                                      ],
+                                    )),
+                              ]),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                BlocBuilder<PostBloc, PostState>(builder: (context, state) {
-                  if (state is PostLoaded) {
-                    return Expanded(
-                        child: ListView.builder(
-                            // controller: _scrollController,
-                            itemCount: state.postModel.length,
-                            itemBuilder: (context, index) {
-                              // print("post distance: ${posts[index].distance}");
+                  BlocBuilder<PostBloc, PostState>(builder: (context, state) {
+                    if (state is PostLoaded) {
+                      return Expanded(
+                          child: ListView.builder(
+                              // controller: _scrollController,
+                              itemCount: state.postModel.length,
+                              itemBuilder: (context, index) {
+                                // print("post distance: ${posts[index].distance}");
                                 final post = state.postModel[index];
                                 return buildPostBox(
                                     context,
@@ -311,41 +379,40 @@ class _ProfilePageState extends State<ProfilePage> {
                                     post.postdate!,
                                     post.distance!,
                                     post.profileImage ?? "",
-                                    post.pricePay!
-                                    
-                                    );
-                            })
-                        // child: FirestoreListView(
-                        //     query: state.postModel,
-                        //     pageSize: 2,
-                        //     itemBuilder: (context, snapshot) {
-                        //       final post = snapshot.data();
-                        //       double distance = calculateDistances(
-                        //           currentLatitude,
-                        //           currentLongtitude,
-                        //           post.latitude!,
-                        //           post.longitude!);
-                        //       return buildPostBox(
-                        //           post.title!,
-                        //           post.detail!,
-                        //           post.location_item ??"",
-                        //           post.postimage ?? "",
-                        //           "a",
-                        //           post.postdate!,
-                        //           distance,
-                        //           post.profileImage ?? "",
-                        //           );
-                        //     }),
-                        );
-                  } else {
-                    return Container(
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  }
-                })
-              ],
+                                    post.pricePay!);
+                              })
+                          // child: FirestoreListView(
+                          //     query: state.postModel,
+                          //     pageSize: 2,
+                          //     itemBuilder: (context, snapshot) {
+                          //       final post = snapshot.data();
+                          //       double distance = calculateDistances(
+                          //           currentLatitude,
+                          //           currentLongtitude,
+                          //           post.latitude!,
+                          //           post.longitude!);
+                          //       return buildPostBox(
+                          //           post.title!,
+                          //           post.detail!,
+                          //           post.location_item ??"",
+                          //           post.postimage ?? "",
+                          //           "a",
+                          //           post.postdate!,
+                          //           distance,
+                          //           post.profileImage ?? "",
+                          //           );
+                          //     }),
+                          );
+                    } else {
+                      return Container(
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
+                  })
+                ],
+              ),
             ),
           );
         }
@@ -356,6 +423,7 @@ class _ProfilePageState extends State<ProfilePage> {
     // add gridview here
   }
 }
+
 Widget buildPostBox(
   context,
   String pid,
@@ -373,15 +441,15 @@ Widget buildPostBox(
     onTap: () {
       print("tap in post box {$pid}");
       BlocProvider.of<PostBloc>(context).add(getPostDetail(pid));
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => postDetailPage()));
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => postDetailPage(comeFrom: 'profile', pid: pid)));
     },
     child: Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.white.withOpacity(0.6),
         border: Border.all(
-          width: 0.2,
-          color: Colors.black,
+          width: 0.1,
+          // color: Colors.black,
         ),
         borderRadius: BorderRadius.circular(10),
       ),
@@ -502,7 +570,6 @@ Widget buildPostBox(
     ),
   );
 }
-
 
 calculateDistances(double curLa, double CurLong, double la, double long) {
   print("curla: $curLa");
@@ -637,4 +704,3 @@ calculateDistances(double curLa, double CurLong, double la, double long) {
 //       'Distance from current location to post ${la}: post latitude is ${la}: post long is ${long} $distanceInKilometers km');
 //       return distanceInKilometers;
 // }
-
