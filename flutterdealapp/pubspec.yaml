@@ -46,6 +46,20 @@ dependencies:
   firebase_storage: ^11.2.6
   image_picker:
   flutter_bloc: ^8.1.5
+  flutterfire_ui: ^0.4.3+20
+  geolocator: ^11.1.0
+  intl: ^0.17.0
+  uuid: ^4.1.0
+  timeline_tile: ^2.0.0
+  workmanager: ^0.5.1
+  permission_handler: ^11.0.1
+  firebase_messaging: ^14.7.10
+  http:
+  googleapis:
+  googleapis_auth:
+  firebase_analytics: ^10.8.0
+  shared_preferences: ^2.2.2
+
 
 dev_dependencies:
   flutter_test:
@@ -73,8 +87,12 @@ flutter:
   assets:
   - assets/
   - assets/images/icon.png
+  - assets/images/newFeed.png
   - assets/images/defaultProfile.png
+  - assets/images/wallet.png
   - assets/icons/
+  - assets/icons/coinpay.png
+  - assets/icons/onDeal.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

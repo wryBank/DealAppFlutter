@@ -11,8 +11,6 @@ import '../../../model/usermodel.dart';
 
 class editProfile_provider {
   final _fireCloud = FirebaseFirestore.instance.collection("users");
-  final _firefirestore = FirebaseFirestore.instance;
-  final _firestore = FirebaseStorage.instance;
   final _uid = FirebaseAuth.instance.currentUser?.uid;
   PlatformFile? pickedFile;
 
@@ -72,6 +70,7 @@ class editProfile_provider {
     }
     return [];
   }
+
   // check user is exit or not
   Future<bool> checkUser(String id) async {
     try {
@@ -111,6 +110,7 @@ class editProfile_provider {
       throw Exception(e.toString());
     }
   }
+
   // upload image firebase
   Future<String?> uploadImage(PlatformFile? pickedFile) async {
     print("inprovider uploadimage");
@@ -135,6 +135,7 @@ class editProfile_provider {
     }
     return "";
   }
+
 // uploadUrl image to firebase doc
   Future<void> uploadUrl(String url) async {
     try {
@@ -144,4 +145,82 @@ class editProfile_provider {
     }
   }
 
+// get userdata by uid
+  Future<UserModel> getUserData(String uid) async {
+    try {
+      DocumentSnapshot documentSnapshot = await _fireCloud.doc(uid).get();
+      return UserModel.fromMap(documentSnapshot.data() as Map<String, dynamic>);
+    } on FirebaseException catch (e) {
+      if (kDebugMode) {
+        print("Failed with error '${e.code}': ${e.message}");
+      }
+    }
+    throw Exception("Failed to get user data."); // Added throw statement
+  }
+
+  Future<void> editBio(String bio) async {
+    try {
+      await _fireCloud.doc(_uid).update({"bio": bio});
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<void> editGender(String gender) async {
+    try {
+      await _fireCloud.doc(_uid).update({"gender": gender});
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  // Future<void> updateCoin(String uid, double coin) async {
+  //   final getOldCoin = FirebaseFirestore.instance
+  //       .collection("users")
+  //       .where("uid", isEqualTo: uid)
+  //       .where("coin")
+  //       .get();
+
+  //   double calCoin = (getOldCoin as double) + coin;
+
+  //   try {
+  //     await _fireCloud.doc(_uid).update({"coin": calCoin});
+  //   } catch (e) {
+  //     throw Exception(e.toString());
+  //   }
+  // }
+  Future<double> updateCoin(String uid, double coin) async {
+    try {
+      // Await the result of the query
+      DocumentSnapshot documentSnapshot = await _fireCloud.doc(uid).get();
+            
+
+            
+
+      // Check if documents are returned
+          // print("querySnapshot.docs = ${querySnapshot.docs.first.data()}");
+        // Assuming uid is unique, there should only be one document
+        // final DocumentSnapshot<Map<String, dynamic>> document =
+        //      querySnapshot.docs.first;
+          // print("document = ${document.data()!["coin"]}");
+        // final double oldCoin = document.data()?["coin"] ??
+            // 0.0; // Safely try to convert to double, default to 0.0
+          
+        final double oldCoin = documentSnapshot.get("coin") ?? 0.0;
+        print("oldCoin = $oldCoin");
+
+        // Calculate the new coin value
+        double calCoin = oldCoin + coin;
+
+        print("oldCoin = $oldCoin");
+        print("coin = $coin");
+        print("calCoin = $calCoin");
+        // Update the document with the new coin value
+        await _fireCloud.doc(uid).update({"coin": calCoin});
+        return calCoin;
+        
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 }

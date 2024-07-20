@@ -10,6 +10,9 @@ import 'package:image_picker/image_picker.dart';
 
 @immutable
 abstract class EditProfileEvent  {
+  const EditProfileEvent();
+}
+class InitialEvent extends EditProfileEvent{
 }
 class Create extends EditProfileEvent {
   // final String uid;
@@ -37,8 +40,8 @@ class uploadingImageEvent extends EditProfileEvent{
   uploadingImageEvent({required this.imageFile});
 }
 class EditImageEvent extends EditProfileEvent{
-  PlatformFile? imageFile;
-  EditImageEvent({required this.imageFile});
+  String? uid ;
+  EditImageEvent({required this.uid});
 }
 class UploadUrlImageEvent extends EditProfileEvent{
   String url;
@@ -47,4 +50,27 @@ class UploadUrlImageEvent extends EditProfileEvent{
 class showImageSelect extends EditProfileEvent{
   PlatformFile? imageFile;
   showImageSelect({required this.imageFile});
+}
+class showData extends EditProfileEvent{
+  UserModel userModel;
+  showData({
+    required this.userModel,
+  });
+}
+class updateProfileBioEvent extends EditProfileEvent{
+  String bio;
+  updateProfileBioEvent(this.bio);
+}
+class updateProfileGenderEvent extends EditProfileEvent{
+  String Gender;
+  updateProfileGenderEvent(this.Gender);
+}
+class EditingBioEvent extends EditProfileEvent{
+  String bio;
+  EditingBioEvent(this.bio);
+}
+class updateCoinEvent extends EditProfileEvent{
+  String uid;
+  double coin;
+  updateCoinEvent(this.uid,this.coin);
 }

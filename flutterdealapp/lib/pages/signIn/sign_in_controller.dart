@@ -5,19 +5,20 @@ import 'package:flutterdealapp/model/usermodel.dart';
 import 'package:flutterdealapp/pages/UserBloc/user_provider.dart';
 import 'package:flutterdealapp/pages/UserBloc/user_repo.dart';
 import 'package:flutterdealapp/pages/editProfile/bloc/editprofile_repo.dart';
-import 'package:flutterdealapp/pages/editProfile/editprofile.dart';
 import 'package:flutterdealapp/pages/signIn/bloc/signin_blocs.dart';
 import 'package:flutterdealapp/widgets/flutter_toast.dart';
 
+import '../../service/shared_preferences_service.dart';
 import '../editProfile/bloc/editprofile_provider.dart';
 
 class SignInController {
   final BuildContext context;
   // UserRepository userRepository = UserRepository();
   user_repo userRepository = user_repo(provider: user_provider());
-  // editProfile_repo _ediitprofile_repo = editProfile_repo(provider: editProfile_provider());
+  editProfile_repo _ediitprofile_repo = editProfile_repo(provider: editProfile_provider());
   UserModel userModel = UserModel();
   SignInController({required this.context});
+  ShardPreferencesService shardPreferencesService = ShardPreferencesService();
 
   Future<void> handleSignIn(String type) async {
     try {
@@ -52,14 +53,22 @@ class SignInController {
           if (user != null && user.emailVerified) {
             // user verified from firebaske
             
-            if(await userRepository.checkUser(user.uid)){
+            
+            if(await userRepository.checkUser(user.uid)) {
               print("user login");
+              // add deviceToken every time user login
+              // await userRepository.addUserToken();
+              
+              shardPreferencesService.writeCacghe(key: "email", value: state.email);
               Navigator.of(context).pushNamed("Application");
+              // Navigator.of(context).pushNamed("editprofileImage");
             }
-            else{
-              userRepository.addData(userModel);
-              Navigator.of(context).pushNamed("editprofile");
-            }
+            // else{
+            //   print("adddata");
+            //   userRepository.addData(userModel);
+            //   // Navigator.of(context).pushNamed("editprofile");
+            //   Navigator.of(context).pushNamed("editprofileImage");
+            // }
 
             // if(user.emailVerified){
             //   print("user login");

@@ -12,6 +12,10 @@ import '../../../model/usermodel.dart';
 
 @immutable
 class EditProfileState  {
+  UserModel? userModelProfile;
+  EditProfileState({this.userModelProfile});
+ 
+
 }
 
 class InitialState extends EditProfileState{
@@ -24,8 +28,8 @@ class EditingError extends EditProfileState{
   EditingError(this.message); 
 }
 class EditImageState extends EditProfileState{
-  final PlatformFile? imageFile2;
-  EditImageState(this.imageFile2);
+  UserModel? userModel;
+  EditImageState(this.userModel);
 }
 class showImageSelectState extends EditProfileState{
   final PlatformFile? imageFile;
@@ -42,4 +46,27 @@ class EditingData extends EditProfileState {
   });
 
 }
-
+class doneUploadState extends EditProfileState {
+  final String? url;
+  doneUploadState(this.url);
+}
+class updateProfileBioState extends EditProfileState{
+  final String? bio;
+  updateProfileBioState(this.bio);
+}
+class updateProfileGenderState extends EditProfileState{
+  final String? Gender;
+  updateProfileGenderState(this.Gender);
+}
+class showDataState extends EditProfileState{
+  String? uid;
+  showDataState(this.uid);
+}
+class EditingBio extends EditProfileState{
+  final String bio;
+  EditingBio(this.bio);
+}
+class updateCoinState extends EditProfileState{
+  final double coin;
+  updateCoinState(this.coin);
+}
