@@ -13,7 +13,7 @@ class UserModel {
   String? urlprofileimage;
   String? bio;
   int? dealcount;
-  int? dealsucceed;
+  int? dealsuccess;
   int? ondeal;
   double? coin;
   double? lastLatitude;
@@ -28,7 +28,7 @@ class UserModel {
     this.urlprofileimage,
     this.bio,
     this.dealcount,
-    this.dealsucceed,
+    this.dealsuccess,
     this.ondeal,
     this.coin,
     this.lastLatitude,
@@ -48,7 +48,7 @@ class UserModel {
     String? urlprofileimage,
     String? bio,
     int? dealcount,
-    int? dealsucceed,
+    int? dealsuccess,
     int? ondeal,
     double? coin,
     double? lastLatitude,
@@ -64,7 +64,7 @@ class UserModel {
       urlprofileimage: urlprofileimage ?? this.urlprofileimage,
       bio: bio ?? this.bio,
       dealcount: dealcount ?? this.dealcount,
-      dealsucceed: dealsucceed ?? this.dealsucceed,
+      dealsuccess: dealsuccess ?? this.dealsuccess,
       ondeal: ondeal ?? this.ondeal,
       coin: coin ?? this.coin,
       lastLatitude: lastLatitude ?? this.lastLatitude,
@@ -83,7 +83,7 @@ class UserModel {
       'urlprofileimage': urlprofileimage,
       'bio': bio,
       'dealcount': dealcount,
-      'dealsucceed': dealsucceed,
+      'dealsuccess': dealsuccess,
       'ondeal': ondeal,
       'coin': coin,
       'lastLatitude': lastLatitude,
@@ -102,7 +102,7 @@ class UserModel {
       urlprofileimage: map['urlprofileimage'] != null ? map['urlprofileimage'] as String : null,
       bio: map['bio'] != null ? map['bio'] as String : null,
       dealcount: map['dealcount'] != null ? map['dealcount'] as int : null,
-      dealsucceed: map['dealsucceed'] != null ? map['dealsucceed'] as int : null,
+      dealsuccess: map['dealsuccess'] != null ? map['dealsuccess'] as int : null,
       ondeal: map['ondeal'] != null ? map['ondeal'] as int : null,
       coin: map['coin'] != null ? map['coin'] as double : null,
       lastLatitude: map['lastLatitude'] != null ? map['lastLatitude'] as double : null,
@@ -116,7 +116,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(uid: $uid,userToken:$userToken, username: $username, email: $email, gender: $gender, phonenumber: $phonenumber, urlprofileimage: $urlprofileimage, bio: $bio, dealcount: $dealcount, dealsucceed: $dealsucceed, ondeal: $ondeal, coin: $coin, lastLatitude: $lastLatitude, lastLongitude: $lastLongitude)';
+    return 'UserModel(uid: $uid,userToken:$userToken, username: $username, email: $email, gender: $gender, phonenumber: $phonenumber, urlprofileimage: $urlprofileimage, bio: $bio, dealcount: $dealcount, dealsuccess: $dealsuccess, ondeal: $ondeal, coin: $coin, lastLatitude: $lastLatitude, lastLongitude: $lastLongitude)';
   }
 
   @override
@@ -133,7 +133,7 @@ class UserModel {
       other.urlprofileimage == urlprofileimage &&
       other.bio == bio &&
       other.dealcount == dealcount &&
-      other.dealsucceed == dealsucceed &&
+      other.dealsuccess == dealsuccess &&
       other.ondeal == ondeal &&
       other.coin == coin&&
       other.lastLatitude == lastLatitude &&
@@ -151,7 +151,7 @@ class UserModel {
       urlprofileimage.hashCode ^
       bio.hashCode ^
       dealcount.hashCode ^
-      dealsucceed.hashCode ^
+      dealsuccess.hashCode ^
       ondeal.hashCode ^
       coin.hashCode^
       lastLatitude.hashCode^
@@ -168,7 +168,7 @@ class UserModel {
   urlprofileimage = doc.data()!["urlprofileimage"],
   bio = doc.data()!["bio"],
   dealcount = doc.data()!["dealcount"],
-  dealsucceed = doc.data()!["dealsucceed"],
+  dealsuccess = doc.data()!["dealsuccess"],
   ondeal = doc.data()!["ondeal"],
   coin = doc.data()!["coin"],
   lastLatitude = doc.data()!["lastLatitude"],

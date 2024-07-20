@@ -17,14 +17,14 @@ class ChatService extends ChangeNotifier{
 
     
     final String currentUserId = _firebaseAuth.currentUser!.uid;
-    final String currentEmail = _firebaseAuth.currentUser!.email!;
+    final String currentUsername = _firebaseAuth.currentUser!.displayName!;
     final Timestamp timestamp = Timestamp.now();
 
 
     Message newMessage = Message(
       Mid: chatIDbyPostId,
       senderId: currentUserId,
-      senderEmail: currentEmail,
+      senderUsername: currentUsername,
       receiverId: receiverId,
       message: message,
       timestamp: timestamp

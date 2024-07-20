@@ -238,11 +238,11 @@ class _FeedPageState extends State<FeedPage> {
                               children: [
                                 Container(
                                     child: Text(
-                                  "Discovery Deal",
+                                  "  Discovery Deals",
                                   style: TextStyle(
                                     fontSize: 25.sp,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.black54,
+                                    color: Colors.black87,
                                   ),
                                 )),
                                 Container(
@@ -439,7 +439,7 @@ class _FeedPageState extends State<FeedPage> {
                                         post.detail!,
                                         post.location_item ?? "",
                                         post.postimage ?? "",
-                                        "a",
+                                        post.postby!,
                                         post.postdate!,
                                         post.distance!,
                                         post.profileImage ?? "",
@@ -582,7 +582,7 @@ Widget buildPostBox(
               Container(
                 margin: EdgeInsets.only(left: 10),
                 child: Text(
-                  "Warayut Saisi",
+                  postby,
                   style: TextStyle(fontSize: 20),
                 ),
               ),

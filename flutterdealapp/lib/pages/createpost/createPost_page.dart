@@ -52,7 +52,6 @@ class _CreatePostPageState extends State<CreatePostPage> {
   @override
   void initState() {
     super.initState();
-    getLocation();
     pricePayFocusNode.addListener(() {
       if (!pricePayFocusNode.hasFocus) {
         final text = pricePayController.text.replaceAll(',', '');

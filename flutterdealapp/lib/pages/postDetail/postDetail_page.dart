@@ -543,7 +543,16 @@ Widget buildPostBoxDetail(
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
+                      String receiverUsername = " ";
+                      await FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(takeby)
+                          .get()
+                          .then((value) {
+                        print("value: ${value.data()}");
+                         receiverUsername = value.data()!['username'];
+                      });
                       if (isowner == true) {
                         print("pid: $pid");
                         Navigator.push(
@@ -551,7 +560,7 @@ Widget buildPostBoxDetail(
                             MaterialPageRoute(
                                 builder: (context) => ChatPage(
                                     receiverUserId: takeby,
-                                    receiverUsername: takeby,
+                                    receiverUsername: receiverUsername,
                                     pid: pid.toString())));
                       } else if (isowner == false) {
                         print("pid: $pid");
@@ -896,29 +905,32 @@ Widget buildProgress(
       ],
     );
   } else {
-    return Column(
-      children: [
-        if (isTake == true)
-          Container(
-            margin: EdgeInsets.all(10),
-            child: Text("This post is taken"),
-          ),
-        if (isTake == false)
-          Container(
-            margin: EdgeInsets.all(10),
-            child: Text("This post is not taken"),
-          ),
-        if (status == "inprogress")
-          Container(
-            margin: EdgeInsets.all(10),
-            child: Text("This post is in progress"),
-          ),
-        if (status == "done")
-          Container(
-            margin: EdgeInsets.all(10),
-            child: Text("This post is done"),
-          ),
-      ],
-    );
+    return SizedBox();
   }
+  // else {
+  //   return Column(
+  //     children: [
+  //       if (isTake == true)
+  //         Container(
+  //           margin: EdgeInsets.all(10),
+  //           child: Text("This post is taken"),
+  //         ),
+  //       if (isTake == false)
+  //         Container(
+  //           margin: EdgeInsets.all(10),
+  //           child: Text("This post is not taken"),
+  //         ),
+  //       if (status == "inprogress")
+  //         Container(
+  //           margin: EdgeInsets.all(10),
+  //           child: Text("This post is in progress"),
+  //         ),
+  //       if (status == "done")
+  //         Container(
+  //           margin: EdgeInsets.all(10),
+  //           child: Text("This post is done"),
+  //         ),
+  //     ],
+  //   );
+  // }
 }

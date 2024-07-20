@@ -80,7 +80,7 @@ class _ApplicationPageState extends State<ApplicationPage> {
                             "assets/images/newFeed.png",
                           ),
                         ),
-                        label: "Home",
+                        label: "Discovery",
                       ),
                       NavigationDestination(
                         // icon: Icon(Icons.search),
@@ -91,7 +91,7 @@ class _ApplicationPageState extends State<ApplicationPage> {
                             "assets/images/icon.png",
                           ),
                         ),
-                        label: "Search",
+                        label: "MyDeal",
                       ),
                       NavigationDestination(
                         icon: SizedBox(

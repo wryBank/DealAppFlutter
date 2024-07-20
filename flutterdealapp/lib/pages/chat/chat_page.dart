@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterdealapp/pages/chat/chat_Bubble.dart';
 import 'package:flutterdealapp/pages/chat/chat_service.dart';
 import 'package:flutterdealapp/pages/postDetail/postDetail_page.dart';
 
@@ -24,6 +26,12 @@ class _ChatPageState extends State<ChatPage> {
   final TextEditingController _messageController = TextEditingController();
   final ChatService _chatService = ChatService();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  
+  @override
+  void initState() {
+    super.initState();
+  }
+ 
 
   void sendMessage() async {
     if (_messageController.text.isNotEmpty) {
@@ -37,6 +45,27 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              // color: Colors.white,
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  // Color.fromRGBO(207, 162, 250,100),
+                  // Color.fromRGBO(194, 233, 251, 100),
+
+                  Color.fromRGBO(224, 195, 252, 100),
+                  Color.fromRGBO(142, 197, 252, 100),
+                ],
+              ),
+              // border: Border.all(
+              //   width: 0.2,
+              //   color: Colors.black,
+              // ),
+              // borderRadius: BorderRadius.circular(25),
+            ),
+          ),
           // automaticallyImplyLeading: true,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -57,13 +86,25 @@ class _ChatPageState extends State<ChatPage> {
         //   backgroundColor: Colors.blue,
         //   title: Text(widget.receiverUsername),
         // ),
-        body: Column(
-          children: [
-            Expanded(
-              child: _buildmessageList(),
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomRight,
+              colors: [
+                Color.fromRGBO(224, 195, 252, 100),
+                Color.fromRGBO(142, 197, 252, 100),
+              ],
             ),
-            _buildMessageInput(),
-          ],
+          ),
+          child: Column(
+            children: [
+              Expanded(
+                child: _buildmessageList(),
+              ),
+              _buildMessageInput(),
+            ],
+          ),
         ));
   }
 
@@ -106,22 +147,20 @@ class _ChatPageState extends State<ChatPage> {
 
     return Container(
       alignment: alignment,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-            crossAxisAlignment:
-                (data['senderId'] == _firebaseAuth.currentUser!.uid)
-                    ? CrossAxisAlignment.end
-                    : CrossAxisAlignment.start,
-            mainAxisAlignment:
-                (data['setnderId'] == _firebaseAuth.currentUser!.uid)
-                    ? MainAxisAlignment.end
-                    : MainAxisAlignment.start,
-            children: [
-              Text(data['senderEmail']),
-              Text(data['message']),
-            ]),
-      ),
+      child: Column(
+          crossAxisAlignment:
+              (data['senderId'] == _firebaseAuth.currentUser!.uid)
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.start,
+          mainAxisAlignment:
+              (data['setnderId'] == _firebaseAuth.currentUser!.uid)
+                  ? MainAxisAlignment.end
+                  : MainAxisAlignment.start,
+          children: [
+            // Text(data['senderUsername']),
+            ChatBubble(message: data['message'], isCurrentUser: data['senderId'] == _firebaseAuth.currentUser!.uid)
+            // Text(data['message']),
+          ]),
     );
   }
 

@@ -34,12 +34,22 @@ class PostProvider {
       bool inprogress, bool statusAll, bool ownPost, bool allPost) async {
     final docpost = await FirebaseFirestore.instance
         .collection('posts')
+        .where('uid', isEqualTo: FirebaseAuth.instance.currentUser?.uid )
         .get()
         .then((querySnapshot) => querySnapshot.docs
             .map(
                 (doc) => PostModel.fromJson(doc.data() as Map<String, dynamic>))
             .toList());
-
+   final docpost2 = await FirebaseFirestore.instance
+        .collection('posts')
+        .where('takeby', isEqualTo: FirebaseAuth.instance.currentUser?.uid )
+        .get()
+        .then((querySnapshot) => querySnapshot.docs
+            .map(
+                (doc) => PostModel.fromJson(doc.data() as Map<String, dynamic>))
+            .toList());
+    
+    final docpost3 = {...docpost, ...docpost2}.toList();
     await getLocation();
     List<PostModel> postsList = [];
     List<PostModel> postsList2 = [];
@@ -53,7 +63,7 @@ class PostProvider {
     }
 
     if (isFindJobAll != true && statusAll != true && allPost != true) {
-      postsList = docpost;
+      postsList = docpost3;
 
       print("status: $status");
       print("isFindJob: $isFindJob");
@@ -648,11 +658,12 @@ class PostProvider {
       DocumentSnapshot documentSnapshot2 = await _userCloud.doc(userid2).get();
 
       if(documentSnapshot1.exists && documentSnapshot2.exists){
+        print("in recordDataDealDone");
         final data1 = documentSnapshot1.data() as Map<String, dynamic>;
         final data2 = documentSnapshot2.data() as Map<String, dynamic>;
 
-        await _userCloud.doc(userid).update({'dealsucced': FieldValue.increment(1)});
-        await _userCloud.doc(userid2).update({'dealsucced': FieldValue.increment(1)});
+        await _userCloud.doc(userid).update({'dealsuccess': FieldValue.increment(1)});
+        await _userCloud.doc(userid2).update({'dealsuccess': FieldValue.increment(1)});
       }
       
     } on FirebaseException catch (e) {

@@ -238,12 +238,51 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
+                                // Container(
+                                //     margin: EdgeInsets.symmetric(
+                                //       vertical: 1,
+                                //     ),
+                                //     height: 70.h,
+                                //     width: 100.w,
+                                //     decoration: BoxDecoration(
+                                //         color: Colors.white,
+                                //         borderRadius: BorderRadius.circular(20),
+                                //         boxShadow: [
+                                //           BoxShadow(
+                                //             color: Colors.grey.withOpacity(0.5),
+                                //             spreadRadius: 1,
+                                //             blurRadius: 7,
+                                //             offset: Offset(0,
+                                //                 3), // changes position of shadow
+                                //           )
+                                //         ]),
+                                //     child: Stack(
+                                //       alignment: Alignment.center,
+                                //       children: <Widget>[
+                                //         Column(
+                                //           children: [
+                                //             Text(
+                                //               state.userModel!.dealcount
+                                //                   .toString(),
+                                //               style: TextStyle(
+                                //                   fontSize: 20.sp,
+                                //                   color: Colors.blue),
+                                //             ),
+                                //             Expanded(
+                                //                 child: Image.asset(
+                                //               "assets/icons/onDeal.png",
+                                //               fit: BoxFit.cover,
+                                //             ))
+                                //           ],
+                                //         ),
+                                //       ],
+                                //     )),
                                 Container(
                                     margin: EdgeInsets.symmetric(
                                       vertical: 1,
                                     ),
                                     height: 70.h,
-                                    width: 100.w,
+                                    width: 150.w,
                                     decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(20),
@@ -271,6 +310,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                             Expanded(
                                                 child: Image.asset(
                                               "assets/icons/onDeal.png",
+                                              // "assets/images/onDeal.png",
                                               fit: BoxFit.cover,
                                             ))
                                           ],
@@ -282,7 +322,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       vertical: 1,
                                     ),
                                     height: 70.h,
-                                    width: 100.w,
+                                    width: 150.w,
                                     decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(20),
@@ -301,46 +341,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                         Column(
                                           children: [
                                             Text(
-                                              state.userModel!.dealcount
+                                              state.userModel!.dealsuccess
                                                   .toString(),
-                                              style: TextStyle(
-                                                  fontSize: 20.sp,
-                                                  color: Colors.blue),
-                                            ),
-                                            Expanded(
-                                                child: Image.asset(
-                                              "assets/images/icon.png",
-                                              fit: BoxFit.cover,
-                                            ))
-                                          ],
-                                        ),
-                                      ],
-                                    )),
-                                Container(
-                                    margin: EdgeInsets.symmetric(
-                                      vertical: 1,
-                                    ),
-                                    height: 70.h,
-                                    width: 100.w,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(20),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.withOpacity(0.5),
-                                            spreadRadius: 1,
-                                            blurRadius: 7,
-                                            offset: Offset(0,
-                                                3), // changes position of shadow
-                                          )
-                                        ]),
-                                    child: Stack(
-                                      alignment: Alignment.center,
-                                      children: <Widget>[
-                                        Column(
-                                          children: [
-                                            Text(
-                                              "0",
                                               style: TextStyle(
                                                   fontSize: 20.sp,
                                                   color: Colors.blue),

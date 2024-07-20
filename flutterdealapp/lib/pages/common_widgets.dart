@@ -61,18 +61,39 @@ AppBar buildAppBar(String type) {
           color: Colors.white,
           onPressed: () {
             print("click edit");
-            
           },
         )
       ],
     );
   }
   return AppBar(
-      automaticallyImplyLeading: false,
-      leading: IconButton(
-        icon: Icon(Icons.cancel_sharp),
-        onPressed: () {},
-      ));
+    automaticallyImplyLeading: false,
+    flexibleSpace: Container(
+      decoration: const BoxDecoration(
+        // color: Colors.white,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            // Color.fromRGBO(207, 162, 250,100),
+            // Color.fromRGBO(194, 233, 251, 100),
+
+            Color.fromRGBO(224, 195, 252, 100),
+            Color.fromRGBO(142, 197, 252, 100),
+          ],
+        ),
+        // border: Border.all(
+        //   width: 0.2,
+        //   color: Colors.black,
+        // ),
+        // borderRadius: BorderRadius.circular(25),
+      ),
+    ),
+    // leading: IconButton(
+    //   icon: Icon(Icons.cancel_sharp),
+    //   onPressed: () {},
+    // )
+  );
 }
 
 //need context for accessing bloc
@@ -182,7 +203,7 @@ Widget buildTextField(String hinttext, String textType, IconData iconName,
       height: 50.h,
       margin: EdgeInsets.only(bottom: 20.h),
       decoration: BoxDecoration(
-          color: Colors.white,
+          color: Colors.white.withOpacity(0.6),
           borderRadius: BorderRadius.all(Radius.circular(25.w)),
           border: Border.all(color: Colors.grey)),
       child: Row(
@@ -234,8 +255,8 @@ Widget buildLoginButton(String buttonName, void Function()? func) {
         width: 180.w,
         height: 50.h,
         // margin: EdgeInsets.only(left: 150.w,right: 25.w,),
-        decoration: BoxDecoration(
-            color: AppColors.primaryButton,
+       decoration: BoxDecoration(
+            color: Color.fromRGBO(83, 82, 125, 0.8),
             borderRadius: BorderRadius.circular(30.w),
             boxShadow: [
               BoxShadow(
@@ -244,6 +265,7 @@ Widget buildLoginButton(String buttonName, void Function()? func) {
                   offset: Offset(0, 3),
                   color: Colors.grey.withOpacity(0.5))
             ]),
+ 
         child: Center(
             child: Text(
           buttonName,
@@ -256,6 +278,7 @@ Widget buildLoginButton(String buttonName, void Function()? func) {
     ),
   );
 }
+
 Widget buildCommonButton(String buttonName, void Function()? func) {
   return GestureDetector(
     onTap: func,
@@ -265,7 +288,7 @@ Widget buildCommonButton(String buttonName, void Function()? func) {
         height: 50.h,
         // margin: EdgeInsets.only(left: 150.w,right: 25.w,),
         decoration: BoxDecoration(
-            color: AppColors.primaryButton,
+            color: Color.fromRGBO(83, 82, 125, 0.8),
             borderRadius: BorderRadius.circular(30.w),
             boxShadow: [
               BoxShadow(

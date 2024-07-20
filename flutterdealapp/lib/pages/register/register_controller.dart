@@ -21,6 +21,8 @@ class RegisterController {
     String password = state.password;
     String rePassword = state.rePassword;
     double coin = 0.0;
+    userModel.dealcount = 0;
+    userModel.dealsuccess = 0;
     userModel.coin = coin;
     userModel.email = email;
     userModel.username = userName;

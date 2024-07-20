@@ -48,26 +48,45 @@ class _DealPageState extends State<DealPage> {
           automaticallyImplyLeading: false,
           backgroundColor: Colors.white,
           flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              // color: Colors.white,
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  // Color.fromRGBO(207, 162, 250,100),
-                  // Color.fromRGBO(194, 233, 251, 100),
+              decoration: const BoxDecoration(
+                // color: Colors.white,
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    // Color.fromRGBO(207, 162, 250,100),
+                    // Color.fromRGBO(194, 233, 251, 100),
 
-                  Color.fromRGBO(224, 195, 252, 100),
-                  Color.fromRGBO(142, 197, 252, 100),
-                ],
+                    Color.fromRGBO(224, 195, 252, 100),
+                    Color.fromRGBO(142, 197, 252, 100),
+                  ],
+                ),
+                // border: Border.all(
+                //   width: 0.2,
+                //   color: Colors.black,
+                // ),
+                // borderRadius: BorderRadius.circular(25),
               ),
-              // border: Border.all(
-              //   width: 0.2,
-              //   color: Colors.black,
-              // ),
-              // borderRadius: BorderRadius.circular(25),
-            ),
-          ),
+              child: Row(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(left: 30.w,),
+                        child: Text(
+                          "MyDeals",
+                          style: TextStyle(
+                            fontSize: 25.sp,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              )),
           actions: [
             IconButton(
               onPressed: () {
@@ -223,7 +242,7 @@ class _DealPageState extends State<DealPage> {
                           post.detail!,
                           post.location_item ?? "",
                           post.postimage ?? "",
-                          "a",
+                          post.postby!,
                           post.postdate!,
                           post.distance ?? 0.0,
                           post.profileImage ?? "",
@@ -265,8 +284,8 @@ Widget buildPostBox(
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => postDetailPage(comeFrom: 'ownDeal', pid: pid)));
     },
-    child: Container( 
-          decoration: BoxDecoration(
+    child: Container(
+      decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.6),
         border: Border.all(
           width: 0.1,
@@ -274,8 +293,6 @@ Widget buildPostBox(
         ),
         borderRadius: BorderRadius.circular(10),
       ),
- 
- 
       margin: EdgeInsets.all(20),
       child: Column(
         children: [
@@ -313,7 +330,7 @@ Widget buildPostBox(
               Container(
                 margin: EdgeInsets.only(left: 10),
                 child: Text(
-                  "Warayut Saisi",
+                  postby,
                   style: TextStyle(fontSize: 20),
                 ),
               ),
