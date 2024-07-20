@@ -7,8 +7,6 @@ import 'package:googleapis/servicecontrol/v1.dart' as servicecontrol;
 
 class PushNotificationService {
   static Future<String> getAccessToken() async {
-    final serviceAccountJson = {
-    };
 
     List<String> scopes = [
       'https://www.googleapis.com/auth/userinfo.email',
